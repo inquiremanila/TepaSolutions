@@ -52,34 +52,6 @@ export const navItems: NavItem[] = [
     hasDropdown: true,
     dropdownItems: [
       { 
-        label: "Mobile App Development", 
-        description: "Native & cross-platform mobile apps",
-        icon: Smartphone, 
-        action: "navigate",
-        target: "app-dev"
-      },
-      { 
-        label: "Web Application Development", 
-        description: "Full-stack web applications",
-        icon: Monitor, 
-        action: "navigate",
-        target: "web-app"
-      },
-      { 
-        label: "Website Development", 
-        description: "Modern responsive websites",
-        icon: Globe, 
-        action: "navigate",
-        target: "web-dev"
-      },
-      { 
-        label: "SEO Solutions", 
-        description: "Search engine optimization",
-        icon: Search, 
-        action: "navigate",
-        target: "seo"
-      },
-      { 
         label: "Business Automation", 
         description: "Workflow & process automation solutions",
         icon: Cog, 
@@ -129,6 +101,34 @@ export const navItems: NavItem[] = [
             target: "automation-inventory"
           }
         ]
+      },
+      { 
+        label: "Mobile App Development", 
+        description: "Native & cross-platform mobile apps",
+        icon: Smartphone, 
+        action: "navigate",
+        target: "app-dev"
+      },
+      { 
+        label: "Web Application Development", 
+        description: "Full-stack web applications",
+        icon: Monitor, 
+        action: "navigate",
+        target: "web-app"
+      },
+      { 
+        label: "Website Development", 
+        description: "Modern responsive websites",
+        icon: Globe, 
+        action: "navigate",
+        target: "web-dev"
+      },
+      { 
+        label: "SEO Solutions", 
+        description: "Search engine optimization",
+        icon: Search, 
+        action: "navigate",
+        target: "seo"
       }
     ]
   },
