@@ -14,7 +14,7 @@ export const contactInfo = [
     value: "hello@yourname.dev",
     href: "mailto:hello@yourname.dev",
     color: "text-blue-500"
-  },
+  }, 
   {
     icon: Phone,
     label: "Phone",
