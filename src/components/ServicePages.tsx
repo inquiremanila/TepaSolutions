@@ -1,8 +1,11 @@
+import React from "react";
+
 import { motion } from 'motion/react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Progress } from './ui/progress';
+
 import { 
   ArrowLeft,
   Smartphone,
