@@ -47,7 +47,7 @@ export const navItems: NavItem[] = [
   { label: "Home", href: "#", icon: Home },
   { 
     label: "Services", 
-    href: "#services", 
+    href: "#services",  
     icon: Briefcase,
     hasDropdown: true,
     dropdownItems: [
