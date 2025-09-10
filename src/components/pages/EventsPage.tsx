@@ -162,7 +162,7 @@ export function EventsPage({ onNavigate }: EventsPageProps) {
     experience: '',
     expectations: '',
     dietaryRestrictions: ''
-  });
+  }); 
 
   const [showNotifyForm, setShowNotifyForm] = useState(false);
   const [notifyEmail, setNotifyEmail] = useState('');
