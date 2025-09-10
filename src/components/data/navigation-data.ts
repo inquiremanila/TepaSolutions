@@ -1,9 +1,9 @@
 import { 
   Home, 
   Briefcase, 
-  FolderOpen,
+  BookOpen,
   Bot, 
-  Mail,
+  Building,
   Smartphone,
   Globe,
   Monitor,
@@ -15,7 +15,17 @@ import {
   Megaphone,
   DollarSign,
   Users,
-  Package
+  Package,
+  FileText,
+  Calendar,
+  Info,
+  MapPin,
+  Phone,
+  Mail,
+  HeadphonesIcon,
+  Target,
+  Factory,
+  Heart
 } from 'lucide-react';
 
 interface SubItem {
@@ -38,6 +48,7 @@ interface DropdownItem {
 interface NavItem {
   label: string;
   href: string;
+
   icon: LucideIcon;
   hasDropdown?: boolean;
   dropdownItems?: DropdownItem[];
@@ -46,8 +57,8 @@ interface NavItem {
 export const navItems: NavItem[] = [
   { label: "Home", href: "#", icon: Home },
   { 
-    label: "Services", 
-    href: "#services",  
+    label: "What we offer", 
+    href: "#portfolio", 
     icon: Briefcase,
     hasDropdown: true,
     dropdownItems: [
@@ -132,6 +143,85 @@ export const navItems: NavItem[] = [
       }
     ]
   },
-  { label: "Projects", href: "#portfolio", icon: FolderOpen },
-  { label: "Contact", href: "#contact", icon: Mail }
+  { 
+    label: "Resources", 
+    href: "#resources", 
+    icon: BookOpen,
+    hasDropdown: true,
+    dropdownItems: [
+      { 
+        label: "Articles & Insights", 
+        description: "Industry insights and best practices",
+        icon: FileText, 
+        action: "navigate",
+        target: "articles"
+      },
+      { 
+        label: "Events", 
+        description: "Upcoming events and webinars",
+        icon: Calendar, 
+        action: "navigate",
+        target: "events"
+      },
+      { 
+        label: "Volunteer with Us", 
+        description: "Join our mission to educate the youth",
+        icon: Heart, 
+        action: "navigate",
+        target: "contact-volunteer"
+      }
+    ]
+  },
+  { 
+    label: "About Tepa", 
+    href: "#about", 
+    icon: Building,
+    hasDropdown: true,
+    dropdownItems: [
+      { 
+        label: "Learn about Tepa", 
+        description: "Our story, mission and values",
+        icon: Info, 
+        action: "navigate",
+        target: "about-company"
+      },
+      { 
+        label: "Careers", 
+        description: "Join our growing team",
+        icon: Users, 
+        action: "navigate",
+        target: "careers"
+      },
+      { 
+        label: "Investors", 
+        description: "Investor relations and information",
+        icon: TrendingUp, 
+        action: "navigate",
+        target: "investors"
+      },
+      { 
+        label: "Contact Us", 
+        description: "Get in touch with our team",
+        icon: Phone, 
+        action: "expand",
+        target: "contact",
+        subItems: [
+          {
+            label: "Sales",
+            description: "Talk to our sales team",
+            icon: Phone,
+            action: "navigate",
+            target: "contact-sales"
+          },
+          {
+            label: "Support",
+            description: "Get technical support",
+            icon: HeadphonesIcon,
+            action: "navigate",
+            target: "contact-support"
+          }
+        ]
+      }
+    ]
+  }
 ];

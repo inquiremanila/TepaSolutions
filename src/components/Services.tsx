@@ -18,11 +18,9 @@ export function Services() {
         >
           <Badge className="mb-4">Services</Badge>
           <h2 className="text-3xl md:text-4xl lg:text-5xl mb-4">
-            Our Expert Services
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            From cutting-edge applications to intelligent automation systems, we deliver 
-            comprehensive digital solutions that transform businesses and accelerate growth.
+            
           </p>
         </motion.div>
 

@@ -1,248 +1,287 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown, ChevronRight, ChevronLeft } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { ChevronRight } from 'lucide-react';
+import { useState, useRef, useCallback } from 'react';
 
-interface SubItem {
+export interface DropdownItem {
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   description: string;
-  icon: any;
   action: string;
   target: string;
-}
-
-interface DropdownItem {
-  label: string;
-  description: string;
-  icon: any;
-  action: string;
-  target: string;
-  subItems?: SubItem[];
+  subItems?: DropdownItem[];
 }
 
 interface NavigationDropdownProps {
   items: DropdownItem[];
   onAction: (action: string, target: string) => void;
-  isMobile?: boolean;
+  isMobile: boolean;
 }
 
-export function NavigationDropdown({ items, onAction, isMobile = false }: NavigationDropdownProps) {
-  const [activeSubDropdown, setActiveSubDropdown] = useState<string | null>(null);
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-  const [subDropdownPosition, setSubDropdownPosition] = useState({ top: 0, left: 0 });
-  const [showSubView, setShowSubView] = useState(false);
-  const [currentSubItems, setCurrentSubItems] = useState<SubItem[]>([]);
-  const [currentSubTitle, setCurrentSubTitle] = useState('');
-  const itemRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+interface NavigationDropdownProps {
+  items: DropdownItem[];
+  onAction: (action: string, target: string) => void;
+  isMobile: boolean;
+  mobileSubMenu?: string | null;
+  onMobileSubMenuToggle?: (target: string | null) => void;
+}
 
-  const handleItemClick = (item: DropdownItem) => {
+export function NavigationDropdown({
+  items,
+  onAction,
+  isMobile,
+  mobileSubMenu = null,
+  onMobileSubMenuToggle
+}: NavigationDropdownProps) {
+  // Desktop hover state only
+  const [desktopHoveredItem, setDesktopHoveredItem] = useState<string | null>(null);
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Desktop hover handlers
+  const handleDesktopItemHover = useCallback((item: DropdownItem) => {
+    if (item.subItems && item.action === "expand") {
+      setDesktopHoveredItem(item.target);
+    }
+  }, []);
+
+  const handleDesktopItemLeave = useCallback(() => {
+    setDesktopHoveredItem(null);
+  }, []);
+
+  const handleItemClick = useCallback((item: DropdownItem) => {
     if (item.action === "expand" && item.subItems) {
-      if (isMobile) {
-        // Mobile: transition to subview
-        setCurrentSubItems(item.subItems);
-        setCurrentSubTitle(item.label);
-        setShowSubView(true);
-      } else {
-        // Desktop: don't toggle on click, let hover handle it
-        return;
+      if (isMobile && onMobileSubMenuToggle) {
+        // Mobile: toggle submenu via parent component
+        const newTarget = mobileSubMenu === item.target ? null : item.target;
+        onMobileSubMenuToggle(newTarget);
       }
+      // Desktop: no click action for expandable items (hover handled)
     } else {
+      // Regular navigation action
       onAction(item.action, item.target);
     }
-  };
+  }, [isMobile, onAction, mobileSubMenu, onMobileSubMenuToggle]);
 
-  const handleBackToMain = () => {
-    setShowSubView(false);
-    setCurrentSubItems([]);
-    setCurrentSubTitle('');
-  };
-
-  const handleItemHover = (item: DropdownItem) => {
-    if (!isMobile && item.action === "expand" && item.subItems) {
-      const itemElement = itemRefs.current[item.target];
-      const parentContainer = itemElement?.closest('.p-2'); // Find the parent dropdown container
-      if (itemElement && parentContainer) {
-        const rect = itemElement.getBoundingClientRect();
-        const parentRect = parentContainer.getBoundingClientRect();
-        
-        // Position subgroup to start at the same level as the first service item
-        setSubDropdownPosition({
-          top: 0, // Start at the very top of the parent dropdown container
-          left: parentRect.width
-        });
-      }
-      setHoveredItem(item.target);
-      setActiveSubDropdown(item.target);
-    }
-  };
-
-  const handleItemLeave = () => {
-    if (!isMobile) {
-      setHoveredItem(null);
-      // Don't immediately close, let the submenu handle its own hover
-    }
-  };
-
-  // Mobile: Show subview if active
-  if (isMobile && showSubView) {
+  // Mobile Component - Nested submenu under parent
+  if (isMobile) {
     return (
-      <motion.div 
-        className="p-2"
-        initial={{ x: 300, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ x: 300, opacity: 0 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-      >
-        {/* Back button */}
-        <motion.button
-          onClick={handleBackToMain}
-          className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors text-left mb-2 border-b border-border/50"
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          <ChevronLeft className="w-4 h-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">Back</span>
-        </motion.button>
+      <div className="p-2 space-y-1">
+        {items.map((item, index) => (
+          <div key={item.label}>
+            {item.subItems ? (
+              <>
+                {/* Mobile Parent Item with submenu */}
+                <motion.button
+                  onClick={() => handleItemClick(item)}
+                  className="w-full flex items-center justify-between p-3 text-left hover:bg-accent rounded-lg transition-colors"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <item.icon className="w-4 h-4 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-medium text-foreground text-sm">
+                        {item.label}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {item.description}
+                      </div>
+                    </div>
+                  </div>
+                  <motion.div
+                    animate={{ rotate: mobileSubMenu === item.target ? 90 : 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                  </motion.div>
+                </motion.button>
 
-        {/* Sub-items */}
-        <div className="space-y-1">
-          <div className="text-xs text-muted-foreground mb-3 px-3">
-            {currentSubTitle}
+                {/* Mobile Nested Submenu - appears under parent */}
+                <AnimatePresence>
+                  {mobileSubMenu === item.target && (
+                    <motion.div
+                      className="ml-6 border-l-2 border-border/30 pl-3 space-y-1 mt-1"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {item.subItems.map((subItem, subIndex) => (
+                        <motion.button
+                          key={subItem.label}
+                          onClick={() => onAction(subItem.action, subItem.target)}
+                          className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors text-left"
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.1 + (subIndex * 0.05) }}
+                        >
+                          <div className="w-6 h-6 rounded bg-primary/5 flex items-center justify-center flex-shrink-0">
+                            <subItem.icon className="w-3 h-3 text-primary" />
+                          </div>
+                          <div>
+                            <div className="font-medium text-foreground text-xs">
+                              {subItem.label}
+                            </div>
+                            <div className="text-xs text-muted-foreground line-clamp-1">
+                              {subItem.description}
+                            </div>
+                          </div>
+                        </motion.button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </>
+            ) : (
+              /* Mobile Regular Item */
+              <motion.button
+                onClick={() => handleItemClick(item)}
+                className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors text-left"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.05 }}
+              >
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <item.icon className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <div className="font-medium text-foreground text-sm">
+                    {item.label}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {item.description}
+                  </div>
+                </div>
+              </motion.button>
+            )}
           </div>
-          {currentSubItems.map((subItem, subIndex) => (
-            <motion.button
-              key={subItem.label}
-              onClick={() => onAction(subItem.action, subItem.target)}
-              className="w-full flex items-start gap-3 p-3 rounded-lg hover:bg-accent transition-colors text-left"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: subIndex * 0.05 }}
-              whileHover={{ x: 4 }}
-            >
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <subItem.icon className="w-5 h-5 text-primary" />
-              </div>
-              <div className="flex-1">
-                <div className="font-medium text-foreground">
-                  {subItem.label}
-                </div>
-                <div className="text-sm text-muted-foreground mt-0.5">
-                  {subItem.description}
-                </div>
-              </div>
-            </motion.button>
-          ))}
-        </div>
-      </motion.div>
+        ))}
+      </div>
     );
   }
 
+  // Desktop Component - Wider dropdown with submenu at same level
   return (
-    <div className="p-2 relative">
-      {items.map((dropdownItem, dropdownIndex) => (
-        <div key={dropdownItem.label} className="relative">
-          {dropdownItem.subItems ? (
-            <>
+    <div 
+      className="flex" 
+      ref={containerRef}
+      style={{ 
+        minWidth: '800px', 
+        maxWidth: 'min(90vw, 1000px)',
+        width: '800px'
+      }}
+    >
+      {/* Main Services Panel */}
+      <div className="p-4 flex-1 min-w-96">
+        {items.map((item, index) => (
+          <div key={item.label} className="relative">
+            {item.subItems ? (
+              /* Desktop Parent Item with hover submenu */
               <motion.div
-                ref={el => itemRefs.current[dropdownItem.target] = el}
-                className="relative"
-                onMouseEnter={() => handleItemHover(dropdownItem)}
-                onMouseLeave={handleItemLeave}
+                onMouseEnter={() => handleDesktopItemHover(item)}
+                onMouseLeave={handleDesktopItemLeave}
               >
                 <motion.button
-                  onClick={() => handleItemClick(dropdownItem)}
+                  onClick={() => handleItemClick(item)}
                   className="w-full flex items-start gap-3 p-3 rounded-lg hover:bg-accent transition-colors text-left group"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: dropdownIndex * 0.05 }}
+                  transition={{ delay: index * 0.05 }}
                   whileHover={{ x: 4 }}
                 >
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <dropdownItem.icon className="w-5 h-5 text-primary" />
+                    <item.icon className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1">
                     <div className="font-medium text-foreground flex items-center justify-between">
-                      {dropdownItem.label}
-                      <ChevronRight className="w-3 h-3 opacity-50 group-hover:opacity-100" />
+                      <span>{item.label}</span>
+                      <ChevronRight className="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity" />
                     </div>
-                    <div className="text-sm text-muted-foreground mt-0.5">
-                      {dropdownItem.description}
+                    <div className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
+                      {item.description}
                     </div>
                   </div>
                 </motion.button>
               </motion.div>
+            ) : (
+              /* Desktop Regular Item */
+              <motion.button
+                onClick={() => handleItemClick(item)}
+                className="w-full flex items-start gap-3 p-3 rounded-lg hover:bg-accent transition-colors text-left"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.05 }}
+                whileHover={{ x: 4 }}
+              >
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <item.icon className="w-5 h-5 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <div className="font-medium text-foreground">
+                    {item.label}
+                  </div>
+                  <div className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
+                    {item.description}
+                  </div>
+                </div>
+              </motion.button>
+            )}
+          </div>
+        ))}
+      </div>
 
-              {/* Desktop Sub-dropdown (positioned to the right) */}
-              {!isMobile && (
-                <AnimatePresence>
-                  {activeSubDropdown === dropdownItem.target && (
-                    <motion.div
-                      className="absolute z-50 w-80 bg-background border rounded-lg shadow-lg"
-                      style={{
-                        top: subDropdownPosition.top,
-                        left: subDropdownPosition.left,
-                      }}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -10 }}
-                      transition={{ duration: 0.2 }}
-                      onMouseEnter={() => setActiveSubDropdown(dropdownItem.target)}
-                      onMouseLeave={() => setActiveSubDropdown(null)}
-                    >
-                      <div className="p-2">
-                        {dropdownItem.subItems.map((subItem, subIndex) => (
-                          <motion.button
-                            key={subItem.label}
-                            onClick={() => onAction(subItem.action, subItem.target)}
-                            className="w-full flex items-start gap-3 p-3 rounded-lg hover:bg-accent transition-colors text-left"
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: subIndex * 0.03 }}
-                            whileHover={{ x: 4 }}
-                          >
-                            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                              <subItem.icon className="w-5 h-5 text-primary" />
-                            </div>
-                            <div className="flex-1">
-                              <div className="font-medium text-foreground">
-                                {subItem.label}
-                              </div>
-                              <div className="text-sm text-muted-foreground mt-0.5">
-                                {subItem.description}
-                              </div>
-                            </div>
-                          </motion.button>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              )}
-            </>
-          ) : (
-            <motion.button
-              onClick={() => onAction(dropdownItem.action, dropdownItem.target)}
-              className="w-full flex items-start gap-3 p-3 rounded-lg hover:bg-accent transition-colors text-left"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: dropdownIndex * 0.05 }}
-              whileHover={{ x: 4 }}
-            >
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <dropdownItem.icon className="w-5 h-5 text-primary" />
-              </div>
-              <div className="flex-1">
-                <div className="font-medium text-foreground">
-                  {dropdownItem.label}
-                </div>
-                <div className="text-sm text-muted-foreground mt-0.5">
-                  {dropdownItem.description}
-                </div>
-              </div>
-            </motion.button>
-          )}
-        </div>
-      ))}
+      {/* Desktop Submenu Panel - Same level as main menu */}
+      <AnimatePresence>
+        {desktopHoveredItem && (
+          <motion.div
+            className="border-l border-border/50 flex-1 min-w-96 bg-popover/50 backdrop-blur-sm"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.15 }}
+            onMouseEnter={() => setDesktopHoveredItem(desktopHoveredItem)}
+            onMouseLeave={handleDesktopItemLeave}
+          >
+            {items.map((item) => {
+              if (item.target === desktopHoveredItem && item.subItems) {
+                return (
+                  <div key={item.target} className="p-4">
+                    {item.subItems.map((subItem, subIndex) => (
+                      <motion.button
+                        key={subItem.label}
+                        onClick={() => onAction(subItem.action, subItem.target)}
+                        className="w-full flex items-start gap-3 p-3 rounded-lg hover:bg-accent transition-colors text-left focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: subIndex * 0.03 }}
+                        whileHover={{ x: 4 }}
+                        role="button"
+                        tabIndex={0}
+                      >
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <subItem.icon className="w-5 h-5 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-foreground truncate">
+                            {subItem.label}
+                          </div>
+                          <div className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
+                            {subItem.description}
+                          </div>
+                        </div>
+                      </motion.button>
+                    ))}
+                  </div>
+                );
+              }
+              return null;
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

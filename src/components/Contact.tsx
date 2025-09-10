@@ -7,8 +7,7 @@ import { Badge } from './ui/badge';
 import { 
   Calendar,
   MessageSquare,
-  Zap,
-  Github
+  Zap
 } from 'lucide-react';
 import { useState } from 'react';
 import { contactInfo, socialLinks } from './data/contact-data';
@@ -216,15 +215,6 @@ export function Contact() {
                   <Button variant="outline" className="w-full justify-start group">
                     <Calendar className="size-4 mr-2 group-hover:rotate-12 transition-transform" />
                     Schedule Free Discovery Call
-                  </Button>
-                </motion.div>
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Button variant="outline" className="w-full justify-start group">
-                    <Github className="size-4 mr-2 group-hover:rotate-12 transition-transform" />
-                    View Our Work
                   </Button>
                 </motion.div>
               </CardContent>

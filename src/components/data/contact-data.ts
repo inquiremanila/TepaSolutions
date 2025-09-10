@@ -2,30 +2,30 @@ import {
   Mail, 
   Phone, 
   MapPin, 
-  Github, 
+  MessageCircle, 
   Linkedin, 
-  Twitter
+  Facebook
 } from 'lucide-react';
 
 export const contactInfo = [
   {
     icon: Mail,
     label: "Email",
-    value: "hello@yourname.dev",
-    href: "mailto:hello@yourname.dev",
+    value: "inquire@tepasolutions.asia",
+    href: "mailto:inquire@tepasolutions.asia",
     color: "text-blue-500"
-  }, 
+  },
   {
     icon: Phone,
     label: "Phone",
-    value: "+1 (555) 123-4567",
-    href: "tel:+15551234567",
+    value: "+63 912 345 678",
+    href: "tel:+639123456789",
     color: "text-green-500"
   },
   {
     icon: MapPin,
     label: "Location",
-    value: "San Francisco, CA",
+    value: "BGC Taguig, Philippines",
     href: "#",
     color: "text-red-500"
   }
@@ -33,21 +33,21 @@ export const contactInfo = [
 
 export const socialLinks = [
   {
-    icon: Github,
-    label: "GitHub",
-    href: "https://github.com",
-    color: "hover:text-gray-900 dark:hover:text-gray-100"
+    icon: MessageCircle,
+    label: "WhatsApp",
+    href: "https://wa.me/639123456789",
+    color: "hover:text-green-600"
   },
   {
     icon: Linkedin,
     label: "LinkedIn", 
-    href: "https://linkedin.com",
+    href: "https://linkedin.com/company/tepasolutions",
     color: "hover:text-blue-600"
   },
   {
-    icon: Twitter,
-    label: "Twitter",
-    href: "https://twitter.com",
-    color: "hover:text-blue-400"
+    icon: Facebook,
+    label: "Facebook",
+    href: "https://facebook.com/tepasolutions",
+    color: "hover:text-blue-500"
   }
 ];

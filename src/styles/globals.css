@@ -126,6 +126,11 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', system-ui, sans-serif;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -186,4 +191,220 @@
 
 html {
   font-size: var(--font-size);
+}
+
+/* Navigation Dropdown Utilities */
+@layer utilities {
+  /* Text truncation for long content */
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+  
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  
+  /* Responsive min/max widths for viewport constraints */
+  .min-w-72 {
+    min-width: 18rem;
+  }
+  
+  .max-w-80 {
+    max-width: 20rem;
+  }
+  
+  .max-w-96 {
+    max-width: 24rem;
+  }
+}
+
+/* SEO and Performance Optimizations */
+@layer base {
+  /* Improve Core Web Vitals */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Optimize font loading for better CLS and FCP */
+  @font-face {
+    font-display: swap;
+    font-family: system;
+  }
+  
+  /* Critical CSS - Improve First Contentful Paint */
+  body {
+    @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', system-ui, sans-serif;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Improve image loading and LCP */
+  img {
+    loading: lazy;
+    decoding: async;
+    height: auto;
+    max-width: 100%;
+  }
+  
+  /* Critical images should load eager */
+  img[data-priority="high"] {
+    loading: eager;
+    fetchpriority: high;
+  }
+  
+  /* Accessibility improvements for SEO */
+  *:focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+  
+  /* Skip to content link for accessibility */
+  .skip-to-content {
+    @apply absolute -top-10 left-4 z-50 bg-primary text-primary-foreground px-4 py-2 rounded;
+    @apply transform -translate-y-16 transition-transform duration-300;
+  }
+  
+  .skip-to-content:focus {
+    @apply translate-y-0;
+  }
+  
+  /* Reduce motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    :root {
+      --color-border: #000000;
+      --color-ring: #0066cc;
+    }
+    
+    .dark {
+      --color-border: #ffffff;
+      --color-ring: #66b3ff;
+    }
+  }
+  
+  /* Print styles for better document SEO */
+  @media print {
+    body {
+      background: white !important;
+      color: black !important;
+    }
+    
+    .no-print {
+      display: none !important;
+    }
+    
+    a::after {
+      content: " (" attr(href) ")";
+      font-size: 0.8em;
+      color: #666;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+      page-break-after: avoid;
+      page-break-inside: avoid;
+    }
+  }
+}
+
+/* Responsive Navigation Dropdown Best Practices */
+@layer components {
+  /* Base dropdown responsive behavior */
+  .navigation-dropdown {
+    /* Ensure proper spacing and overflow handling */
+    max-width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Desktop dropdown constraints */
+  @media (min-width: 768px) {
+    .navigation-dropdown {
+      /* Prevent dropdown from extending beyond viewport */
+      max-width: min(calc(100vw - 4rem), 800px);
+    }
+  }
+  
+  /* Mobile dropdown full-width behavior */
+  @media (max-width: 767px) {
+    .navigation-dropdown {
+      width: 100%;
+      max-width: none;
+    }
+  }
+  
+  /* Touch-friendly interactions for mobile */
+  @media (pointer: coarse) {
+    .navigation-dropdown button {
+      min-height: 44px; /* WCAG AA minimum touch target */
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+    }
+  }
+  
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .navigation-dropdown button {
+      border: 1px solid transparent;
+    }
+    
+    .navigation-dropdown button:hover,
+    .navigation-dropdown button:focus {
+      border-color: currentColor;
+    }
+  }
+  
+  /* Reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .navigation-dropdown * {
+      transition-duration: 0.1s !important;
+      animation-duration: 0.1s !important;
+    }
+  }
+  
+  /* Focus management for accessibility */
+  .navigation-dropdown button:focus {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+  
+  /* Submenu positioning constraints */
+  .navigation-submenu {
+    /* Ensure submenu doesn't overflow viewport */
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+    
+    /* Custom scrollbar for webkit browsers */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+  
+  .navigation-submenu::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .navigation-submenu::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .navigation-submenu::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 2px;
+  }
 }

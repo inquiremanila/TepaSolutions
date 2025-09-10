@@ -1,11 +1,8 @@
-import React from "react";
-
 import { motion } from 'motion/react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Progress } from './ui/progress';
-
 import { 
   ArrowLeft,
   Smartphone,
@@ -349,6 +346,23 @@ export function ServicePage({ service, onBackToMain }: ServicePageProps) {
   };
 
   const data = serviceData[service];
+  
+  // Safety check to prevent errors if service is not found
+  if (!data) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-muted/30 to-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Service Not Found</h1>
+          <p className="text-muted-foreground mb-6">The requested service could not be found.</p>
+          <Button onClick={onBackToMain}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Go Back
+          </Button>
+        </div>
+      </div>
+    );
+  }
+  
   const ServiceIcon = data.icon;
 
   return (

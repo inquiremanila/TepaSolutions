@@ -1,0 +1,103 @@
+User-agent: *
+Allow: /
+
+# Main pages
+Allow: /
+Allow: /services/
+Allow: /about/
+Allow: /contact/
+Allow: /careers/
+Allow: /events/
+Allow: /articles/
+Allow: /investors/
+Allow: /automation/
+
+# Service pages
+Allow: /services/app-development/
+Allow: /services/web-development/
+Allow: /services/seo-services/
+Allow: /services/business-automation/
+
+# Contact forms
+Allow: /contact/sales/
+Allow: /contact/support/
+Allow: /contact/volunteer/
+Allow: /contact/events/
+Allow: /contact/investors/
+
+# Block admin and temporary files
+Disallow: /admin/
+Disallow: /temp/
+Disallow: *.tmp$
+Disallow: /private/
+Disallow: /api/
+Disallow: /temp_*
+
+# Block duplicate content
+Disallow: /*?*
+Disallow: /*&*
+Disallow: /search?*
+
+# Allow important resources
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: /assets/
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.svg$
+Allow: /*.webp$
+Allow: /*.ico$
+Allow: /*.woff$
+Allow: *.woff2$
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://tepasolutions.asia/sitemap.xml
+Sitemap: https://tepasolutions.asia/sitemap-images.xml
+Sitemap: https://tepasolutions.asia/sitemap-services.xml
+
+# Special bot instructions
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 2
+
+# Social media crawlers
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# Block problematic bots
+User-agent: CCBot
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10

@@ -30,7 +30,7 @@ export function Hero() {
             whileTap={{ scale: 0.95 }}
           >
             <Sparkles className="size-4 text-primary" />
-            <span className="text-sm">Taking on select client projects</span>
+            <span className="text-sm">Start Here</span>
           </motion.div>
 
           <motion.h1
@@ -39,7 +39,7 @@ export function Hero() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            Digital{' '}
+            Build{' '}
             <motion.span
               className="text-primary inline-block"
               animate={{ 
@@ -53,10 +53,10 @@ export function Hero() {
                 ease: "easeInOut"
               }}
             >
-              Innovation
+              Smarter
             </motion.span>
             <br />
-            Agency
+            Solutions
           </motion.h1>
 
           <motion.p
@@ -65,8 +65,7 @@ export function Hero() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            We transform businesses with cutting-edge web applications, mobile solutions, and intelligent automation systems. 
-            Partner with our expert team to accelerate your digital transformation and unlock unprecedented growth.
+            Simplifying complexity with intelligent digital systems.
           </motion.p>
 
           <motion.div

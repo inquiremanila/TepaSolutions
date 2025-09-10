@@ -1,8 +1,8 @@
 export const projects = [
   {
     id: 1,
-    title: "QuickEats Delivery",
-    description: "Modern food delivery app with real-time tracking, seamless ordering, and intuitive user experience. Features include restaurant browsing, cart management, and order tracking.",
+    title: "Mobile Application",
+    description: "Comprehensive mobile app solution with intuitive user experience, real-time functionality, and seamless performance. Features advanced UI/UX design, secure payment integration, and cross-platform compatibility.",
     type: "Mobile App",
     category: "mobile",
     color: "from-orange-500/20 to-red-500/20",
@@ -11,22 +11,22 @@ export const projects = [
   },
   {
     id: 2,
-    title: "QuickEats Dashboard",
-    description: "Restaurant owner/admin portal for managing orders, tracking revenue, analyzing performance, and updating menu items. Real-time order management with comprehensive analytics.",
+    title: "Business Dashboard",
+    description: "Comprehensive admin portal for managing operations, tracking performance, analyzing data, and optimizing business processes. Real-time management system with powerful analytics and reporting capabilities.",
     type: "Web Application", 
     category: "desktop",
     color: "from-green-500/20 to-orange-500/20",
-    tags: ["React", "Dashboard", "Restaurant Management", "Analytics", "Order Tracking"],
+    tags: ["React", "Dashboard", "Business Management", "Analytics", "Real-time"],
     demoComponent: "AdminDashboardDemo"
   },
   {
     id: 3,
-    title: "ISmile Dental Clinic",
-    description: "Modern, friendly dental clinic website with comprehensive services showcase, online appointment booking, patient testimonials, and engaging animations that create a welcoming digital experience.",
+    title: "Business Website",
+    description: "Professional, modern business website with comprehensive services showcase, online booking system, client testimonials, and engaging animations that create an exceptional digital experience.",
     type: "Website",
     category: "desktop",
     color: "from-blue-500/20 to-teal-500/20", 
-    tags: ["React", "Healthcare", "Booking System", "Animations", "Responsive Design"],
+    tags: ["React", "Professional Services", "Booking System", "Animations", "Responsive Design"],
     demoComponent: "DentalWebsiteDemo"
   },
   {
