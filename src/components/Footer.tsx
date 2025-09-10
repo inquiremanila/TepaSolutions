@@ -155,7 +155,11 @@ export function Footer({ onNavigate }: FooterProps) {
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <span className="text-primary-foreground font-bold text-sm">T</span>
+                  <div className="flex gap-1">
+                    <div className="w-1.5 h-1.5 bg-primary-foreground rounded-full"></div>
+                    <div className="w-1.5 h-1.5 bg-primary-foreground rounded-full"></div>
+                    <div className="w-1.5 h-1.5 bg-primary-foreground rounded-full"></div>
+                  </div>
                 </div>
                 <span className="font-semibold">Tepa Solutions</span>
               </div>

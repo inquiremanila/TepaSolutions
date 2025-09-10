@@ -12,7 +12,7 @@ export interface SitemapUrl {
   }>;
 }
 
-const baseUrl = 'https://tepasolutions.com';
+const baseUrl = 'https://tepasolutions.asia';
 const currentDate = new Date().toISOString();
 
 // Main website structure
@@ -39,13 +39,7 @@ export const sitemapUrls: SitemapUrl[] = [
 
   // Main service categories - high priority
   {
-    url: `${baseUrl}/services`,
-    lastModified: currentDate,
-    changeFrequency: 'weekly',
-    priority: 0.9
-  },
-  {
-    url: `${baseUrl}/services/mobile-app-development`,
+    url: `${baseUrl}/mobile-app-development`,
     lastModified: currentDate,
     changeFrequency: 'weekly',
     priority: 0.9,
@@ -58,7 +52,7 @@ export const sitemapUrls: SitemapUrl[] = [
     ]
   },
   {
-    url: `${baseUrl}/services/web-application-development`,
+    url: `${baseUrl}/web-application-development`,
     lastModified: currentDate,
     changeFrequency: 'weekly', 
     priority: 0.9,
@@ -71,19 +65,19 @@ export const sitemapUrls: SitemapUrl[] = [
     ]
   },
   {
-    url: `${baseUrl}/services/website-development`,
+    url: `${baseUrl}/website-development`,
     lastModified: currentDate,
     changeFrequency: 'weekly',
     priority: 0.9
   },
   {
-    url: `${baseUrl}/services/seo-services`,
+    url: `${baseUrl}/seo-services`,
     lastModified: currentDate,
     changeFrequency: 'weekly',
     priority: 0.9
   },
   {
-    url: `${baseUrl}/services/business-automation`,
+    url: `${baseUrl}/business-automation`,
     lastModified: currentDate,
     changeFrequency: 'weekly',
     priority: 0.9
@@ -91,37 +85,37 @@ export const sitemapUrls: SitemapUrl[] = [
 
   // Automation services - specific solutions
   {
-    url: `${baseUrl}/services/sales-automation`,
+    url: `${baseUrl}/business-automation/sales-process-automation`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.8
   },
   {
-    url: `${baseUrl}/services/marketing-automation`,
+    url: `${baseUrl}/business-automation/marketing-automation`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.8
   },
   {
-    url: `${baseUrl}/services/customer-support-automation`,
+    url: `${baseUrl}/business-automation/customer-support-automation`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.8
   },
   {
-    url: `${baseUrl}/services/hr-automation`,
+    url: `${baseUrl}/business-automation/hr-automation`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.8
   },
   {
-    url: `${baseUrl}/services/finance-automation`,
+    url: `${baseUrl}/business-automation/finance-automation`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.8
   },
   {
-    url: `${baseUrl}/services/inventory-automation`,
+    url: `${baseUrl}/business-automation/inventory-management-automation`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.8
@@ -129,7 +123,7 @@ export const sitemapUrls: SitemapUrl[] = [
 
   // Company pages - important for brand
   {
-    url: `${baseUrl}/about`,
+    url: `${baseUrl}/learn-about-tepa`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.8,
@@ -145,6 +139,12 @@ export const sitemapUrls: SitemapUrl[] = [
         title: 'Modern Tech Workspace'
       }
     ]
+  },
+  {
+    url: `${baseUrl}/volunteer-with-us`,
+    lastModified: currentDate,
+    changeFrequency: 'monthly',
+    priority: 0.6
   },
   {
     url: `${baseUrl}/careers`,
@@ -183,62 +183,34 @@ export const sitemapUrls: SitemapUrl[] = [
 
   // Contact pages - conversion focused
   {
-    url: `${baseUrl}/contact`,
+    url: `${baseUrl}/contact-us/sales`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.8
   },
   {
-    url: `${baseUrl}/contact/sales`,
-    lastModified: currentDate,
-    changeFrequency: 'monthly',
-    priority: 0.8
-  },
-  {
-    url: `${baseUrl}/contact/support`,
+    url: `${baseUrl}/contact-us/support`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.7
   },
   {
-    url: `${baseUrl}/contact/volunteer`,
+    url: `${baseUrl}/contact-us/volunteer`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.5
   },
   {
-    url: `${baseUrl}/contact/events`,
+    url: `${baseUrl}/contact-us/event-hosting`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.5
   },
   {
-    url: `${baseUrl}/contact/investors`,
+    url: `${baseUrl}/contact-us/investors`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.6
-  },
-
-  // Portfolio/Case studies (if available)
-  {
-    url: `${baseUrl}/portfolio`,
-    lastModified: currentDate,
-    changeFrequency: 'monthly',
-    priority: 0.7
-  },
-
-  // Legal pages (important for trust)
-  {
-    url: `${baseUrl}/privacy-policy`,
-    lastModified: currentDate,
-    changeFrequency: 'yearly',
-    priority: 0.3
-  },
-  {
-    url: `${baseUrl}/terms-of-service`,
-    lastModified: currentDate,
-    changeFrequency: 'yearly',
-    priority: 0.3
   }
 ];
 

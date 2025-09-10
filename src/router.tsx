@@ -1,5 +1,5 @@
 // Router system for multi-page architecture
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigation } from './components/Navigation';
 import { Footer } from './components/Footer';
 import { SEOHead } from './components/SEOHead';
@@ -18,13 +18,13 @@ import { SupportAutomationPage } from './pages/SupportAutomationPage';
 import { HRAutomationPage } from './pages/HRAutomationPage';
 import { FinanceAutomationPage } from './pages/FinanceAutomationPage';
 import { InventoryAutomationPage } from './pages/InventoryAutomationPage';
-import { AboutPage } from './components/pages/AboutPage';
-import { CareersPage } from './components/pages/CareersPage';
-import { EventsPage } from './components/pages/EventsPage';
-import { ArticlesPage } from './components/pages/ArticlesPage';
-import { InvestorsPage } from './components/pages/InvestorsPage';
-import { WhoWeServePage } from './components/pages/WhoWeServePage';
-import { VolunteerPage } from './components/pages/VolunteerPage';
+import { AboutPage } from './pages/AboutPage';
+import { CareersPage } from './pages/CareersPage';
+import { EventsPage } from './pages/EventsPage';
+import { ArticlesPage } from './pages/ArticlesPage';
+import { InvestorsPage } from './pages/InvestorsPage';
+import { WhoWeServePage } from './pages/WhoWeServePage';
+import { VolunteerPage } from './pages/VolunteerPage';
 import { ContactSalesPage } from './pages/ContactSalesPage';
 import { ContactSupportPage } from './pages/ContactSupportPage';
 import { ContactVolunteerPage } from './pages/ContactVolunteerPage';
@@ -35,7 +35,7 @@ import { NotFoundPage } from './pages/NotFoundPage';
 // Route configuration
 export interface RouteConfig {
   path: string;
-  component: React.ComponentType<any>;
+  component: React.FC<any>;
   title: string;
   description: string;
   keywords: string;
