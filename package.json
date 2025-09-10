@@ -1,6 +1,7 @@
 {
     "name": "tepasolutions",
     "version": "0.1.0",
+    "type": "module",
     "private": true,
     "dependencies": {
         "@radix-ui/react-accordion": "^1.2.3",
@@ -30,6 +31,8 @@
         "@radix-ui/react-toggle-group": "^1.1.2",
         "@radix-ui/react-tooltip": "^1.1.8",
         "@supabase/supabase-js": "^2.44.0",
+        "@tailwindcss/postcss": "^4.1.13",
+        "autoprefixer": "^10.4.21",
         "class-variance-authority": "^0.7.1",
         "clsx": "*",
         "cmdk": "^1.1.1",
@@ -39,6 +42,7 @@
         "lucide-react": "^0.487.0",
         "motion": "*",
         "next-themes": "^0.4.6",
+        "postcss": "^8.5.6",
         "react": "^18.3.1",
         "react-day-picker": "^8.10.1",
         "react-dom": "^18.3.1",
@@ -47,6 +51,7 @@
         "recharts": "^2.15.2",
         "sonner": "^2.0.3",
         "tailwind-merge": "*",
+        "tailwindcss": "^4.1.13",
         "vaul": "^1.1.2"
     },
     "devDependencies": {

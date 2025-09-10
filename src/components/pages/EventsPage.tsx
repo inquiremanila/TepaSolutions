@@ -33,7 +33,7 @@ const events = [
     instructor: "Jake Martinez",
     instructorRole: "Senior Game Developer",
     level: "Beginner",
-    image: "https://images.unsplash.com/photo-1704244377777-fc9d78f11643?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb2Jsb3glMjBnYW1lJTIwZGV2ZWxvcG1lbnR8ZW58MXx8fHwxNzU3NDUwMzU2fDA&ixlib=rb-4.1.0&q=80&w=1080",    certificate: "Completion Certificate",
+    image: "/images/Roblox_game_development_workshop_image_563b57d9.png",    certificate: "Completion Certificate",
     topics: [
       "Introduction to Roblox Studio",
       "Basic Lua scripting concepts",

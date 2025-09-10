@@ -1,0 +1,39 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://tepasolutions.asia/sitemap.xml
+
+# Preferred URLs
+User-agent: *
+Crawl-delay: 1
+
+# Allow search engine bots to crawl all pages
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+# Block unnecessary crawling of certain file types
+User-agent: *
+Disallow: /*.js$
+Disallow: /*.css$
+Disallow: /*.json$
+Disallow: /api/
+Disallow: /.git/
+Disallow: /node_modules/
+Disallow: /build/
+Disallow: /dist/

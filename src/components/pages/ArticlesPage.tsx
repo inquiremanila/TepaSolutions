@@ -15,6 +15,7 @@ const articles = [
     id: 1,
     title: "How AI is Transforming the Workforce in 2025",
     excerpt: "Artificial intelligence is no longer a distant promise—it's reshaping workplaces right now. From smarter automation to personalized employee experiences, here's how businesses can thrive in the AI-driven era.",
+    image: "/images/AI_workplace_transformation_hero_image_6692af29.png",
     content: `
       <h2>The AI Revolution in the Workplace</h2>
       <p>In 2025, artificial intelligence isn't just changing how we work—it's redefining what work means. AI is no longer limited to automating routine tasks. It's becoming a partner in creativity, strategy, and decision-making, opening up opportunities that were once unimaginable.</p>
@@ -69,6 +70,7 @@ const articles = [
     id: 2,
     title: "iPhone 17 Series: Apple's Boldest Leap Yet",
     excerpt: "Apple has officially unveiled the iPhone 17 lineup, introducing the ultra-slim iPhone Air alongside major design and performance upgrades across the series. Here's everything you need to know.",
+    image: "/images/iPhone_17_product_hero_image_42303541.png",
     content: `
       <h2>A Redesign Years in the Making</h2>
       <p>Apple's iPhone 17 launch marks its most dramatic update since the iPhone X. With four models—the iPhone 17, iPhone 17 Pro, iPhone 17 Pro Max, and the all-new iPhone Air—Apple is pushing the limits of design, performance, and everyday usability.</p>
@@ -110,6 +112,7 @@ const articles = [
     id: 3,
     title: "Quantum Computing's Magic State Breakthrough: 2025's Game-Changer",
     excerpt: "After 20 years of research, scientists achieve the 'magic state' quantum computing milestone with 0.000015% error rates. This breakthrough could revolutionize everything from drug discovery to financial modeling.",
+    image: "/images/Quantum_computing_breakthrough_lab_image_da0b045d.png",
     content: `
       <h2>The Quantum Leap We've Been Waiting For</h2>
       <p>2025 has officially become the year quantum computing moved from laboratory curiosity to practical reality. Scientists have achieved a world record quantum computer error rate of 0.000015%, marking a pivotal breakthrough that could lead to smaller, faster, and more reliable quantum machines.</p>
@@ -440,6 +443,16 @@ export function ArticlesPage({ onNavigate }: ArticlesPageProps) {
                 ))}
               </div>
               
+              {article.image && (
+                <div className="aspect-[2/1] w-full overflow-hidden rounded-lg mb-6">
+                  <img 
+                    src={article.image} 
+                    alt={article.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              
               <h1 className="text-4xl md:text-5xl font-bold leading-tight">
                 {article.title}
               </h1>
@@ -473,7 +486,7 @@ export function ArticlesPage({ onNavigate }: ArticlesPageProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="prose prose-lg max-w-none dark:prose-invert"
+              className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-headings:text-foreground prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-6 prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-6 prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-4 prose-h4:text-lg prose-h4:mt-6 prose-h4:mb-3 prose-ul:my-6 prose-li:my-2 prose-blockquote:border-l-primary prose-blockquote:bg-muted/20 prose-blockquote:p-4 prose-blockquote:rounded-r-lg prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground"
               dangerouslySetInnerHTML={{ __html: article.content }}
             />
             
@@ -626,15 +639,24 @@ export function ArticlesPage({ onNavigate }: ArticlesPageProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="h-full hover:shadow-lg transition-shadow duration-300 cursor-pointer" onClick={() => setSelectedArticle(article.id)}>
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-2">
+                <Card className="h-full hover:shadow-lg transition-shadow duration-300 cursor-pointer overflow-hidden" onClick={() => setSelectedArticle(article.id)}>
+                  {article.image && (
+                    <div className="aspect-video w-full overflow-hidden">
+                      <img 
+                        src={article.image} 
+                        alt={article.title}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  )}
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between mb-3">
                       <Badge variant="outline">{article.category}</Badge>
                       <span className="text-xs text-muted-foreground">
                         {new Date(article.date).toLocaleDateString()}
                       </span>
                     </div>
-                    <CardTitle className="line-clamp-2">{article.title}</CardTitle>
+                    <CardTitle className="line-clamp-2 text-lg leading-tight">{article.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-muted-foreground mb-4 line-clamp-3">

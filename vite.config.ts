@@ -57,7 +57,16 @@
       outDir: 'build',
     },
     server: {
-      port: 3000,
-      open: true,
+      port: 5000,
+      host: '0.0.0.0',
+      allowedHosts: [
+        '.replit.dev',
+        '.repl.co',
+        'localhost'
+      ],
+      hmr: {
+        host: 'localhost',
+        clientPort: 5000
+      }
     },
   });

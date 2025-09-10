@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navigation } from './components/Navigation';
 import { Hero } from './components/Hero';
 import { Services } from './components/Services';
@@ -17,6 +17,7 @@ import { InvestorsPage } from './components/pages/InvestorsPage';
 import { WhoWeServePage } from './components/pages/WhoWeServePage';
 import { SEOHead } from './components/SEOHead';
 import { SEO_CONFIG, createBreadcrumbs } from './utils/seo-config';
+import { createArticleStructuredData, createServiceStructuredData } from './components/SEOHead';
 import { Toaster } from "./components/ui/sonner";
 
 type PageType = 'main' | 'automation' | 'service' | 'contact-sales' | 'contact-support' | 'contact-volunteer' | 'contact-event-host' | 'contact-investor' | 'articles' | 'events' | 'about-company' | 'careers' | 'investors' | 'business-size' | 'industry' | 'who-we-serve';
