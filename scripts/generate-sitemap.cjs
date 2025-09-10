@@ -4,7 +4,26 @@ const path = require('path');
 const baseUrl = 'https://tepasolutions.asia';
 const currentDate = new Date().toISOString();
 
-// Routes that match the actual application routes
+// Import data from TypeScript files (simplified for Node.js)
+const articlesData = [
+  { id: 'how-ai-is-transforming-workforce-in-2025', featured: true },
+  { id: 'react-performance-optimization-guide', featured: false },
+  { id: 'philippines-tech-startup-ecosystem-2025', featured: true }
+];
+
+const eventsData = [
+  { id: 'introduction-to-how-to-make-a-roblox-game', featured: true },
+  { id: 'react-masterclass-advanced-patterns', featured: true },
+  { id: 'ai-automation-business-workshop', featured: false }
+];
+
+const careersData = [
+  { id: 'frontend-developer-1' },
+  { id: 'backend-developer-1' },
+  { id: 'ui-ux-designer-1' }
+];
+
+// Main routes that match the actual application routes
 const routes = [
   { url: '', priority: 1.0, changefreq: 'weekly' }, // Homepage
   { url: '/mobile-app-development', priority: 0.9, changefreq: 'weekly' },
@@ -32,6 +51,33 @@ const routes = [
   { url: '/contact-us/investors', priority: 0.6, changefreq: 'monthly' }
 ];
 
+// Add individual article routes
+articlesData.forEach(article => {
+  routes.push({
+    url: `/articles/${article.id}`,
+    priority: article.featured ? 0.7 : 0.6,
+    changefreq: 'monthly'
+  });
+});
+
+// Add individual event routes
+eventsData.forEach(event => {
+  routes.push({
+    url: `/events/${event.id}`,
+    priority: event.featured ? 0.7 : 0.6,
+    changefreq: 'weekly'
+  });
+});
+
+// Add individual career routes
+careersData.forEach(career => {
+  routes.push({
+    url: `/careers/${career.id}`,
+    priority: 0.6,
+    changefreq: 'weekly'
+  });
+});
+
 // Generate sitemap XML
 const generateSitemap = () => {
   const urls = routes.map(route => {
@@ -50,13 +96,13 @@ ${urls}
 </urlset>`;
 };
 
-// Write sitemap to dist directory
-const distPath = path.join(__dirname, '../dist');
-const sitemapPath = path.join(distPath, 'sitemap.xml');
+// Write sitemap to public directory
+const publicPath = path.join(__dirname, '../public');
+const sitemapPath = path.join(publicPath, 'sitemap.xml');
 
-if (!fs.existsSync(distPath)) {
-  fs.mkdirSync(distPath, { recursive: true });
+if (!fs.existsSync(publicPath)) {
+  fs.mkdirSync(publicPath, { recursive: true });
 }
 
 fs.writeFileSync(sitemapPath, generateSitemap());
-console.log('✅ Sitemap generated successfully at dist/sitemap.xml');
+console.log('✅ Sitemap generated successfully at public/sitemap.xml');

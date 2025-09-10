@@ -30,6 +30,9 @@ import { ContactSupportPage } from './pages/ContactSupportPage';
 import { ContactVolunteerPage } from './pages/ContactVolunteerPage';
 import { ContactEventHostPage } from './pages/ContactEventHostPage';
 import { ContactInvestorPage } from './pages/ContactInvestorPage';
+import { ArticleDetailPage } from './pages/ArticleDetailPage';
+import { EventDetailPage } from './pages/EventDetailPage';
+import { CareerDetailPage } from './pages/CareerDetailPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 // Route configuration
@@ -147,7 +150,8 @@ export const routes: RouteConfig[] = [
     component: CareersPage,
     title: 'Careers at Tepa Solutions | Tech Jobs Philippines | Software Developer Positions',
     description: 'Join Tepa Solutions team! Exciting career opportunities in software development, AI, cloud computing, and digital innovation. Remote and on-site positions available for passionate tech professionals.',
-    keywords: 'tech careers Philippines, software developer jobs, remote developer jobs, React developer careers, AI engineer positions, startup careers Philippines'
+    keywords: 'tech careers Philippines, software developer jobs, remote developer jobs, React developer careers, AI engineer positions, startup careers Philippines',
+    exact: true
   },
   {
     path: '/volunteer-with-us',
@@ -161,14 +165,16 @@ export const routes: RouteConfig[] = [
     component: EventsPage,
     title: 'Tech Events & Workshops | Coding Bootcamps | Webinars | Tepa Solutions',
     description: 'Attend Tepa Solutions tech events and workshops. Learn latest technologies, networking opportunities, and skill development programs. From beginners to advanced developers.',
-    keywords: 'tech events Philippines, coding workshops, developer meetups, tech conferences Philippines, programming bootcamps, web development training'
+    keywords: 'tech events Philippines, coding workshops, developer meetups, tech conferences Philippines, programming bootcamps, web development training',
+    exact: true
   },
   {
     path: '/articles',
     component: ArticlesPage,
     title: 'Tech Blog & Insights | Digital Transformation Articles | Development Guides | Tepa Solutions',
     description: 'Stay updated with latest tech trends, development tutorials, and digital transformation insights. Expert articles on web development, mobile apps, AI, and business automation.',
-    keywords: 'tech blog Philippines, web development tutorials, digital transformation insights, programming guides, technology articles, software development tips'
+    keywords: 'tech blog Philippines, web development tutorials, digital transformation insights, programming guides, technology articles, software development tips',
+    exact: true
   },
   {
     path: '/investors',
@@ -220,6 +226,32 @@ export const routes: RouteConfig[] = [
     title: 'Investor Relations Contact | Investment Inquiries | Funding Opportunities | Tepa Solutions',
     description: 'Connect with Tepa Solutions investor relations team. Investment opportunities, funding rounds, partnership inquiries, and financial information for potential investors.',
     keywords: 'startup investment contact, tech company funding, investor relations Philippines, venture capital inquiry, investment opportunities'
+  },
+
+  // Dynamic Routes for Individual Items
+  {
+    path: '/articles/',
+    component: ArticleDetailPage,
+    title: 'Article | Tepa Solutions Blog',
+    description: 'Read our latest insights on technology, business automation, and digital transformation.',
+    keywords: 'tech blog, digital transformation, business automation, technology insights',
+    exact: false
+  },
+  {
+    path: '/events/',
+    component: EventDetailPage,
+    title: 'Event Details | Tepa Solutions',
+    description: 'Join our tech events, workshops, and training sessions.',
+    keywords: 'tech events, workshops, training, programming courses',
+    exact: false
+  },
+  {
+    path: '/careers/',
+    component: CareerDetailPage,
+    title: 'Career Opportunity | Jobs at Tepa Solutions',
+    description: 'Explore career opportunities and join our growing tech team.',
+    keywords: 'tech jobs, software developer careers, remote work opportunities',
+    exact: false
   }
 ];
 
@@ -265,12 +297,35 @@ export function Router({ initialPath }: RouterProps) {
 
   // Find matching route
   const findRoute = (path: string): RouteConfig | undefined => {
-    return routes.find(route => {
-      if (route.exact) {
-        return route.path === path;
+    // First, try to find an exact match
+    const exactMatch = routes.find(route => {
+      if (route.exact !== false && route.path === path) {
+        return true;
       }
-      return path.startsWith(route.path);
-    }) || routes.find(route => route.path === '/404');
+      return false;
+    });
+    
+    if (exactMatch) return exactMatch;
+    
+    // Then try dynamic routes (articles, events, careers with IDs)
+    const dynamicMatch = routes.find(route => {
+      if (route.exact === false && path.startsWith(route.path)) {
+        return true;
+      }
+      return false;
+    });
+    
+    if (dynamicMatch) return dynamicMatch;
+    
+    // Finally, try prefix matches for other routes
+    const prefixMatch = routes.find(route => {
+      if (route.exact !== false && path.startsWith(route.path) && route.path !== '/') {
+        return true;
+      }
+      return false;
+    });
+    
+    return prefixMatch || routes.find(route => route.path === '/404');
   };
 
   const currentRoute = findRoute(currentPath);

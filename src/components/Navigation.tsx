@@ -100,7 +100,8 @@ export function Navigation({ navigate, currentPath }: NavigationProps) {
     if (navigate) {
       navigate('/');
     } else {
-      window.dispatchEvent(new CustomEvent('navigateToService', { detail: 'home' }));
+      // Fallback for direct navigation
+      window.location.href = '/';
     }
   };
 

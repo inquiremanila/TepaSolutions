@@ -52,7 +52,6 @@
     "vite": "^6.3.5"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.13",
     "@types/node": "^20.10.0",
     "@vitejs/plugin-react-swc": "^3.10.2",
     "autoprefixer": "^10.4.20",
@@ -62,7 +61,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/generate-sitemap.cjs",
+    "prebuild": "node scripts/generate-sitemap.cjs",
+    "build": "vite build",
     "start": "serve -s dist -l $PORT"
   }
 }
