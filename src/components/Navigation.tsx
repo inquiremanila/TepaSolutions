@@ -6,7 +6,12 @@ import { navItems } from './data/navigation-data';
 import { MobileNavigationSheet } from './MobileNavigationSheet';
 import { NavigationDropdown } from './NavigationDropdown';
 
-export function Navigation() {
+interface NavigationProps {
+  navigate?: (path: string) => void;
+  currentPath?: string;
+}
+
+export function Navigation({ navigate, currentPath }: NavigationProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDesktopDropdown, setActiveDesktopDropdown] = useState<string | null>(null);
@@ -47,15 +52,66 @@ export function Navigation() {
 
   const handleServiceAction = (action: string, target: string) => {
     if (action === "navigate") {
-      if (target === "automation") {
-        window.dispatchEvent(new CustomEvent('navigateToAutomation'));
-      } else if (target.startsWith('automation-')) {
-        window.dispatchEvent(new CustomEvent('navigateToAutomation', { detail: target }));
+      if (navigate) {
+        // Use the new routing system
+        const pathMap: Record<string, string> = {
+          'home': '/',
+          'automation': '/business-automation',
+          'app-dev': '/mobile-app-development',
+          'web-app': '/web-application-development',
+          'web-dev': '/website-development',
+          'seo': '/seo-services',
+          'automation-sales': '/business-automation/sales-process-automation',
+          'automation-marketing': '/business-automation/marketing-automation',
+          'automation-support': '/business-automation/customer-support-automation',
+          'automation-hr': '/business-automation/hr-automation',
+          'automation-finance': '/business-automation/finance-automation',
+          'automation-inventory': '/business-automation/inventory-management-automation',
+          'about-company': '/learn-about-tepa',
+          'careers': '/careers',
+          'events': '/events',
+          'articles': '/articles',
+          'investors': '/investors',
+          'who-we-serve': '/who-we-serve',
+          'contact-sales': '/contact-us/sales',
+          'contact-support': '/contact-us/support',
+          'contact-volunteer': '/contact-us/volunteer',
+          'contact-event-host': '/contact-us/event-hosting',
+          'contact-investor': '/contact-us/investors'
+        };
+        
+        const path = pathMap[target] || `/${target}`;
+        navigate(path);
       } else {
-        window.dispatchEvent(new CustomEvent('navigateToService', { detail: target }));
+        // Fallback to old event system for backward compatibility
+        if (target === "automation") {
+          window.dispatchEvent(new CustomEvent('navigateToAutomation'));
+        } else if (target.startsWith('automation-')) {
+          window.dispatchEvent(new CustomEvent('navigateToAutomation', { detail: target }));
+        } else {
+          window.dispatchEvent(new CustomEvent('navigateToService', { detail: target }));
+        }
       }
     }
     setActiveDesktopDropdown(null);
+  };
+
+  const handleLogoClick = () => {
+    if (navigate) {
+      navigate('/');
+    } else {
+      window.dispatchEvent(new CustomEvent('navigateToService', { detail: 'home' }));
+    }
+  };
+
+  const handleContactClick = () => {
+    if (currentPath === '/') {
+      scrollToSection("#contact");
+    } else if (navigate) {
+      navigate('/contact-us/sales');
+    } else {
+      scrollToSection("#contact");
+    }
   };
 
   // Desktop dropdown handlers with hover delay
@@ -99,7 +155,7 @@ export function Navigation() {
             {/* Logo */}
             <motion.div
               className="flex items-center gap-2 cursor-pointer"
-              onClick={() => window.dispatchEvent(new CustomEvent('navigateToService', { detail: 'home' }))}
+              onClick={handleLogoClick}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -169,7 +225,7 @@ export function Navigation() {
               {/* CTA Button */}
               <Button 
                 className="bg-primary hover:bg-primary/90"
-                onClick={() => scrollToSection("#contact")}
+                onClick={handleContactClick}
               >
                 Contact Us
               </Button>

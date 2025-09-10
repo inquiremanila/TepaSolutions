@@ -1,5 +1,7 @@
 
-  # Tepa Solutions
+  # tepasolutions
+
+  This is a code bundle for tepasolutions. The original project is available at https://www.figma.com/design/JbzwtrhU7jC14eeVP1MqYN/tepasolutions.
 
   ## Running the code
 

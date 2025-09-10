@@ -22,7 +22,7 @@ export function SEOHead({
   keywords,
   canonical,
   ogType = 'website',
-  ogImage = 'https://tepasolutions.asia/og-image.jpg',
+  ogImage = 'https://tepasolutions.com/og-image.jpg',
   structuredData,
   breadcrumbs,
   alternateLanguages,
@@ -77,10 +77,10 @@ export function SEOHead({
       { name: 'apple-mobile-web-app-capable', content: 'yes' },
       { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
       
-      // Geographic targeting - Worldwide English-speaking
-      { name: 'geo.region', content: 'US;CA;GB;AU;NZ;ZA;PH;SG;JP;IND' },
-      { name: 'geo.country', content: 'Worldwide' },
-      { name: 'geo.placename', content: 'Global' },
+      // Geographic targeting
+      { name: 'geo.region', content: 'PH' },
+      { name: 'geo.country', content: 'Philippines' },
+      { name: 'geo.placename', content: 'Philippines' },
       
       // Business info
       { name: 'DC.title', content: title },
@@ -140,12 +140,12 @@ export function SEOHead({
       "@graph": [
         {
           "@type": "Organization",
-          "@id": "https://tepasolutions.asia/#organization",
+          "@id": "https://tepasolutions.com/#organization",
           "name": "Tepa Solutions",
-          "url": "https://tepasolutions.asia",
+          "url": "https://tepasolutions.com",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://tepasolutions.asia/logo.png",
+            "url": "https://tepasolutions.com/logo.png",
             "width": 500,
             "height": 500
           },
@@ -153,45 +153,45 @@ export function SEOHead({
             "@type": "ContactPoint",
             "telephone": "+63-2-8558-1237",
             "contactType": "customer service",
-            "availableLanguage": ["English"]
+            "availableLanguage": ["English", "Filipino"]
           },
           "address": {
             "@type": "PostalAddress",
             "addressCountry": "Philippines"
           },
+          "founder": {
+            "@type": "Person",
+            "name": "Jerrie Mataya"
+          },
           "foundingDate": "2024",
-          "description": "Leading digital transformation agency specializing in business automation, web development, mobile app development, and AI-powered solutions for businesses worldwide.",
+          "description": "Leading digital transformation agency in the Philippines specializing in web development, mobile app development, business automation, and AI-powered solutions for businesses worldwide.",
           "sameAs": [
             "https://linkedin.com/company/tepa-solutions",
             "https://twitter.com/tepasolutions",
             "https://facebook.com/tepasolutions"
           ],
-          "areaServed": "Worldwide",
           "services": [
-            "Business Process Automation",
             "Web Application Development",
             "Mobile App Development", 
+            "Business Process Automation",
             "Digital Transformation Consulting",
             "AI & Machine Learning Solutions",
             "Cloud Migration Services",
             "API Integration",
-            "Customer Service",
-            "IT Support",
-            "Customer Support Solutions",
             "SEO & Digital Marketing"
           ]
         },
         {
           "@type": "WebSite",
-          "@id": "https://tepasolutions.asia/#website",
-          "url": "https://tepasolutions.asia",
-          "name": "Tepa Solutions - Business Automation & Digital Solutions",
+          "@id": "https://tepasolutions.com/#website",
+          "url": "https://tepasolutions.com",
+          "name": "Tepa Solutions - Digital Innovation Agency Philippines",
           "publisher": {
-            "@id": "https://tepasolutions.asia/#organization"
+            "@id": "https://tepasolutions.com/#organization"
           },
           "potentialAction": {
             "@type": "SearchAction",
-            "target": "https://tepasolutions.asia/search?q={search_term_string}",
+            "target": "https://tepasolutions.com/search?q={search_term_string}",
             "query-input": "required name=search_term_string"
           }
         }
@@ -236,38 +236,23 @@ export function SEOHead({
 // SEO utility functions
 export const generateKeywords = (primary: string[], secondary: string[] = []) => {
   const baseKeywords = [
-    // Common search queries people actually type
-    'how can i automate my business',
-    'business process automation',
-    'automate customer service',
-    'hire virtual assistant',
-    'affordable website development',
-    'cheap website design',
-    'custom web application',
-    'mobile app development services',
-    'business automation tools',
-    'workflow automation software',
-    'digital transformation services',
-    'outsource customer support',
-    'hire remote developers',
-    'cloud migration services',
-    'API integration services',
-    'automated business solutions',
-    'small business automation',
-    'enterprise software development',
-    'ai chatbot development',
-    'crm automation',
-    'inventory management system',
-    'e-commerce development',
-    'saas application development',
-    'business intelligence solutions',
-    'data analytics services',
-    'cost effective web solutions',
-    'scalable web applications',
+    'digital transformation Philippines',
+    'business automation solutions',
+    'web development company Philippines',
+    'mobile app development',
     'custom software development',
-    'business consulting services',
-    'digital marketing automation',
-    'lead generation automation'
+    'AI solutions Philippines',
+    'cloud migration services',
+    'enterprise software solutions',
+    'digital innovation agency',
+    'tech consulting Philippines',
+    'API integration services',
+    'workflow automation tools',
+    'SaaS development',
+    'full-stack development',
+    'scalable web applications',
+    'Tepa Solutions',
+    'Jerrie Mataya'
   ];
   
   return [...primary, ...secondary, ...baseKeywords].join(', ');
@@ -279,7 +264,7 @@ export const createServiceStructuredData = (service: any) => ({
   "name": service.name,
   "description": service.description,
   "provider": {
-    "@id": "https://tepasolutions.asia/#organization"
+    "@id": "https://tepasolutions.com/#organization"
   },
   "serviceType": service.type,
   "areaServed": "Worldwide",
@@ -301,7 +286,7 @@ export const createArticleStructuredData = (article: any) => ({
     "name": article.author || "Tepa Solutions Team"
   },
   "publisher": {
-    "@id": "https://tepasolutions.asia/#organization"
+    "@id": "https://tepasolutions.com/#organization"
   },
   "datePublished": article.publishedDate,
   "dateModified": article.modifiedDate || article.publishedDate,

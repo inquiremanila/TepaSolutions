@@ -48,7 +48,6 @@ interface DropdownItem {
 interface NavItem {
   label: string;
   href: string;
-
   icon: LucideIcon;
   hasDropdown?: boolean;
   dropdownItems?: DropdownItem[];

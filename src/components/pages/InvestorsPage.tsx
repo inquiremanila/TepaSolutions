@@ -503,7 +503,7 @@ export function InvestorsPage({ onNavigate }: InvestorsPageProps) {
             
             <div className="mt-8 text-sm text-muted-foreground">
               <p>Investor Relations Contact:</p>
-              <p>Email: investors@tepasolutions.asia | Phone: +63 2 8558 1237</p>
+              <p>Email: investors@tepasolutions.com | Phone: +63 2 8558 1237</p>
             </div>
           </motion.div>
         </div>

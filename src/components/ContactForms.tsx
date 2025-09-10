@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Phone, Mail, ArrowLeft, Send, CheckCircle, AlertCircle, Upload } from 'lucide-react';
 import { submitContactForm } from '../utils/api';
-import { toast } from "sonner";
+import { toast } from "sonner@2.0.3";
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -853,7 +853,7 @@ export function ContactForms({ formType, onBack }: ContactFormsProps) {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-lg font-semibold text-primary">investors@tepasolutions.asia</p>
+                  <p className="text-lg font-semibold text-primary">investors@tepasolutions.com</p>
                   <p className="text-muted-foreground mt-2">
                     For detailed inquiries and document requests
                   </p>

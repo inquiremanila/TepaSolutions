@@ -2,20 +2,9 @@
   import { defineConfig } from 'vite';
   import react from '@vitejs/plugin-react-swc';
   import path from 'path';
-  import { viteStaticCopy } from 'vite-plugin-static-copy';
-
 
   export default defineConfig({
-    plugins: [
-      react(),
-      viteStaticCopy({
-        targets: [
-          { src: 'public/sitemap.xml', dest: '.' },
-          { src: 'public/manifest.json', dest: '.' },
-          { src: 'public/icons/*', dest: 'images' } // optional: copy all icons
-        ]
-      })
-    ],
+    plugins: [react()],
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       alias: {
@@ -68,18 +57,7 @@
       outDir: 'build',
     },
     server: {
-      port: 5000,
-      host: '0.0.0.0',
-      allowedHosts: [
-        '.replit.dev',
-        '.repl.co',
-        'localhost'
-      ],
-      hmr: {
-        host: 'localhost',
-        clientPort: 5000
-      }
+      port: 3000,
+      open: true,
     },
   });
-
- 

@@ -46,12 +46,12 @@ export function Portfolio() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-        <Badge className="mb-4">Demos</Badge>
-        <h2 className="text-3xl md:text-4xl lg:text-5xl mb-4">
-        What We Offer
-        </h2>
+          <Badge className="mb-4">Demos</Badge>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl mb-4">
+            What We Offer
+          </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-         Browse our demos to get a feel for what we do. These examples show the kind of apps and solutions we build.
+            Browse our demos to get a feel for what we do. These examples show the kind of apps and solutions we build.
           </p>
         </motion.div>
 

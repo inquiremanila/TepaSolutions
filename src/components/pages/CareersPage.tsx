@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { MapPin, Clock, Users, Heart, Code, Palette, GraduationCap, Laptop, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { submitCareerApplication } from '../../utils/api';
-import { toast } from "sonner";
+import { toast } from "sonner@2.0.3";
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';

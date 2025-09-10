@@ -12,7 +12,7 @@ export interface SitemapUrl {
   }>;
 }
 
-const baseUrl = 'https://tepasolutions.asia';
+const baseUrl = 'https://tepasolutions.com';
 const currentDate = new Date().toISOString();
 
 // Main website structure

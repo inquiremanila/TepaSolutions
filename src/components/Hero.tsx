@@ -30,7 +30,7 @@ export function Hero() {
             whileTap={{ scale: 0.95 }}
           >
             <Sparkles className="size-4 text-primary" />
-            <span className="text-sm">Start Here</span>
+            <span className="text-sm">Taking on select client projects</span>
           </motion.div>
 
           <motion.h1
