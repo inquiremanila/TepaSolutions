@@ -1,18 +1,14 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { MapPin, Clock, Users, Heart, Code, Palette, GraduationCap, Laptop, Send, CheckCircle, AlertCircle } from 'lucide-react';
-import { submitCareerApplication } from '../utils/api';
-import { toast } from "sonner@2.0.3";
+import { motion } from 'motion/react';
+import { MapPin, Clock, Users, Heart, Code, Palette, GraduationCap, Laptop, Send, CheckCircle, AlertCircle, ArrowRight, Calendar, DollarSign } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Textarea } from '../components/ui/textarea';
 
 interface CareersPageProps {
-  onNavigate: (target: string) => void;
+  navigate?: (path: string) => void;
+  currentPath?: string;
 }
 
 const benefits = [
@@ -38,414 +34,177 @@ const benefits = [
   }
 ];
 
-const positions = [
+export const jobPositions = [
   {
     id: 1,
+    slug: 'frontend-developer',
     title: "Frontend Developer",
     department: "Engineering",
     type: "Full-time",
-    location: "BGC, Taguig",
+    location: "BGC, Taguig / Remote",
     experience: "2-4 years",
-    description: "Build beautiful, responsive user interfaces using React, TypeScript, and modern web technologies.",
+    salary: "₱50,000 - ₱80,000",
+    description: "Build beautiful, responsive user interfaces using React, TypeScript, and modern web technologies. Join our development team to create innovative solutions that impact businesses worldwide.",
     requirements: [
-      "3+ years of React/JavaScript experience",
-      "Strong understanding of TypeScript",
-      "Experience with responsive design and CSS frameworks",
-      "Knowledge of state management (Redux/Zustand)",
-      "Familiarity with testing frameworks"
+      "3+ years experience with React and TypeScript",
+      "Strong knowledge of HTML, CSS, and JavaScript",
+      "Experience with modern build tools (Vite, Webpack)",
+      "Understanding of responsive design principles",
+      "Familiarity with Git version control",
+      "Experience with REST APIs and state management"
     ],
     responsibilities: [
-      "Develop and maintain frontend applications",
-      "Collaborate with designers and backend developers",
-      "Optimize applications for performance",
-      "Write clean, maintainable code",
-      "Participate in code reviews"
+      "Develop and maintain responsive web applications",
+      "Collaborate with designers to implement pixel-perfect UIs",
+      "Optimize applications for maximum speed and scalability",
+      "Write clean, maintainable, and testable code",
+      "Participate in code reviews and technical discussions",
+      "Stay updated with latest frontend technologies and best practices"
     ],
-    skills: ["React", "TypeScript", "Tailwind CSS", "Next.js", "Testing"]
+    niceToHave: [
+      "Experience with Next.js or other React frameworks",
+      "Knowledge of design systems and component libraries",
+      "Understanding of accessibility (a11y) principles",
+      "Experience with testing frameworks (Jest, Cypress)",
+      "Familiarity with cloud platforms (AWS, Vercel)",
+      "Design skills and experience with Figma"
+    ],
+    postedDate: "2025-01-10",
+    applicationDeadline: "2025-02-10"
   },
   {
     id: 2,
-    title: "Backend Developer",
+    slug: 'fullstack-developer',
+    title: "Full Stack Developer",
     department: "Engineering",
     type: "Full-time",
-    location: "BGC, Taguig",
+    location: "BGC, Taguig / Remote",
     experience: "3-5 years",
-    description: "Design and implement scalable backend systems and APIs using Node.js, Python, and cloud technologies.",
+    salary: "₱70,000 - ₱120,000",
+    description: "Work across the entire technology stack to build scalable web applications and automation solutions. Perfect opportunity for developers who enjoy both frontend and backend challenges.",
     requirements: [
-      "4+ years of backend development experience",
-      "Proficiency in Node.js or Python",
-      "Database design and optimization skills",
-      "Experience with cloud platforms (AWS/GCP)",
-      "Understanding of microservices architecture"
+      "4+ years of full-stack development experience",
+      "Proficiency in React and Node.js",
+      "Experience with databases (PostgreSQL, MongoDB)",
+      "Knowledge of cloud platforms (AWS, Azure, GCP)",
+      "Understanding of DevOps practices",
+      "Strong problem-solving and debugging skills"
     ],
     responsibilities: [
-      "Design and develop RESTful APIs",
-      "Optimize database performance",
+      "Design and implement full-stack web applications",
+      "Build and maintain APIs and microservices",
+      "Collaborate with cross-functional teams on product features",
+      "Optimize application performance and scalability",
       "Implement security best practices",
-      "Deploy and monitor applications",
-      "Mentor junior developers"
+      "Mentor junior developers and conduct code reviews"
     ],
-    skills: ["Node.js", "Python", "PostgreSQL", "MongoDB", "AWS", "Docker"]
+    niceToHave: [
+      "Experience with automation and workflow tools",
+      "Knowledge of containerization (Docker, Kubernetes)",
+      "Understanding of CI/CD pipelines",
+      "Experience with real-time technologies (WebSockets, Socket.io)",
+      "Familiarity with AI/ML integration",
+      "Previous startup or agency experience"
+    ],
+    postedDate: "2025-01-08",
+    applicationDeadline: "2025-02-08"
   },
   {
     id: 3,
-    title: "Frontend Developer Intern",
-    department: "Engineering",
-    type: "Internship",
-    location: "BGC, Taguig",
-    experience: "Student/Fresh Graduate",
-    description: "Learn and contribute to real-world projects while working with experienced developers.",
+    slug: 'ui-ux-designer',
+    title: "UI/UX Designer",
+    department: "Design",
+    type: "Full-time",
+    location: "BGC, Taguig / Remote",
+    experience: "2-4 years",
+    salary: "₱45,000 - ₱70,000",
+    description: "Create intuitive and engaging user experiences for web applications and automation platforms. Work closely with development teams to bring designs to life.",
     requirements: [
-      "Currently studying Computer Science or related field",
-      "Basic knowledge of HTML, CSS, JavaScript",
-      "Eagerness to learn React and modern frameworks",
-      "Good communication skills",
-      "Available for 6-month internship"
+      "3+ years of UI/UX design experience",
+      "Proficiency in Figma and design tools",
+      "Strong understanding of user-centered design principles",
+      "Experience with prototyping and user testing",
+      "Knowledge of design systems and component libraries",
+      "Portfolio showcasing web application designs"
     ],
     responsibilities: [
-      "Assist in frontend development tasks",
-      "Learn React and TypeScript",
-      "Work on assigned features",
-      "Participate in daily standups",
-      "Complete training modules"
+      "Design user interfaces for web applications and automation tools",
+      "Create wireframes, prototypes, and high-fidelity mockups",
+      "Conduct user research and usability testing",
+      "Collaborate with developers to ensure design implementation",
+      "Maintain and evolve design systems",
+      "Present design concepts to stakeholders"
     ],
-    skills: ["HTML", "CSS", "JavaScript", "React (learning)", "Git"]
+    niceToHave: [
+      "Experience designing for business automation tools",
+      "Knowledge of HTML/CSS and frontend technologies",
+      "Understanding of accessibility principles",
+      "Experience with motion design and animations",
+      "Background in service design or business process design",
+      "Familiarity with data visualization"
+    ],
+    postedDate: "2025-01-05",
+    applicationDeadline: "2025-02-05"
   },
   {
     id: 4,
-    title: "Backend Developer Intern",
-    department: "Engineering", 
-    type: "Internship",
+    slug: 'business-development-manager',
+    title: "Business Development Manager",
+    department: "Sales",
+    type: "Full-time",
     location: "BGC, Taguig",
-    experience: "Student/Fresh Graduate",
-    description: "Gain hands-on experience in backend development and API design.",
+    experience: "3-5 years",
+    salary: "₱60,000 - ₱100,000 + Commission",
+    description: "Drive business growth by identifying new opportunities and building relationships with potential clients. Lead the expansion of our automation and development services.",
     requirements: [
-      "Computer Science or related field student",
-      "Basic programming knowledge (any language)",
-      "Understanding of databases and APIs",
-      "Willingness to learn new technologies",
-      "6-month commitment"
+      "4+ years of B2B sales or business development experience",
+      "Experience selling technology solutions or services",
+      "Strong communication and presentation skills",
+      "Understanding of business automation and software development",
+      "Proven track record of meeting sales targets",
+      "Network in the Philippine business community"
     ],
     responsibilities: [
-      "Support backend development projects",
-      "Learn server-side technologies",
-      "Assist with database tasks",
-      "Write documentation",
-      "Shadow senior developers"
+      "Identify and pursue new business opportunities",
+      "Build and maintain relationships with key clients",
+      "Develop and present proposals for automation solutions",
+      "Collaborate with technical teams on solution design",
+      "Manage sales pipeline and forecast revenue",
+      "Represent Tepa Solutions at industry events"
     ],
-    skills: ["Programming Basics", "SQL", "APIs", "Node.js (learning)"]
+    niceToHave: [
+      "Experience with CRM systems and sales automation tools",
+      "Background in consulting or professional services",
+      "Understanding of enterprise software sales cycles",
+      "Experience selling to SMEs and large enterprises",
+      "Knowledge of digital transformation trends",
+      "Previous experience in a startup environment"
+    ],
+    postedDate: "2025-01-03",
+    applicationDeadline: "2025-02-03"
   }
 ];
 
-const volunteerProgram = {
-  title: "Educational Outreach Volunteer",
-  description: "Help us bridge the digital divide by teaching coding and digital literacy to underserved communities.",
-  commitment: "4-8 hours per month",
-  activities: [
-    "Teach basic programming in schools",
-    "Conduct digital literacy workshops",
-    "Mentor students in coding projects",
-    "Help develop educational curriculum",
-    "Support community tech events"
-  ],
-  requirements: [
-    "Passion for education and technology",
-    "Basic programming knowledge",
-    "Good communication skills",
-    "Patience and empathy",
-    "Available weekends or evenings"
-  ]
-};
+const departments = ["All", "Engineering", "Design", "Sales", "Marketing"];
 
-export function CareersPage({ onNavigate }: CareersPageProps) {
-  const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
-  const [filterType, setFilterType] = useState("All");
-  const [showApplicationForm, setShowApplicationForm] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [applicationData, setApplicationData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    resume: '',
-    coverLetter: '',
-    portfolio: '',
-    experience: ''
-  });
+export function CareersPage({ navigate }: CareersPageProps) {
+  const [selectedDepartment, setSelectedDepartment] = useState("All");
 
-  const handleApplicationSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const position = positions.find(p => p.id === selectedPosition);
-      await submitCareerApplication({
-        position: position?.title || 'General Application',
-        ...applicationData
-      });
-
-      toast.success('Application submitted successfully!', {
-        description: 'We will review your application and get back to you soon.',
-        icon: <CheckCircle className="w-4 h-4" />,
-      });
-
-      setApplicationData({
-        name: '',
-        email: '',
-        phone: '',
-        resume: '',
-        coverLetter: '',
-        portfolio: '',
-        experience: ''
-      });
-      setShowApplicationForm(false);
-
-    } catch (error) {
-      console.error('Application submission error:', error);
-      toast.error('Failed to submit application', {
-        description: 'Please try again or contact us directly.',
-        icon: <AlertCircle className="w-4 h-4" />,
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const filteredPositions = positions.filter(pos => 
-    filterType === "All" || pos.type === filterType
+  const filteredPositions = jobPositions.filter(position => 
+    selectedDepartment === "All" || position.department === selectedDepartment
   );
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'Full-time':
-        return 'bg-green-500';
-      case 'Internship':
-        return 'bg-blue-500';
-      case 'Contract':
-        return 'bg-orange-500';
-      default:
-        return 'bg-gray-500';
+  const handleJobClick = (job: typeof jobPositions[0]) => {
+    if (navigate) {
+      navigate(`/careers/${job.slug}`);
     }
   };
 
-  if (selectedPosition) {
-    const position = positions.find(p => p.id === selectedPosition);
-    if (!position) return null;
-
-    if (showApplicationForm) {
-      return (
-        <div className="min-h-screen bg-background">
-          <div className="container mx-auto px-6 py-20 max-w-2xl">
-            <Button
-              variant="ghost"
-              onClick={() => setShowApplicationForm(false)}
-              className="mb-8"
-            >
-              ← Back
-            </Button>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-8"
-            >
-              <div>
-                <h1 className="text-3xl font-bold mb-4">Apply for {position.title}</h1>
-                <p className="text-muted-foreground">
-                  Fill out the form below to submit your application. All fields marked with * are required.
-                </p>
-              </div>
-
-              <Card>
-                <CardContent className="p-6">
-                  <form onSubmit={handleApplicationSubmit} className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="name">Full Name *</Label>
-                        <Input
-                          id="name"
-                          value={applicationData.name}
-                          onChange={(e) => setApplicationData(prev => ({ ...prev, name: e.target.value }))}
-                          required
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="email">Email Address *</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          value={applicationData.email}
-                          onChange={(e) => setApplicationData(prev => ({ ...prev, email: e.target.value }))}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="phone">Phone Number</Label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        value={applicationData.phone}
-                        onChange={(e) => setApplicationData(prev => ({ ...prev, phone: e.target.value }))}
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="resume">Resume/CV (Link or text) *</Label>
-                      <Textarea
-                        id="resume"
-                        placeholder="Paste your resume content here or provide a link to your resume..."
-                        value={applicationData.resume}
-                        onChange={(e) => setApplicationData(prev => ({ ...prev, resume: e.target.value }))}
-                        rows={6}
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="coverLetter">Cover Letter</Label>
-                      <Textarea
-                        id="coverLetter"
-                        placeholder="Tell us why you're interested in this position and how you can contribute to our team..."
-                        value={applicationData.coverLetter}
-                        onChange={(e) => setApplicationData(prev => ({ ...prev, coverLetter: e.target.value }))}
-                        rows={4}
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="portfolio">Portfolio/GitHub (Optional)</Label>
-                      <Input
-                        id="portfolio"
-                        placeholder="Link to your portfolio, GitHub, or relevant work samples"
-                        value={applicationData.portfolio}
-                        onChange={(e) => setApplicationData(prev => ({ ...prev, portfolio: e.target.value }))}
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="experience">Relevant Experience</Label>
-                      <Textarea
-                        id="experience"
-                        placeholder="Briefly describe your relevant experience and achievements..."
-                        value={applicationData.experience}
-                        onChange={(e) => setApplicationData(prev => ({ ...prev, experience: e.target.value }))}
-                        rows={3}
-                      />
-                    </div>
-
-                    <Button 
-                      type="submit" 
-                      className="w-full"
-                      disabled={isSubmitting}
-                    >
-                      <Send className="w-4 h-4 mr-2" />
-                      {isSubmitting ? 'Submitting Application...' : 'Submit Application'}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
-        </div>
-      );
+  const handleApplyClick = () => {
+    if (navigate) {
+      navigate('/contact-us/careers');
     }
-
-    return (
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-6 py-20 max-w-4xl">
-          <Button
-            variant="ghost"
-            onClick={() => setSelectedPosition(null)}
-            className="mb-8"
-          >
-            ← Back
-          </Button>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-8"
-          >
-            {/* Position Header */}
-            <div>
-              <div className="flex items-center gap-4 mb-4">
-                <Badge className={getTypeColor(position.type)}>{position.type}</Badge>
-                <Badge variant="outline">{position.department}</Badge>
-              </div>
-              <h1 className="text-4xl font-bold mb-4">{position.title}</h1>
-              <div className="flex flex-wrap gap-4 text-muted-foreground">
-                <div className="flex items-center gap-1">
-                  <MapPin className="w-4 h-4" />
-                  <span>{position.location}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
-                  <span>{position.experience}</span>
-                </div>
-              </div>
-              <p className="text-lg text-muted-foreground mt-4">{position.description}</p>
-            </div>
-
-            {/* Position Details */}
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-bold mb-4">Requirements</h3>
-                  <ul className="space-y-2">
-                    {position.requirements.map((req, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <div className="w-2 h-2 bg-primary rounded-full mt-2" />
-                        <span className="text-muted-foreground">{req}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                <div>
-                  <h3 className="text-xl font-bold mb-4">Key Skills</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {position.skills.map((skill, index) => (
-                      <Badge key={index} variant="secondary">{skill}</Badge>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-xl font-bold mb-4">Responsibilities</h3>
-                <ul className="space-y-2">
-                  {position.responsibilities.map((resp, index) => (
-                    <li key={index} className="flex items-start gap-2">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2" />
-                      <span className="text-muted-foreground">{resp}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Apply Section */}
-            <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-8 rounded-lg">
-              <h3 className="text-2xl font-bold mb-4">Ready to Apply?</h3>
-              <p className="text-muted-foreground mb-6">
-                Send us your resume and a brief cover letter explaining why you're excited 
-                about this opportunity and how you can contribute to our team.
-              </p>
-              <div className="flex gap-4">
-                <Button onClick={() => setShowApplicationForm(true)} size="lg">
-                  Apply Now
-                </Button>
-                <Button variant="outline" size="lg" onClick={() => onNavigate('contact-sales')}>
-                  Ask Questions
-                </Button>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -457,19 +216,20 @@ export function CareersPage({ onNavigate }: CareersPageProps) {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <Badge className="mb-4">Careers</Badge>
+            <Badge className="mb-4">Join Our Team</Badge>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Join Our Growing Team
+              Build the Future of Business Technology
             </h1>
             <p className="text-xl text-muted-foreground">
-              Be part of a dynamic team that's transforming businesses through innovative technology. 
-              Build your career while making a real impact.
+              Join a growing team of passionate professionals creating innovative solutions 
+              that transform how businesses operate. Be part of our mission to make technology 
+              accessible and powerful for every organization.
             </p>
           </motion.div>
         </div>
       </div>
 
-      {/* Why Work With Us */}
+      {/* Why Join Us */}
       <div className="py-16">
         <div className="container mx-auto px-6">
           <motion.div
@@ -477,12 +237,13 @@ export function CareersPage({ onNavigate }: CareersPageProps) {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl font-bold mb-4">Why Choose Tepa Solutions?</h2>
+            <h2 className="text-3xl font-bold mb-4">Why Join Tepa Solutions?</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              We believe that great work comes from great culture. Here's what makes working at Tepa special.
+              We're building a company where talented people can do their best work, 
+              learn continuously, and make a meaningful impact on businesses worldwide.
             </p>
           </motion.div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {benefits.map((benefit, index) => (
               <motion.div
@@ -511,24 +272,33 @@ export function CareersPage({ onNavigate }: CareersPageProps) {
       {/* Open Positions */}
       <div className="py-16 bg-muted/30">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-12"
+          >
             <h2 className="text-3xl font-bold mb-4">Open Positions</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Explore our current openings and find the perfect role to advance your career.
+              Explore current opportunities to join our team and help shape the future of business automation.
             </p>
+          </motion.div>
+
+          {/* Department Filter */}
+          <div className="flex flex-wrap gap-2 justify-center mb-8">
+            {departments.map(dept => (
+              <Button
+                key={dept}
+                variant={selectedDepartment === dept ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedDepartment(dept)}
+              >
+                {dept}
+              </Button>
+            ))}
           </div>
 
-          {/* Filter Tabs */}
-          <Tabs defaultValue="All" className="mb-8">
-            <TabsList className="grid grid-cols-3 max-w-md mx-auto">
-              <TabsTrigger value="All" onClick={() => setFilterType("All")}>All</TabsTrigger>
-              <TabsTrigger value="Full-time" onClick={() => setFilterType("Full-time")}>Full-time</TabsTrigger>
-              <TabsTrigger value="Internship" onClick={() => setFilterType("Internship")}>Internships</TabsTrigger>
-            </TabsList>
-          </Tabs>
-
-          {/* Positions Grid */}
-          <div className="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+          {/* Job Listings */}
+          <div className="max-w-4xl mx-auto space-y-6">
             {filteredPositions.map((position, index) => (
               <motion.div
                 key={position.id}
@@ -536,134 +306,80 @@ export function CareersPage({ onNavigate }: CareersPageProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setSelectedPosition(position.id)}>
-                  <CardHeader>
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge className={getTypeColor(position.type)}>{position.type}</Badge>
-                      <Badge variant="outline">{position.department}</Badge>
-                    </div>
-                    <CardTitle className="text-xl">{position.title}</CardTitle>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <MapPin className="w-3 h-3" />
-                        <span>{position.location}</span>
+                <Card className="hover:shadow-lg transition-shadow duration-300 cursor-pointer" onClick={() => handleJobClick(position)}>
+                  <CardContent className="p-6">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge variant="outline">{position.department}</Badge>
+                          <Badge variant="secondary">{position.type}</Badge>
+                        </div>
+                        
+                        <h3 className="text-xl font-bold mb-2">{position.title}</h3>
+                        <p className="text-muted-foreground mb-4 line-clamp-2">{position.description}</p>
+                        
+                        <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <MapPin className="w-4 h-4" />
+                            <span>{position.location}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-4 h-4" />
+                            <span>{position.experience}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <DollarSign className="w-4 h-4" />
+                            <span>{position.salary}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-4 h-4" />
+                            <span>Posted {new Date(position.postedDate).toLocaleDateString()}</span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        <span>{position.experience}</span>
+                      
+                      <div className="flex flex-col gap-2">
+                        <Button>
+                          View Details
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
                       </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground mb-4 line-clamp-2">
-                      {position.description}
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-1 mb-4">
-                      {position.skills.slice(0, 4).map((skill, idx) => (
-                        <Badge key={idx} variant="secondary" className="text-xs">{skill}</Badge>
-                      ))}
-                      {position.skills.length > 4 && (
-                        <Badge variant="outline" className="text-xs">+{position.skills.length - 4} more</Badge>
-                      )}
-                    </div>
-                    
-                    <div className="flex justify-end">
-                      <Button variant="outline" size="sm">
-                        View Details
-                      </Button>
                     </div>
                   </CardContent>
                 </Card>
               </motion.div>
             ))}
           </div>
-        </div>
-      </div>
 
-      {/* Volunteer Program */}
-      <div className="py-16">
-        <div className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="max-w-4xl mx-auto"
-          >
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Educational Outreach Program</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Use your skills to make a difference in the community. Join our volunteer program 
-                to help teach coding and digital literacy to underserved communities.
+          {filteredPositions.length === 0 && (
+            <div className="text-center py-16">
+              <p className="text-muted-foreground text-lg">
+                No open positions in this department at the moment.
+              </p>
+              <p className="text-muted-foreground mt-2">
+                Check back soon or contact us about future opportunities.
               </p>
             </div>
-            
-            <Card className="bg-gradient-to-r from-primary/5 to-primary/10">
-              <CardHeader>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
-                    <Heart className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <CardTitle className="text-xl">{volunteerProgram.title}</CardTitle>
-                    <p className="text-muted-foreground">{volunteerProgram.commitment}</p>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-6">{volunteerProgram.description}</p>
-                
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div>
-                    <h4 className="font-semibold mb-3">What You'll Do:</h4>
-                    <ul className="space-y-2">
-                      {volunteerProgram.activities.map((activity, index) => (
-                        <li key={index} className="flex items-start gap-2">
-                          <div className="w-2 h-2 bg-primary rounded-full mt-2" />
-                          <span className="text-sm text-muted-foreground">{activity}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-semibold mb-3">What We're Looking For:</h4>
-                    <ul className="space-y-2">
-                      {volunteerProgram.requirements.map((req, index) => (
-                        <li key={index} className="flex items-start gap-2">
-                          <div className="w-2 h-2 bg-primary rounded-full mt-2" />
-                          <span className="text-sm text-muted-foreground">{req}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-                
-                <div className="mt-8">
-                  <Button onClick={() => onNavigate('contact-volunteer')}>
-                    Join Our Volunteer Program
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+          )}
         </div>
       </div>
 
       {/* Call to Action */}
-      <div className="py-16 bg-muted/30">
+      <div className="py-16">
         <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="max-w-2xl mx-auto text-center"
           >
-            <h2 className="text-3xl font-bold mb-4">Don't See Your Perfect Role?</h2>
+            <h2 className="text-3xl font-bold mb-4">Don't See the Right Role?</h2>
             <p className="text-muted-foreground mb-8">
-              We're always looking for talented individuals who share our passion for innovation. 
+              We're always looking for talented individuals to join our team. 
               Send us your resume and let us know how you'd like to contribute to our mission.
             </p>
-            <Button onClick={() => onNavigate('contact-sales')} size="lg">
-              Send Your Resume
+            <Button size="lg" onClick={handleApplyClick}>
+              Send Us Your Resume
+              <Send className="w-4 h-4 ml-2" />
             </Button>
           </motion.div>
         </div>

@@ -1,4 +1,4 @@
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView } from 'motion/react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';

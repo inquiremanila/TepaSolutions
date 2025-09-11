@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { useState, useEffect } from 'react';
 import { Star, Clock, MapPin, Plus, Search, Filter, Heart, ArrowLeft, ShoppingCart, Minus, CreditCard, Clock3, Car, CheckCircle2, MapPinIcon, User, Phone } from 'lucide-react';
 import { ImageWithFallback } from '../figma/ImageWithFallback';

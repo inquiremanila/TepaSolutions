@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { Button } from './ui/button';
 import { navItems } from './data/navigation-data';
@@ -100,8 +100,7 @@ export function Navigation({ navigate, currentPath }: NavigationProps) {
     if (navigate) {
       navigate('/');
     } else {
-      // Fallback for direct navigation
-      window.location.href = '/';
+      window.dispatchEvent(new CustomEvent('navigateToService', { detail: 'home' }));
     }
   };
 

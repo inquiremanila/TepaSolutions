@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Building, Users, TrendingUp, Target, Zap, Shield, Globe, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
@@ -7,8 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 
 interface WhoWeServePageProps {
-  initialSection?: 'overview' | 'business-size' | 'industry';
-  onNavigate: (target: string) => void;
+  navigate?: (path: string) => void;
+  currentPath?: string;
 }
 
 const businessSizes = [
@@ -18,68 +18,50 @@ const businessSizes = [
     icon: <Zap className="w-8 h-8" />,
     features: [
       "MVP Development",
-      "Cost-effective solutions",
-      "Rapid prototyping",
-      "Scalable architecture",
-      "Cloud-first approach"
+      "Affordable automation solutions",
+      "Scalable architecture planning",
+      "Growth-focused strategies"
     ],
     solutions: [
-      "Simple website to establish online presence",
-      "Basic mobile app for customer engagement",
-      "Essential automation for daily operations",
-      "Founder-friendly development process",
-      "Growth-ready technology foundation"
-    ],
-    caseStudy: {
-      title: "Local Restaurant Chain Growth",
-      description: "Helped a 3-location restaurant chain implement online ordering and delivery management, increasing revenue by 40% in 6 months."
-    }
+      "Web application development",
+      "Basic process automation",
+      "Digital presence establishment",
+      "Cost-effective integrations"
+    ]
   },
   {
-    title: "Medium-Sized Enterprises",
-    description: "51-500 employees",
+    title: "Medium Enterprises",
+    description: "50-500 employees",
     icon: <Building className="w-8 h-8" />,
     features: [
-      "Custom enterprise solutions",
-      "Integration capabilities",
-      "Advanced automation",
-      "Multi-platform deployment",
-      "Team collaboration tools"
+      "Process optimization",
+      "System integrations",
+      "Team productivity tools",
+      "Compliance automation"
     ],
     solutions: [
-      "Comprehensive business management systems",
-      "Advanced workflow automation",
-      "Custom mobile applications for teams",
-      "Data analytics and reporting tools",
-      "Integrated communication platforms"
-    ],
-    caseStudy: {
-      title: "Healthcare Network Digitization",
-      description: "Built integrated patient management system for 200-employee healthcare network, reducing administrative time by 60%."
-    }
+      "Workflow automation platforms",
+      "Custom business applications",
+      "Data analytics solutions",
+      "Multi-department integrations"
+    ]
   },
   {
-    title: "Large Corporations",
+    title: "Large Enterprises",
     description: "500+ employees",
     icon: <Globe className="w-8 h-8" />,
     features: [
-      "Enterprise-grade security",
-      "Complex system integration",
-      "Scalable infrastructure",
-      "Advanced analytics",
-      "24/7 support"
+      "Enterprise-grade solutions",
+      "Complex system integrations",
+      "Advanced security measures",
+      "Multi-location support"
     ],
     solutions: [
-      "Enterprise resource planning systems",
-      "Large-scale automation platforms",
-      "Multi-regional application deployment",
-      "Advanced AI and machine learning integration",
-      "Comprehensive digital transformation strategies"
-    ],
-    caseStudy: {
-      title: "Manufacturing Giant Automation",
-      description: "Implemented AI-powered supply chain automation for 2000+ employee manufacturer, saving $2M annually."
-    }
+      "Enterprise automation platforms",
+      "Legacy system modernization",
+      "Advanced AI integrations",
+      "Global deployment strategies"
+    ]
   }
 ];
 
@@ -87,115 +69,79 @@ const industries = [
   {
     name: "Healthcare",
     icon: "🏥",
-    description: "Digital solutions for better patient care and operational efficiency",
+    description: "Digital health solutions and patient management systems",
     solutions: [
-      "Patient management systems",
-      "Telemedicine platforms",
-      "Medical record digitization",
+      "Electronic health records",
       "Appointment scheduling automation",
-      "Compliance management tools"
-    ],
-    challenges: [
-      "HIPAA compliance requirements",
-      "Integration with existing systems",
-      "Real-time data processing",
-      "Security and privacy concerns"
+      "Patient communication systems",
+      "Compliance and reporting tools"
+    ]
+  },
+  {
+    name: "Financial Services",
+    icon: "🏦",
+    description: "Fintech solutions and financial automation",
+    solutions: [
+      "Payment processing systems",
+      "Risk assessment automation",
+      "Customer onboarding workflows",
+      "Regulatory compliance tools"
     ]
   },
   {
     name: "Education",
     icon: "🎓",
-    description: "Technology solutions that enhance learning and administrative efficiency",
+    description: "EdTech platforms and learning management systems",
     solutions: [
       "Learning management systems",
       "Student information systems",
-      "Online examination platforms",
-      "Virtual classroom solutions",
-      "Administrative automation"
-    ],
-    challenges: [
-      "Accessibility requirements",
-      "Multi-device compatibility",
-      "Data privacy for minors",
-      "Scalable infrastructure"
+      "Online assessment platforms",
+      "Academic workflow automation"
     ]
   },
   {
-    name: "E-commerce & Retail",
+    name: "Retail & E-commerce",
     icon: "🛒",
-    description: "Comprehensive solutions for modern retail operations",
+    description: "Online stores and inventory management solutions",
     solutions: [
-      "Custom e-commerce platforms",
+      "E-commerce platforms",
       "Inventory management systems",
-      "Customer loyalty programs",
-      "Payment processing integration",
-      "Supply chain automation"
-    ],
-    challenges: [
-      "High-traffic handling",
-      "Payment security",
-      "Multi-channel integration",
-      "Real-time inventory sync"
-    ]
-  },
-  {
-    name: "Financial Services",
-    icon: "💰",
-    description: "Secure and compliant solutions for financial institutions",
-    solutions: [
-      "Digital banking platforms",
-      "Investment portfolio management",
-      "Risk assessment automation",
-      "Fraud detection systems",
-      "Regulatory compliance tools"
-    ],
-    challenges: [
-      "Regulatory compliance",
-      "High-security requirements",
-      "Real-time transaction processing",
-      "Legacy system integration"
+      "Order processing automation",
+      "Customer relationship management"
     ]
   },
   {
     name: "Manufacturing",
     icon: "🏭",
-    description: "Smart manufacturing solutions for Industry 4.0",
+    description: "Production optimization and supply chain management",
     solutions: [
-      "Production management systems",
+      "Production planning systems",
       "Quality control automation",
-      "Predictive maintenance platforms",
       "Supply chain optimization",
-      "IoT integration solutions"
-    ],
-    challenges: [
-      "Industrial IoT integration",
-      "Real-time monitoring needs",
-      "Safety compliance",
-      "Legacy equipment compatibility"
+      "Equipment monitoring platforms"
     ]
   },
   {
     name: "Professional Services",
     icon: "💼",
-    description: "Streamlined operations for service-based businesses",
+    description: "Client management and service delivery automation",
     solutions: [
-      "Client management systems",
-      "Project tracking platforms",
-      "Time and billing automation",
-      "Document management systems",
-      "Communication platforms"
-    ],
-    challenges: [
-      "Client data security",
-      "Multi-project management",
-      "Billing complexity",
-      "Team collaboration needs"
+      "Client portal development",
+      "Project management systems",
+      "Billing and invoicing automation",
+      "Document management platforms"
     ]
   }
 ];
 
-export function WhoWeServePage({ initialSection = 'overview', onNavigate }: WhoWeServePageProps) {
-  const [activeTab, setActiveTab] = useState(initialSection);
+export function WhoWeServePage({ navigate }: WhoWeServePageProps) {
+  const [activeTab, setActiveTab] = useState("overview");
+
+  const handleContactClick = () => {
+    if (navigate) {
+      navigate('/contact-us/sales');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -209,281 +155,224 @@ export function WhoWeServePage({ initialSection = 'overview', onNavigate }: WhoW
           >
             <Badge className="mb-4">Who We Serve</Badge>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Solutions for Every Scale of Business
+              Solutions for Every Business Size and Industry
             </h1>
             <p className="text-xl text-muted-foreground">
-              From startups building their first digital presence to enterprises transforming 
-              entire workflows, we create tailored solutions that fit your unique needs and scale.
+              From startups to Fortune 500 companies, we provide tailored technology solutions 
+              that drive growth, efficiency, and innovation across diverse industries worldwide.
             </p>
           </motion.div>
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="sticky top-16 z-20 bg-background/80 backdrop-blur-lg border-b">
+      {/* Content Tabs */}
+      <div className="py-16">
         <div className="container mx-auto px-6">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 max-w-md mx-auto">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="max-w-6xl mx-auto">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="business-size" id="business-size">Business Size</TabsTrigger>
-              <TabsTrigger value="industry" id="industry">Industry</TabsTrigger>
+              <TabsTrigger value="business-size">By Business Size</TabsTrigger>
+              <TabsTrigger value="industry">By Industry</TabsTrigger>
             </TabsList>
-          </Tabs>
-        </div>
-      </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        {/* Overview Tab */}
-        <TabsContent value="overview">
-          <div className="py-16">
-            <div className="container mx-auto px-6">
-              {/* Stats Section */}
+            <TabsContent value="overview" className="mt-8">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="grid md:grid-cols-4 gap-8 mb-16"
+                className="space-y-8"
               >
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-primary mb-2">200+</div>
-                  <div className="text-muted-foreground">Projects Delivered</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-primary mb-2">50+</div>
-                  <div className="text-muted-foreground">Industries Served</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-primary mb-2">98%</div>
-                  <div className="text-muted-foreground">Client Satisfaction</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-primary mb-2">24/7</div>
-                  <div className="text-muted-foreground">Support Available</div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-center">Our Global Reach</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid md:grid-cols-3 gap-8 text-center">
+                      <div>
+                        <div className="text-3xl font-bold text-primary mb-2">200+</div>
+                        <div className="text-muted-foreground">Projects Delivered</div>
+                      </div>
+                      <div>
+                        <div className="text-3xl font-bold text-primary mb-2">15+</div>
+                        <div className="text-muted-foreground">Industries Served</div>
+                      </div>
+                      <div>
+                        <div className="text-3xl font-bold text-primary mb-2">5</div>
+                        <div className="text-muted-foreground">Countries</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <div className="grid md:grid-cols-2 gap-8">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Target className="w-5 h-5" />
+                        Our Approach
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-3 text-muted-foreground">
+                        <li className="flex items-start gap-3">
+                          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                          <span>Understand your unique business needs and challenges</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                          <span>Design solutions that scale with your growth</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                          <span>Implement with minimal disruption to operations</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                          <span>Provide ongoing support and optimization</span>
+                        </li>
+                      </ul>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Shield className="w-5 h-5" />
+                        Why Choose Us
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-3 text-muted-foreground">
+                        <li className="flex items-start gap-3">
+                          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                          <span>Local expertise with global standards</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                          <span>Transparent pricing and project timelines</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                          <span>Proven track record across industries</span>
+                        </li>
+                        <li className="flex items-start gap-3">
+                          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                          <span>Continuous support and partnership</span>
+                        </li>
+                      </ul>
+                    </CardContent>
+                  </Card>
                 </div>
               </motion.div>
+            </TabsContent>
 
-              {/* Our Approach */}
-              <div className="max-w-4xl mx-auto text-center mb-16">
-                <h2 className="text-3xl font-bold mb-6">Our Approach to Every Business</h2>
-                <p className="text-lg text-muted-foreground mb-8">
-                  We believe that every business, regardless of size or industry, deserves access to 
-                  cutting-edge technology solutions. Our approach is always tailored to your specific 
-                  needs, budget, and growth trajectory.
-                </p>
-                
-                <div className="grid md:grid-cols-3 gap-8">
-                  <Card>
-                    <CardHeader>
-                      <Target className="w-12 h-12 text-primary mx-auto mb-4" />
-                      <CardTitle>Understand Your Needs</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground">
-                        We start by deeply understanding your business challenges, goals, and constraints.
-                      </p>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader>
-                      <Zap className="w-12 h-12 text-primary mx-auto mb-4" />
-                      <CardTitle>Design Custom Solutions</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground">
-                        Our solutions are never one-size-fits-all. We craft technology that fits your unique situation.
-                      </p>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader>
-                      <TrendingUp className="w-12 h-12 text-primary mx-auto mb-4" />
-                      <CardTitle>Scale With You</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground">
-                        Our solutions grow with your business, adapting to changing needs and increasing demands.
-                      </p>
-                    </CardContent>
-                  </Card>
+            <TabsContent value="business-size" className="mt-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-8"
+              >
+                <div className="text-center mb-12">
+                  <h2 className="text-2xl font-bold mb-4">Tailored Solutions for Every Business Size</h2>
+                  <p className="text-muted-foreground max-w-2xl mx-auto">
+                    We understand that different business sizes have unique needs, budgets, and growth trajectories.
+                  </p>
                 </div>
-              </div>
 
-              {/* Quick Navigation */}
-              <div className="grid md:grid-cols-2 gap-8">
-                <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('business-size')}>
-                  <CardHeader>
-                    <Building className="w-12 h-12 text-primary mb-4" />
-                    <CardTitle>Solutions by Business Size</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground mb-4">
-                      Discover how our solutions scale from startup MVPs to enterprise-grade systems.
-                    </p>
-                    <Button variant="outline">
-                      Explore Business Sizes
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </CardContent>
-                </Card>
-                
-                <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveTab('industry')}>
-                  <CardHeader>
-                    <Users className="w-12 h-12 text-primary mb-4" />
-                    <CardTitle>Solutions by Industry</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground mb-4">
-                      See how we address the unique challenges and requirements of different industries.
-                    </p>
-                    <Button variant="outline">
-                      Explore Industries
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-
-        {/* Business Size Tab */}
-        <TabsContent value="business-size">
-          <div className="py-16" id="business-size">
-            <div className="container mx-auto px-6">
-              <div className="text-center mb-16">
-                <h2 className="text-3xl font-bold mb-4">Solutions for Every Business Size</h2>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  Whether you're just starting out or managing a large enterprise, 
-                  we have the right solutions to help you build, automate, and scale your operations.
-                </p>
-              </div>
-
-              <div className="space-y-16">
-                {businessSizes.map((size, index) => (
-                  <motion.div
-                    key={size.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.2 }}
-                    className="grid lg:grid-cols-2 gap-12 items-center"
-                  >
-                    <div className={`space-y-6 ${index % 2 === 1 ? 'lg:order-2' : ''}`}>
-                      <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
-                          {size.icon}
-                        </div>
-                        <div>
-                          <h3 className="text-2xl font-bold">{size.title}</h3>
+                <div className="grid lg:grid-cols-3 gap-8">
+                  {businessSizes.map((size, index) => (
+                    <motion.div
+                      key={size.title}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Card className="h-full">
+                        <CardHeader className="text-center">
+                          <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4 text-primary">
+                            {size.icon}
+                          </div>
+                          <CardTitle className="text-xl">{size.title}</CardTitle>
                           <p className="text-muted-foreground">{size.description}</p>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <h4 className="font-semibold mb-3">What We Offer:</h4>
-                        <div className="grid gap-2">
-                          {size.solutions.map((solution, idx) => (
-                            <div key={idx} className="flex items-center gap-2">
-                              <div className="w-2 h-2 bg-primary rounded-full" />
-                              <span className="text-sm">{solution}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      <div className="flex flex-wrap gap-2">
-                        {size.features.map((feature, idx) => (
-                          <Badge key={idx} variant="secondary">{feature}</Badge>
-                        ))}
-                      </div>
-                      
-                      <Button onClick={() => onNavigate('contact-sales')}>
-                        Get Started
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </div>
-                    
-                    <div className={`${index % 2 === 1 ? 'lg:order-1' : ''}`}>
-                      <Card>
-                        <CardHeader>
-                          <CardTitle className="text-lg">Success Story</CardTitle>
                         </CardHeader>
-                        <CardContent>
-                          <h4 className="font-semibold mb-2">{size.caseStudy.title}</h4>
-                          <p className="text-muted-foreground text-sm">{size.caseStudy.description}</p>
+                        <CardContent className="space-y-6">
+                          <div>
+                            <h4 className="font-semibold mb-3">Key Features</h4>
+                            <ul className="space-y-2">
+                              {size.features.map((feature, idx) => (
+                                <li key={idx} className="flex items-start gap-2 text-sm">
+                                  <div className="w-1.5 h-1.5 bg-primary rounded-full mt-1.5 flex-shrink-0" />
+                                  <span className="text-muted-foreground">{feature}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          
+                          <div>
+                            <h4 className="font-semibold mb-3">Popular Solutions</h4>
+                            <ul className="space-y-2">
+                              {size.solutions.map((solution, idx) => (
+                                <li key={idx} className="flex items-start gap-2 text-sm">
+                                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full mt-1.5 flex-shrink-0" />
+                                  <span className="text-muted-foreground">{solution}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         </CardContent>
                       </Card>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </TabsContent>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </TabsContent>
 
-        {/* Industry Tab */}
-        <TabsContent value="industry">
-          <div className="py-16" id="industry">
-            <div className="container mx-auto px-6">
-              <div className="text-center mb-16">
-                <h2 className="text-3xl font-bold mb-4">Industry-Specific Solutions</h2>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  Every industry has unique challenges and requirements. 
-                  Our solutions are designed with deep industry knowledge to address your specific needs.
-                </p>
-              </div>
+            <TabsContent value="industry" className="mt-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-8"
+              >
+                <div className="text-center mb-12">
+                  <h2 className="text-2xl font-bold mb-4">Industry Expertise</h2>
+                  <p className="text-muted-foreground max-w-2xl mx-auto">
+                    Deep industry knowledge enables us to deliver solutions that address specific sector challenges and opportunities.
+                  </p>
+                </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {industries.map((industry, index) => (
-                  <motion.div
-                    key={industry.name}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <Card className="h-full hover:shadow-lg transition-shadow">
-                      <CardHeader>
-                        <div className="text-4xl mb-4">{industry.icon}</div>
-                        <CardTitle>{industry.name}</CardTitle>
-                        <p className="text-muted-foreground text-sm">{industry.description}</p>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div>
-                          <h4 className="font-semibold mb-2 text-sm">Our Solutions:</h4>
-                          <div className="space-y-1">
-                            {industry.solutions.slice(0, 3).map((solution, idx) => (
-                              <div key={idx} className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 bg-primary rounded-full" />
-                                <span className="text-xs text-muted-foreground">{solution}</span>
-                              </div>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {industries.map((industry, index) => (
+                    <motion.div
+                      key={industry.name}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Card className="h-full hover:shadow-lg transition-shadow duration-300">
+                        <CardHeader>
+                          <div className="text-4xl mb-3">{industry.icon}</div>
+                          <CardTitle className="text-lg">{industry.name}</CardTitle>
+                          <p className="text-sm text-muted-foreground">{industry.description}</p>
+                        </CardHeader>
+                        <CardContent>
+                          <h4 className="font-semibold mb-3 text-sm">Specialized Solutions</h4>
+                          <ul className="space-y-2">
+                            {industry.solutions.map((solution, idx) => (
+                              <li key={idx} className="flex items-start gap-2 text-sm">
+                                <div className="w-1.5 h-1.5 bg-primary rounded-full mt-1.5 flex-shrink-0" />
+                                <span className="text-muted-foreground">{solution}</span>
+                              </li>
                             ))}
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <h4 className="font-semibold mb-2 text-sm">Key Challenges We Address:</h4>
-                          <div className="space-y-1">
-                            {industry.challenges.slice(0, 2).map((challenge, idx) => (
-                              <div key={idx} className="flex items-center gap-2">
-                                <Shield className="w-3 h-3 text-primary" />
-                                <span className="text-xs text-muted-foreground">{challenge}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        
-                        <Button variant="outline" size="sm" className="w-full" onClick={() => onNavigate('contact-sales')}>
-                          Learn More
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </TabsContent>
-      </Tabs>
+                          </ul>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
 
       {/* Call to Action */}
       <div className="py-16 bg-muted/30">
@@ -493,19 +382,15 @@ export function WhoWeServePage({ initialSection = 'overview', onNavigate }: WhoW
             animate={{ opacity: 1, y: 0 }}
             className="max-w-2xl mx-auto text-center"
           >
-            <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Business?</h2>
+            <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
             <p className="text-muted-foreground mb-8">
-              No matter your business size or industry, we have the expertise and solutions 
-              to help you achieve your digital transformation goals.
+              Whatever your business size or industry, we have the expertise and solutions to help you succeed. 
+              Let's discuss how we can accelerate your digital transformation.
             </p>
-            <div className="flex gap-4 justify-center">
-              <Button onClick={() => onNavigate('contact-sales')} size="lg">
-                Get Started Today
-              </Button>
-              <Button variant="outline" size="lg" onClick={() => onNavigate('automation')}>
-                Explore Solutions
-              </Button>
-            </div>
+            <Button size="lg" onClick={handleContactClick}>
+              Schedule a Consultation
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
           </motion.div>
         </div>
       </div>

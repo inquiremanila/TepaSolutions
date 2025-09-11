@@ -1,11 +1,12 @@
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { MapPin, Phone, Mail, Users, Target, Zap, Heart, TrendingUp, Globe, Award, BookOpen } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 
 interface AboutPageProps {
-  onNavigate: (target: string) => void;
+  navigate?: (path: string) => void;
+  currentPath?: string;
 }
 
 const values = [
@@ -70,7 +71,17 @@ const futureGoals = [
   }
 ];
 
-export function AboutPage({ onNavigate }: AboutPageProps) {
+export function AboutPage({ navigate }: AboutPageProps) {
+  const handleNavigate = (target: string) => {
+    if (navigate) {
+      const pathMap: Record<string, string> = {
+        'contact-sales': '/contact-us/sales',
+        'careers': '/careers'
+      };
+      navigate(pathMap[target] || `/${target}`);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -263,7 +274,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
                     </div>
                     
                     <div>
-                      <Button onClick={() => onNavigate('contact-sales')}>
+                      <Button onClick={() => handleNavigate('contact-sales')}>
                         Schedule a Meeting
                       </Button>
                     </div>
@@ -297,10 +308,10 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
               Let's discuss how we can help streamline your operations and accelerate your growth with innovative technology solutions. Get in touch with our team today.
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
-              <Button onClick={() => onNavigate('contact-sales')} size="lg">
+              <Button onClick={() => handleNavigate('contact-sales')} size="lg">
                 Tell Us About Your Projects
               </Button>
-              <Button variant="outline" size="lg" onClick={() => onNavigate('careers')}>
+              <Button variant="outline" size="lg" onClick={() => handleNavigate('careers')}>
                 Join Our Team
               </Button>
             </div>

@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { Card, CardContent } from './ui/card';

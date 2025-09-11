@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Heart, Users, GraduationCap, Code, Laptop, MapPin, Calendar, Award, Camera, BookOpen } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 
 interface VolunteerPageProps {
-  onNavigate: (target: string) => void;
+  navigate?: (path: string) => void;
+  currentPath?: string;
 }
 
 const volunteerOpportunities = [
@@ -110,7 +111,48 @@ const pastEvents = [
   }
 ];
 
-export function VolunteerPage({ onNavigate }: VolunteerPageProps) {
+const galleryImages = [
+  {
+    id: 1,
+    alt: "Students coding their first website",
+    caption: "Young students learning web development basics during our coding workshop"
+  },
+  {
+    id: 2,
+    alt: "Digital literacy workshop in progress",
+    caption: "Community members learning essential computer skills"
+  },
+  {
+    id: 3,
+    alt: "Mentorship session",
+    caption: "One-on-one mentoring session between volunteer and student"
+  },
+  {
+    id: 4,
+    alt: "Hackathon team collaboration",
+    caption: "Teams collaborating during our Code for Good hackathon"
+  },
+  {
+    id: 5,
+    alt: "Community leaders learning tech",
+    caption: "Local community leaders embracing new technologies"
+  },
+  {
+    id: 6,
+    alt: "Graduation ceremony",
+    caption: "Celebrating successful completion of our programming bootcamp"
+  }
+];
+
+export function VolunteerPage({ navigate }: VolunteerPageProps) {
+  const handleVolunteerClick = () => {
+    navigate?.('/volunteer-with-us/volunteer-form');
+  };
+
+  const handleContactClick = () => {
+    navigate?.('/contact-us/sales');
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -132,7 +174,7 @@ export function VolunteerPage({ onNavigate }: VolunteerPageProps) {
               Join our mission to democratize technology education and empower underserved communities through coding, digital literacy, and mentorship programs across the Philippines.
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
-              <Button size="lg" onClick={() => onNavigate('contact-volunteer')}>
+              <Button size="lg" onClick={handleVolunteerClick}>
                 Join Our Mission
               </Button>
               <Button variant="outline" size="lg" onClick={() => {
@@ -145,8 +187,40 @@ export function VolunteerPage({ onNavigate }: VolunteerPageProps) {
         </div>
       </div>
 
-      {/* Why Volunteer With Us */}
+      {/* Mission & Vision */}
       <div className="py-16">
+        <div className="container mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-4xl mx-auto"
+          >
+            <div className="grid md:grid-cols-2 gap-12 mb-16">
+              <div>
+                <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
+                <p className="text-muted-foreground text-lg leading-relaxed mb-6">
+                  To bridge the digital divide by making technology education accessible to everyone, regardless of their background or economic status. We believe that every individual deserves the opportunity to learn, grow, and thrive in our digital world.
+                </p>
+                <p className="text-muted-foreground">
+                  Through our volunteer programs, we're not just teaching code - we're building dreams, opening doors, and creating pathways to better futures for individuals and communities across the Philippines.
+                </p>
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold mb-6">Our Vision</h2>
+                <p className="text-muted-foreground text-lg leading-relaxed mb-6">
+                  A Philippines where technology literacy is universal, where every community has access to digital tools and knowledge, and where the next generation of tech innovators comes from all walks of life.
+                </p>
+                <p className="text-muted-foreground">
+                  We envision a future where our volunteer efforts create a ripple effect - where those we teach today become the mentors and leaders of tomorrow, continuing the cycle of knowledge sharing and community empowerment.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Why Volunteer With Us */}
+      <div className="py-16 bg-muted/30">
         <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -224,7 +298,7 @@ export function VolunteerPage({ onNavigate }: VolunteerPageProps) {
       </div>
 
       {/* Volunteer Opportunities */}
-      <div className="py-16 bg-muted/30">
+      <div className="py-16">
         <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -273,7 +347,7 @@ export function VolunteerPage({ onNavigate }: VolunteerPageProps) {
       </div>
 
       {/* Impact Statistics */}
-      <div className="py-16">
+      <div className="py-16 bg-muted/30">
         <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -305,7 +379,7 @@ export function VolunteerPage({ onNavigate }: VolunteerPageProps) {
       </div>
 
       {/* Past Events & Gallery */}
-      <div className="py-16 bg-muted/30" id="impact-stories">
+      <div className="py-16" id="impact-stories">
         <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -353,7 +427,7 @@ export function VolunteerPage({ onNavigate }: VolunteerPageProps) {
             ))}
           </div>
 
-          {/* Photo Gallery Placeholder */}
+          {/* Photo Gallery */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -361,19 +435,17 @@ export function VolunteerPage({ onNavigate }: VolunteerPageProps) {
           >
             <h3 className="text-2xl font-bold text-center mb-8">Event Highlights</h3>
             <div className="grid md:grid-cols-3 gap-6">
-              {[1, 2, 3, 4, 5, 6].map((index) => (
-                <div key={index} className="aspect-video bg-muted/50 rounded-lg flex items-center justify-center group hover:bg-muted/70 transition-colors">
-                  <div className="text-center">
-                    <Camera className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground">
-                      {index === 1 && "Students coding their first website"}
-                      {index === 2 && "Digital literacy workshop in progress"}
-                      {index === 3 && "Mentorship session"}
-                      {index === 4 && "Hackathon team collaboration"}
-                      {index === 5 && "Community leaders learning tech"}
-                      {index === 6 && "Graduation ceremony"}
-                    </p>
+              {galleryImages.map((image) => (
+                <div key={image.id} className="group">
+                  <div className="aspect-video bg-muted/20 rounded-lg overflow-hidden mb-3">
+                    <ImageWithFallback
+                      src="/images/placeholder"
+                      alt={image.alt}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      data-priority={image.id <= 2 ? "high" : undefined}
+                    />
                   </div>
+                  <p className="text-sm text-muted-foreground text-center">{image.caption}</p>
                 </div>
               ))}
             </div>
@@ -382,7 +454,7 @@ export function VolunteerPage({ onNavigate }: VolunteerPageProps) {
       </div>
 
       {/* Testimonials */}
-      <div className="py-16">
+      <div className="py-16 bg-muted/30">
         <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -434,10 +506,10 @@ export function VolunteerPage({ onNavigate }: VolunteerPageProps) {
               Whether you have 2 hours a week or 2 hours a month, your contribution matters.
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
-              <Button size="lg" onClick={() => onNavigate('contact-volunteer')}>
+              <Button size="lg" onClick={handleVolunteerClick}>
                 Start Volunteering Today
               </Button>
-              <Button variant="outline" size="lg" onClick={() => onNavigate('contact-sales')}>
+              <Button variant="outline" size="lg" onClick={handleContactClick}>
                 Partner With Us
               </Button>
             </div>

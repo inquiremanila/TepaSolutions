@@ -22,7 +22,7 @@ export function SEOHead({
   keywords,
   canonical,
   ogType = 'website',
-  ogImage = 'https://tepasolutions.com/og-image.jpg',
+  ogImage = 'https://tepasolutions.asia/og-image.jpg',
   structuredData,
   breadcrumbs,
   alternateLanguages,
@@ -77,6 +77,10 @@ export function SEOHead({
       { name: 'apple-mobile-web-app-capable', content: 'yes' },
       { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
       
+      // Favicon and App Icons
+      { name: 'application-name', content: 'Tepa Solutions' },
+      { name: 'msapplication-config', content: '/browserconfig.xml' },
+      
       // Geographic targeting
       { name: 'geo.region', content: 'PH' },
       { name: 'geo.country', content: 'Philippines' },
@@ -112,6 +116,28 @@ export function SEOHead({
       
       meta.setAttribute('content', tag.content);
       document.head.appendChild(meta);
+    });
+
+    // Add favicon and icon links
+    const iconLinks = [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' },
+      { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
+      { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
+      { rel: 'manifest', href: '/manifest.json' }
+    ];
+
+    // Remove existing favicon links
+    const existingIcons = document.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"], link[rel="manifest"]');
+    existingIcons.forEach(icon => icon.remove());
+
+    // Add favicon links
+    iconLinks.forEach(linkData => {
+      const link = document.createElement('link');
+      Object.entries(linkData).forEach(([key, value]) => {
+        link.setAttribute(key, value);
+      });
+      document.head.appendChild(link);
     });
 
     // Set canonical URL

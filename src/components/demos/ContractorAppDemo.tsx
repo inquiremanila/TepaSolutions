@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { useState, useEffect } from 'react';
 import { Badge } from '../ui/badge';
 import { Play, Pause, Clock, MapPin, DollarSign, Calendar, Camera, FileText, Users } from 'lucide-react';

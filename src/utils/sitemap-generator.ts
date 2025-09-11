@@ -39,7 +39,13 @@ export const sitemapUrls: SitemapUrl[] = [
 
   // Main service categories - high priority
   {
-    url: `${baseUrl}/mobile-app-development`,
+    url: `${baseUrl}/services`,
+    lastModified: currentDate,
+    changeFrequency: 'weekly',
+    priority: 0.9
+  },
+  {
+    url: `${baseUrl}/services/mobile-app-development`,
     lastModified: currentDate,
     changeFrequency: 'weekly',
     priority: 0.9,
@@ -52,7 +58,7 @@ export const sitemapUrls: SitemapUrl[] = [
     ]
   },
   {
-    url: `${baseUrl}/web-application-development`,
+    url: `${baseUrl}/services/web-application-development`,
     lastModified: currentDate,
     changeFrequency: 'weekly', 
     priority: 0.9,
@@ -65,19 +71,19 @@ export const sitemapUrls: SitemapUrl[] = [
     ]
   },
   {
-    url: `${baseUrl}/website-development`,
+    url: `${baseUrl}/services/website-development`,
     lastModified: currentDate,
     changeFrequency: 'weekly',
     priority: 0.9
   },
   {
-    url: `${baseUrl}/seo-services`,
+    url: `${baseUrl}/services/seo-services`,
     lastModified: currentDate,
     changeFrequency: 'weekly',
     priority: 0.9
   },
   {
-    url: `${baseUrl}/business-automation`,
+    url: `${baseUrl}/services/business-automation`,
     lastModified: currentDate,
     changeFrequency: 'weekly',
     priority: 0.9
@@ -85,37 +91,37 @@ export const sitemapUrls: SitemapUrl[] = [
 
   // Automation services - specific solutions
   {
-    url: `${baseUrl}/business-automation/sales-process-automation`,
+    url: `${baseUrl}/services/sales-automation`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.8
   },
   {
-    url: `${baseUrl}/business-automation/marketing-automation`,
+    url: `${baseUrl}/services/marketing-automation`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.8
   },
   {
-    url: `${baseUrl}/business-automation/customer-support-automation`,
+    url: `${baseUrl}/services/customer-support-automation`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.8
   },
   {
-    url: `${baseUrl}/business-automation/hr-automation`,
+    url: `${baseUrl}/services/hr-automation`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.8
   },
   {
-    url: `${baseUrl}/business-automation/finance-automation`,
+    url: `${baseUrl}/services/finance-automation`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.8
   },
   {
-    url: `${baseUrl}/business-automation/inventory-management-automation`,
+    url: `${baseUrl}/services/inventory-automation`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.8
@@ -123,7 +129,7 @@ export const sitemapUrls: SitemapUrl[] = [
 
   // Company pages - important for brand
   {
-    url: `${baseUrl}/learn-about-tepa`,
+    url: `${baseUrl}/about`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.8,
@@ -139,12 +145,6 @@ export const sitemapUrls: SitemapUrl[] = [
         title: 'Modern Tech Workspace'
       }
     ]
-  },
-  {
-    url: `${baseUrl}/volunteer-with-us`,
-    lastModified: currentDate,
-    changeFrequency: 'monthly',
-    priority: 0.6
   },
   {
     url: `${baseUrl}/careers`,
@@ -170,7 +170,67 @@ export const sitemapUrls: SitemapUrl[] = [
     url: `${baseUrl}/events`,
     lastModified: currentDate,
     changeFrequency: 'weekly',
-    priority: 0.7
+    priority: 0.7,
+    images: [
+      {
+        url: `${baseUrl}/images/placeholder`,
+        caption: 'Roblox game development workshop in progress',
+        title: 'Students learning Roblox game development fundamentals'
+      },
+      {
+        url: `${baseUrl}/images/placeholder`,
+        caption: 'Web development bootcamp participants coding',
+        title: 'Participants building their first full-stack web application'
+      },
+      {
+        url: `${baseUrl}/images/placeholder`,
+        caption: 'AI and automation workshop for business leaders',
+        title: 'Business executives learning AI implementation strategies'
+      },
+      {
+        url: `${baseUrl}/images/placeholder`,
+        caption: 'Mobile app design workshop with Figma',
+        title: 'Designers creating mobile app prototypes and wireframes'
+      }
+    ]
+  },
+  {
+    url: `${baseUrl}/volunteer-with-us`,
+    lastModified: currentDate,
+    changeFrequency: 'weekly',
+    priority: 0.7,
+    images: [
+      {
+        url: `${baseUrl}/images/placeholder`,
+        caption: 'Students coding their first website',
+        title: 'Young students learning web development basics during our coding workshop'
+      },
+      {
+        url: `${baseUrl}/images/placeholder`,
+        caption: 'Digital literacy workshop in progress',
+        title: 'Community members learning essential computer skills'
+      },
+      {
+        url: `${baseUrl}/images/placeholder`,
+        caption: 'Mentorship session',
+        title: 'One-on-one mentoring session between volunteer and student'
+      },
+      {
+        url: `${baseUrl}/images/placeholder`,
+        caption: 'Hackathon team collaboration',
+        title: 'Teams collaborating during our Code for Good hackathon'
+      },
+      {
+        url: `${baseUrl}/images/placeholder`,
+        caption: 'Community leaders learning tech',
+        title: 'Local community leaders embracing new technologies'
+      },
+      {
+        url: `${baseUrl}/images/placeholder`,
+        caption: 'Graduation ceremony',
+        title: 'Celebrating successful completion of our programming bootcamp'
+      }
+    ]
   },
 
   // Investment/Business pages
@@ -183,34 +243,68 @@ export const sitemapUrls: SitemapUrl[] = [
 
   // Contact pages - conversion focused
   {
-    url: `${baseUrl}/contact-us/sales`,
+    url: `${baseUrl}/contact`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.8
   },
   {
-    url: `${baseUrl}/contact-us/support`,
+    url: `${baseUrl}/contact/sales`,
+    lastModified: currentDate,
+    changeFrequency: 'monthly',
+    priority: 0.8
+  },
+  {
+    url: `${baseUrl}/contact/support`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.7
   },
   {
-    url: `${baseUrl}/contact-us/volunteer`,
+    url: `${baseUrl}/contact/volunteer`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.5
   },
   {
-    url: `${baseUrl}/contact-us/event-hosting`,
-    lastModified: currentDate,
-    changeFrequency: 'monthly',
-    priority: 0.5
-  },
-  {
-    url: `${baseUrl}/contact-us/investors`,
+    url: `${baseUrl}/volunteer-with-us/volunteer-form`,
     lastModified: currentDate,
     changeFrequency: 'monthly',
     priority: 0.6
+  },
+  {
+    url: `${baseUrl}/contact/events`,
+    lastModified: currentDate,
+    changeFrequency: 'monthly',
+    priority: 0.5
+  },
+  {
+    url: `${baseUrl}/contact/investors`,
+    lastModified: currentDate,
+    changeFrequency: 'monthly',
+    priority: 0.6
+  },
+
+  // Portfolio/Case studies (if available)
+  {
+    url: `${baseUrl}/portfolio`,
+    lastModified: currentDate,
+    changeFrequency: 'monthly',
+    priority: 0.7
+  },
+
+  // Legal pages (important for trust)
+  {
+    url: `${baseUrl}/privacy-policy`,
+    lastModified: currentDate,
+    changeFrequency: 'yearly',
+    priority: 0.3
+  },
+  {
+    url: `${baseUrl}/terms-of-service`,
+    lastModified: currentDate,
+    changeFrequency: 'yearly',
+    priority: 0.3
   }
 ];
 
