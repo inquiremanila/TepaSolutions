@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Phone, Mail, ArrowLeft, Send, CheckCircle, AlertCircle, Upload } from 'lucide-react';
-import { submitContactForm } from '../utils/api';
+import { submitContactForm, submitVolunteerApplication } from '../utils/api';
 import { toast } from "sonner@2.0.3";
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -81,30 +81,42 @@ export function ContactForms({ formType, onBack }: ContactFormsProps) {
     setIsSubmitting(true);
 
     try {
-      const submissionData = {
-        type: formType,
-        name: `${formData.firstName} ${formData.lastName}`.trim(),
-        email: formData.email,
-        company: formData.businessName,
-        phone: formData.phone,
-        message: formData.message,
-        subject: formType === 'sales' 
-          ? `Sales Inquiry - ${formData.areaOfInterest || 'General'}`
-          : formType === 'volunteer'
-          ? `Volunteer Application - ${formData.areaOfInterest || 'General'}`
-          : formType === 'event-host'
-          ? `Event Hosting Inquiry - ${formData.areaOfInterest || 'General'}`
-          : formType === 'investor'
-          ? formData.subject || 'Investor Relations Inquiry'
-          : formType === 'support'
-          ? `Customer Support Request - ${supportType || 'General'}`
-          : 'Customer Support Request',
-        priority: formType === 'support' ? 'high' as const : 'medium' as const,
-        supportType: supportType,
-        attachedFiles: attachedFiles.length
-      };
+      if (formType === 'volunteer') {
+        // Handle volunteer application separately
+        await submitVolunteerApplication({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          experienceLevel: formData.howCanWeHelp, // Using this field for experience level
+          availability: formData.isCurrentClient, // Using this field for availability
+          areaOfInterest: formData.areaOfInterest,
+          message: formData.message
+        });
+      } else {
+        const submissionData = {
+          type: formType,
+          name: `${formData.firstName} ${formData.lastName}`.trim(),
+          email: formData.email,
+          company: formData.businessName,
+          phone: formData.phone,
+          message: formData.message,
+          subject: formType === 'sales' 
+            ? `Sales Inquiry - ${formData.areaOfInterest || 'General'}`
+            : formType === 'event-host'
+            ? `Event Hosting Inquiry - ${formData.areaOfInterest || 'General'}`
+            : formType === 'investor'
+            ? formData.subject || 'Investor Relations Inquiry'
+            : formType === 'support'
+            ? `Customer Support Request - ${supportType || 'General'}`
+            : 'Customer Support Request',
+          priority: formType === 'support' ? 'high' as const : 'medium' as const,
+          supportType: supportType,
+          attachedFiles: attachedFiles.length
+        };
 
-      await submitContactForm(submissionData);
+        await submitContactForm(submissionData);
+      }
       
       toast.success('Form submitted successfully!', {
         description: 'We will contact you shortly.',

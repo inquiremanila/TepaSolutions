@@ -1,5 +1,6 @@
 import { Phone, Mail, MapPin, ExternalLink, Facebook, Linkedin } from 'lucide-react';
 import { Button } from './ui/button';
+import { Logo } from './Logo';
 import exampleImage from 'figma:asset/730ea04e583f770efc56f1b8808444632b232c5f.png';
 
 interface FooterProps {
@@ -153,12 +154,7 @@ export function Footer({ onNavigate }: FooterProps) {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             {/* Logo and Social */}
             <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <span className="text-primary-foreground font-bold text-sm">T</span>
-                </div>
-                <span className="font-semibold">Tepa Solutions</span>
-              </div>
+              <Logo size="md" showText={true} />
               
               {/* Social Media Icons */}
               <div className="flex items-center gap-3">

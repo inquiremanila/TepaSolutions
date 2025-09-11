@@ -90,19 +90,19 @@ export function ArticlePage({ navigate, articleSlug }: ArticlePageProps) {
 
       {/* Featured Image */}
       {article.featuredImage && (
-        <div className=\"py-8\">
-          <div className=\"container mx-auto px-6 max-w-4xl\">
+        <div className="py-8">
+          <div className="container mx-auto px-6 max-w-4xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className=\"aspect-video rounded-xl overflow-hidden\"
+              className="aspect-video rounded-xl overflow-hidden"
             >
               <ImageWithFallback
                 src={article.featuredImage}
                 alt={article.title}
-                className=\"w-full h-full object-cover\"
-                data-priority=\"high\"
+                className="w-full h-full object-cover"
+                data-priority="high"
               />
             </motion.div>
           </div>

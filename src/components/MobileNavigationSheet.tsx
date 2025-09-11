@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Logo } from './Logo';
 import { navItems } from './data/navigation-data';
 
 interface MobileNavigationSheetProps {
@@ -317,9 +318,9 @@ export function MobileNavigationSheet({ isOpen, onClose, onAction }: MobileNavig
 
               {/* Footer */}
               <div className="p-4 border-t">
-                <div className="text-center text-sm text-muted-foreground">
-                  <p className="font-medium text-foreground">Tepa Solutions</p>
-                  <p>Digital Innovation Partner</p>
+                <div className="flex flex-col items-center gap-2">
+                  <Logo size="sm" showText={true} />
+                  <p className="text-sm text-muted-foreground">Digital Innovation Partner</p>
                 </div>
               </div>
             </div>

@@ -35,53 +35,241 @@ const benefits = [
 ];
 
 export const jobPositions = [
+  // Internship Positions - Remote
   {
     id: 1,
-    slug: 'frontend-developer',
-    title: "Frontend Developer",
+    slug: 'intern-frontend-developer',
+    title: "Frontend Developer Intern",
     department: "Engineering",
-    type: "Full-time",
-    location: "BGC, Taguig / Remote",
-    experience: "2-4 years",
-    salary: "₱50,000 - ₱80,000",
-    description: "Build beautiful, responsive user interfaces using React, TypeScript, and modern web technologies. Join our development team to create innovative solutions that impact businesses worldwide.",
+    type: "Internship",
+    location: "Remote",
+    experience: "Entry Level",
+    salary: "",
+    description: "Join our development team as a frontend developer intern. Learn React, TypeScript, and modern web technologies while working on real projects that impact businesses worldwide.",
     requirements: [
-      "3+ years experience with React and TypeScript",
-      "Strong knowledge of HTML, CSS, and JavaScript",
-      "Experience with modern build tools (Vite, Webpack)",
+      "Basic knowledge of HTML, CSS, and JavaScript",
+      "Familiarity with React (personal projects or coursework)",
       "Understanding of responsive design principles",
-      "Familiarity with Git version control",
-      "Experience with REST APIs and state management"
+      "Strong willingness to learn and adapt",
+      "Good communication skills",
+      "Availability for at least 20 hours per week"
     ],
     responsibilities: [
-      "Develop and maintain responsive web applications",
-      "Collaborate with designers to implement pixel-perfect UIs",
-      "Optimize applications for maximum speed and scalability",
-      "Write clean, maintainable, and testable code",
-      "Participate in code reviews and technical discussions",
-      "Stay updated with latest frontend technologies and best practices"
+      "Assist in developing responsive web applications",
+      "Learn and implement modern frontend technologies",
+      "Collaborate with senior developers on UI components",
+      "Participate in code reviews and learning sessions",
+      "Support testing and quality assurance processes",
+      "Document your learning and project contributions"
     ],
     niceToHave: [
-      "Experience with Next.js or other React frameworks",
-      "Knowledge of design systems and component libraries",
-      "Understanding of accessibility (a11y) principles",
-      "Experience with testing frameworks (Jest, Cypress)",
-      "Familiarity with cloud platforms (AWS, Vercel)",
+      "Experience with Git version control",
+      "Basic understanding of design principles",
+      "Familiarity with TypeScript",
+      "Experience with CSS frameworks",
+      "Personal coding projects or portfolio",
       "Design skills and experience with Figma"
     ],
-    postedDate: "2025-01-10",
-    applicationDeadline: "2025-02-10"
+    postedDate: "2025-01-15",
+    applicationDeadline: "2025-10-30"
   },
   {
     id: 2,
-    slug: 'fullstack-developer',
+    slug: 'intern-backend-developer',
+    title: "Backend Developer Intern",
+    department: "Engineering",
+    type: "Internship",
+    location: "Remote",
+    experience: "Entry Level",
+    salary: "",
+    description: "Learn backend development with Node.js, databases, and API design while contributing to real automation solutions and business tools.",
+    requirements: [
+      "Basic programming knowledge (JavaScript, Python, or similar)",
+      "Understanding of databases and data structures",
+      "Familiarity with REST APIs",
+      "Strong problem-solving skills",
+      "Good communication and teamwork abilities",
+      "Availability for at least 20 hours per week"
+    ],
+    responsibilities: [
+      "Assist in API development and maintenance",
+      "Learn database design and optimization",
+      "Support backend infrastructure and automation tools",
+      "Participate in code reviews and technical discussions",
+      "Help with testing and debugging backend systems",
+      "Document development processes and learnings"
+    ],
+    niceToHave: [
+      "Experience with Node.js or Express.js",
+      "Knowledge of SQL and NoSQL databases",
+      "Familiarity with cloud platforms",
+      "Understanding of version control (Git)",
+      "Experience with automation tools",
+      "Interest in DevOps practices"
+    ],
+    postedDate: "2025-01-15",
+    applicationDeadline: "2025-10-30"
+  },
+  {
+    id: 3,
+    slug: 'intern-article-writer',
+    title: "Article Writer Intern",
+    department: "Marketing",
+    type: "Internship",
+    location: "Remote",
+    experience: "Entry Level",
+    salary: "",
+    description: "Create engaging content about technology, business automation, and digital trends. Perfect for writers passionate about tech and business innovation.",
+    requirements: [
+      "Excellent written English communication skills",
+      "Interest in technology and business topics",
+      "Basic research and fact-checking abilities",
+      "Understanding of SEO principles",
+      "Ability to meet deadlines consistently",
+      "Availability for at least 15 hours per week"
+    ],
+    responsibilities: [
+      "Write articles on technology and business automation topics",
+      "Research industry trends and emerging technologies",
+      "Create compelling headlines and meta descriptions",
+      "Collaborate with marketing team on content strategy",
+      "Edit and proofread content for quality assurance",
+      "Assist with social media content creation"
+    ],
+    niceToHave: [
+      "Experience with content management systems",
+      "Knowledge of digital marketing principles",
+      "Familiarity with AI tools and automation",
+      "Understanding of target audience engagement",
+      "Portfolio of published articles or blog posts",
+      "Social media management experience"
+    ],
+    postedDate: "2025-01-15",
+    applicationDeadline: "2025-10-30"
+  },
+  {
+    id: 4,
+    slug: 'intern-seo-specialist',
+    title: "SEO Specialist Intern",
+    department: "Marketing",
+    type: "Internship",
+    location: "Remote",
+    experience: "Entry Level",
+    salary: "",
+    description: "Learn search engine optimization and digital marketing strategies while helping improve our clients' online visibility and search rankings.",
+    requirements: [
+      "Basic understanding of SEO principles",
+      "Analytical mindset and attention to detail",
+      "Familiarity with Google Analytics and Search Console",
+      "Interest in digital marketing and online growth",
+      "Strong research and problem-solving skills",
+      "Availability for at least 20 hours per week"
+    ],
+    responsibilities: [
+      "Assist with keyword research and analysis",
+      "Support on-page optimization projects",
+      "Help with technical SEO audits",
+      "Monitor website performance and rankings",
+      "Assist with content optimization strategies",
+      "Learn and apply SEO best practices"
+    ],
+    niceToHave: [
+      "Experience with SEO tools (SEMrush, Ahrefs, Moz)",
+      "Knowledge of HTML and basic web technologies",
+      "Understanding of content marketing",
+      "Familiarity with local SEO strategies",
+      "Experience with social media marketing",
+      "Certification in Google Analytics or Ads"
+    ],
+    postedDate: "2025-01-15",
+    applicationDeadline: "2025-10-30"
+  },
+  {
+    id: 5,
+    slug: 'intern-admin-assistant',
+    title: "Administrative Assistant Intern",
+    department: "Operations",
+    type: "Internship",
+    location: "Remote",
+    experience: "Entry Level",
+    salary: "",
+    description: "Support daily operations and learn business administration while working with a dynamic tech company focused on automation and innovation.",
+    requirements: [
+      "Strong organizational and time management skills",
+      "Excellent communication abilities",
+      "Proficiency in Microsoft Office or Google Workspace",
+      "Attention to detail and accuracy",
+      "Ability to multitask and prioritize",
+      "Availability for at least 20 hours per week"
+    ],
+    responsibilities: [
+      "Assist with scheduling and calendar management",
+      "Support client communication and follow-ups",
+      "Help with document preparation and data entry",
+      "Coordinate meetings and virtual events",
+      "Assist with project management tasks",
+      "Learn business process optimization"
+    ],
+    niceToHave: [
+      "Experience with project management tools",
+      "Knowledge of CRM systems",
+      "Understanding of business automation tools",
+      "Customer service experience",
+      "Familiarity with virtual collaboration tools",
+      "Interest in process improvement"
+    ],
+    postedDate: "2025-01-15",
+    applicationDeadline: "2025-10-30"
+  },
+  {
+    id: 6,
+    slug: 'intern-business-development',
+    title: "Business Development Intern",
+    department: "Sales",
+    type: "Internship",
+    location: "Remote",
+    experience: "Entry Level",
+    salary: "",
+    description: "Learn business development and sales strategies while supporting client acquisition and relationship building for our technology solutions.",
+    requirements: [
+      "Strong interpersonal and communication skills",
+      "Interest in business development and sales",
+      "Basic understanding of technology solutions",
+      "Research and analytical abilities",
+      "Self-motivated and goal-oriented",
+      "Availability for at least 20 hours per week"
+    ],
+    responsibilities: [
+      "Support lead generation and prospecting activities",
+      "Assist with market research and competitor analysis",
+      "Help prepare sales presentations and proposals",
+      "Support client communication and follow-ups",
+      "Learn CRM management and sales processes",
+      "Assist with networking and event coordination"
+    ],
+    niceToHave: [
+      "Experience with sales or customer service",
+      "Understanding of B2B sales processes",
+      "Familiarity with CRM tools",
+      "Knowledge of automation and tech solutions",
+      "Strong presentation skills",
+      "Network in business or tech communities"
+    ],
+    postedDate: "2025-01-15",
+    applicationDeadline: "2025-10-30"
+  },
+
+  // Contractual Positions - Remote (6-12 months)
+  {
+    id: 7,
+    slug: 'contract-fullstack-developer',
     title: "Full Stack Developer",
     department: "Engineering",
-    type: "Full-time",
-    location: "BGC, Taguig / Remote",
+    type: "Contract",
+    location: "Remote",
     experience: "3-5 years",
-    salary: "₱70,000 - ₱120,000",
-    description: "Work across the entire technology stack to build scalable web applications and automation solutions. Perfect opportunity for developers who enjoy both frontend and backend challenges.",
+    salary: "",
+    description: "Work on end-to-end web application development using modern technologies. 6-12 month contract opportunity for experienced developers who enjoy both frontend and backend challenges.",
     requirements: [
       "4+ years of full-stack development experience",
       "Proficiency in React and Node.js",
@@ -106,86 +294,160 @@ export const jobPositions = [
       "Familiarity with AI/ML integration",
       "Previous startup or agency experience"
     ],
-    postedDate: "2025-01-08",
-    applicationDeadline: "2025-02-08"
+    postedDate: "2025-01-15",
+    applicationDeadline: "2025-10-30"
   },
   {
-    id: 3,
-    slug: 'ui-ux-designer',
-    title: "UI/UX Designer",
-    department: "Design",
-    type: "Full-time",
-    location: "BGC, Taguig / Remote",
-    experience: "2-4 years",
-    salary: "₱45,000 - ₱70,000",
-    description: "Create intuitive and engaging user experiences for web applications and automation platforms. Work closely with development teams to bring designs to life.",
-    requirements: [
-      "3+ years of UI/UX design experience",
-      "Proficiency in Figma and design tools",
-      "Strong understanding of user-centered design principles",
-      "Experience with prototyping and user testing",
-      "Knowledge of design systems and component libraries",
-      "Portfolio showcasing web application designs"
-    ],
-    responsibilities: [
-      "Design user interfaces for web applications and automation tools",
-      "Create wireframes, prototypes, and high-fidelity mockups",
-      "Conduct user research and usability testing",
-      "Collaborate with developers to ensure design implementation",
-      "Maintain and evolve design systems",
-      "Present design concepts to stakeholders"
-    ],
-    niceToHave: [
-      "Experience designing for business automation tools",
-      "Knowledge of HTML/CSS and frontend technologies",
-      "Understanding of accessibility principles",
-      "Experience with motion design and animations",
-      "Background in service design or business process design",
-      "Familiarity with data visualization"
-    ],
-    postedDate: "2025-01-05",
-    applicationDeadline: "2025-02-05"
-  },
-  {
-    id: 4,
-    slug: 'business-development-manager',
-    title: "Business Development Manager",
-    department: "Sales",
-    type: "Full-time",
-    location: "BGC, Taguig",
+    id: 8,
+    slug: 'contract-mobile-app-developer',
+    title: "Mobile App Developer",
+    department: "Engineering",
+    type: "Contract",
+    location: "Remote",
     experience: "3-5 years",
-    salary: "₱60,000 - ₱100,000 + Commission",
-    description: "Drive business growth by identifying new opportunities and building relationships with potential clients. Lead the expansion of our automation and development services.",
+    salary: "",
+    description: "Develop native and cross-platform mobile applications. 6-12 month contract for experienced mobile developers working on innovative business solutions.",
     requirements: [
-      "4+ years of B2B sales or business development experience",
-      "Experience selling technology solutions or services",
-      "Strong communication and presentation skills",
-      "Understanding of business automation and software development",
-      "Proven track record of meeting sales targets",
-      "Network in the Philippine business community"
+      "4+ years of mobile app development experience",
+      "Proficiency in React Native or Flutter",
+      "Experience with native iOS and Android development",
+      "Knowledge of mobile app deployment processes",
+      "Understanding of mobile UX/UI principles",
+      "Experience with mobile testing and debugging"
     ],
     responsibilities: [
-      "Identify and pursue new business opportunities",
-      "Build and maintain relationships with key clients",
-      "Develop and present proposals for automation solutions",
-      "Collaborate with technical teams on solution design",
-      "Manage sales pipeline and forecast revenue",
-      "Represent Tepa Solutions at industry events"
+      "Develop cross-platform mobile applications",
+      "Implement native mobile features and integrations",
+      "Optimize app performance and user experience",
+      "Collaborate with designers on UI implementation",
+      "Manage app store submissions and updates",
+      "Ensure mobile security best practices"
     ],
     niceToHave: [
-      "Experience with CRM systems and sales automation tools",
-      "Background in consulting or professional services",
-      "Understanding of enterprise software sales cycles",
-      "Experience selling to SMEs and large enterprises",
-      "Knowledge of digital transformation trends",
-      "Previous experience in a startup environment"
+      "Experience with mobile automation testing",
+      "Knowledge of mobile analytics and crash reporting",
+      "Understanding of mobile CI/CD pipelines",
+      "Experience with mobile payment integrations",
+      "Familiarity with augmented reality or IoT",
+      "Previous enterprise mobile app experience"
     ],
-    postedDate: "2025-01-03",
-    applicationDeadline: "2025-02-03"
+    postedDate: "2025-01-15",
+    applicationDeadline: "2025-10-30"
+  },
+  {
+    id: 9,
+    slug: 'contract-android-developer',
+    title: "Android Developer",
+    department: "Engineering",
+    type: "Contract",
+    location: "Remote",
+    experience: "3-5 years",
+    salary: "",
+    description: "Build native Android applications using Kotlin and modern Android development practices. 6-12 month contract opportunity for Android specialists.",
+    requirements: [
+      "4+ years of native Android development experience",
+      "Proficiency in Kotlin and Java",
+      "Experience with Android SDK and development tools",
+      "Knowledge of Android architecture components",
+      "Understanding of Material Design principles",
+      "Experience with Google Play Store deployment"
+    ],
+    responsibilities: [
+      "Develop native Android applications",
+      "Implement Android-specific features and services",
+      "Ensure app compatibility across Android versions",
+      "Optimize app performance and battery usage",
+      "Integrate with Android system features",
+      "Maintain code quality and best practices"
+    ],
+    niceToHave: [
+      "Experience with Android Jetpack Compose",
+      "Knowledge of Android testing frameworks",
+      "Understanding of Android security practices",
+      "Experience with Firebase and Google services",
+      "Familiarity with Android enterprise features",
+      "Knowledge of Android accessibility guidelines"
+    ],
+    postedDate: "2025-01-15",
+    applicationDeadline: "2025-10-30"
+  },
+  {
+    id: 10,
+    slug: 'contract-ios-developer',
+    title: "iOS Developer",
+    department: "Engineering",
+    type: "Contract",
+    location: "Remote",
+    experience: "3-5 years",
+    salary: "",
+    description: "Create native iOS applications using Swift and iOS development frameworks. 6-12 month contract for experienced iOS developers.",
+    requirements: [
+      "4+ years of native iOS development experience",
+      "Proficiency in Swift and Objective-C",
+      "Experience with iOS SDK and Xcode",
+      "Knowledge of iOS design patterns and architecture",
+      "Understanding of Apple's Human Interface Guidelines",
+      "Experience with App Store submission process"
+    ],
+    responsibilities: [
+      "Develop native iOS applications",
+      "Implement iOS-specific features and integrations",
+      "Ensure app compatibility across iOS versions",
+      "Optimize app performance and memory usage",
+      "Integrate with iOS system frameworks",
+      "Follow Apple's development guidelines and best practices"
+    ],
+    niceToHave: [
+      "Experience with SwiftUI and Combine",
+      "Knowledge of iOS testing frameworks (XCTest)",
+      "Understanding of iOS security and privacy",
+      "Experience with Core Data and CloudKit",
+      "Familiarity with iOS enterprise distribution",
+      "Knowledge of iOS accessibility features"
+    ],
+    postedDate: "2025-01-15",
+    applicationDeadline: "2025-10-30"
+  },
+  {
+    id: 11,
+    slug: 'contract-backend-developer',
+    title: "Backend Developer",
+    department: "Engineering",
+    type: "Contract",
+    location: "Remote",
+    experience: "3-5 years",
+    salary: "",
+    description: "Build scalable backend systems and APIs for business automation solutions. 6-12 month contract opportunity for backend specialists.",
+    requirements: [
+      "4+ years of backend development experience",
+      "Proficiency in Node.js, Python, or similar",
+      "Experience with databases (PostgreSQL, MongoDB, Redis)",
+      "Knowledge of API design and development",
+      "Understanding of cloud platforms and services",
+      "Experience with microservices architecture"
+    ],
+    responsibilities: [
+      "Design and develop scalable backend systems",
+      "Build robust APIs and microservices",
+      "Implement database schemas and optimization",
+      "Ensure system security and performance",
+      "Collaborate with frontend teams on integration",
+      "Monitor and maintain production systems"
+    ],
+    niceToHave: [
+      "Experience with container orchestration",
+      "Knowledge of message queues and event streaming",
+      "Understanding of DevOps and CI/CD practices",
+      "Experience with monitoring and logging tools",
+      "Familiarity with serverless architecture",
+      "Knowledge of automation and workflow systems"
+    ],
+    postedDate: "2025-01-15",
+    applicationDeadline: "2025-10-30"
   }
 ];
 
-const departments = ["All", "Engineering", "Design", "Sales", "Marketing"];
+const departments = ["All", "Engineering", "Marketing", "Sales", "Operations"];
 
 export function CareersPage({ navigate }: CareersPageProps) {
   const [selectedDepartment, setSelectedDepartment] = useState("All");
@@ -327,10 +589,12 @@ export function CareersPage({ navigate }: CareersPageProps) {
                             <Clock className="w-4 h-4" />
                             <span>{position.experience}</span>
                           </div>
-                          <div className="flex items-center gap-1">
-                            <DollarSign className="w-4 h-4" />
-                            <span>{position.salary}</span>
-                          </div>
+                          {position.salary && (
+                            <div className="flex items-center gap-1">
+                              <DollarSign className="w-4 h-4" />
+                              <span>{position.salary}</span>
+                            </div>
+                          )}
                           <div className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
                             <span>Posted {new Date(position.postedDate).toLocaleDateString()}</span>

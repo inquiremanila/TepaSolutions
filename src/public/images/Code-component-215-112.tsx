@@ -1,0 +1,1 @@
+https://images.unsplash.com/photo-1725273627190-ef48c1c95cbf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb2Jsb3glMjBnYW1pbmclMjB3b3Jrc2hvcHxlbnwxfHx8fDE3NTc2Mjc5NDR8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral

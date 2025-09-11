@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { Button } from './ui/button';
+import { Logo } from './Logo';
 import { navItems } from './data/navigation-data';
 import { MobileNavigationSheet } from './MobileNavigationSheet';
 import { NavigationDropdown } from './NavigationDropdown';
@@ -153,21 +154,11 @@ export function Navigation({ navigate, currentPath }: NavigationProps) {
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <motion.div
-              className="flex items-center gap-2 cursor-pointer"
+            <Logo 
+              size="md" 
+              showText={true} 
               onClick={handleLogoClick}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <div className="flex gap-1">
-                  <div className="w-1.5 h-1.5 bg-primary-foreground rounded-full"></div>
-                  <div className="w-1.5 h-1.5 bg-primary-foreground rounded-full"></div>
-                  <div className="w-1.5 h-1.5 bg-primary-foreground rounded-full"></div>
-                </div>
-              </div>
-              <span className="font-semibold text-lg">Tepa Solutions</span>
-            </motion.div>
+            />
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">

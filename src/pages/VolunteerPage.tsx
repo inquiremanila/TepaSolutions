@@ -1,9 +1,17 @@
 import { motion } from 'motion/react';
-import { Heart, Users, GraduationCap, Code, Laptop, MapPin, Calendar, Award, Camera, BookOpen } from 'lucide-react';
+import { Heart, Users, GraduationCap, Code, Laptop, MapPin, Calendar, Award, Camera, BookOpen, Send, ArrowLeft } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
+import { Input } from '../components/ui/input';
+import { Textarea } from '../components/ui/textarea';
+import { Label } from '../components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { toast } from "sonner@2.0.3";
+import { useState } from 'react';
+import { submitVolunteerApplication } from '../utils/api';
 
 interface VolunteerPageProps {
   navigate?: (path: string) => void;
@@ -114,39 +122,86 @@ const pastEvents = [
 const galleryImages = [
   {
     id: 1,
+    src: "https://images.unsplash.com/photo-1540058404349-2e5fabf32d75?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb2RpbmclMjB3b3Jrc2hvcCUyMHN0dWRlbnRzJTIwbGVhcm5pbmd8ZW58MXx8fHwxNzU3NTQ5NDU3fDA&ixlib=rb-4.1.0&q=80&w=1080",
     alt: "Students coding their first website",
     caption: "Young students learning web development basics during our coding workshop"
   },
   {
     id: 2,
+    src: "https://images.unsplash.com/photo-1585597648262-4ec84d233732?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb21tdW5pdHklMjBjb21wdXRlciUyMGRpZ2l0YWwlMjBsaXRlcmFjeXxlbnwxfHx8fDE3NTc1NDk0NTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
     alt: "Digital literacy workshop in progress",
     caption: "Community members learning essential computer skills"
   },
   {
     id: 3,
+    src: "https://images.unsplash.com/photo-1690192435015-319c1d5065b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtZW50b3JzaGlwJTIwcHJvZ3JhbW1pbmclMjB0ZWFjaGluZ3xlbnwxfHx8fDE3NTc1NDk0NTh8MA&ixlib=rb-4.1.0&q=80&w=1080",
     alt: "Mentorship session",
     caption: "One-on-one mentoring session between volunteer and student"
   },
   {
     id: 4,
+    src: "https://images.unsplash.com/photo-1633249658235-d591f2f2acba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYWNrYXRob24lMjB0ZWFtJTIwY29sbGFib3JhdGlvbnxlbnwxfHx8fDE3NTc1NDk0NTh8MA&ixlib=rb-4.1.0&q=80&w=1080",
     alt: "Hackathon team collaboration",
     caption: "Teams collaborating during our Code for Good hackathon"
   },
   {
     id: 5,
+    src: "https://images.unsplash.com/photo-1696041757950-62e2c030283b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWNoJTIwdm9sdW50ZWVyJTIwY29tbXVuaXR5JTIwb3V0cmVhY2h8ZW58MXx8fHwxNzU3NTQ5NDU5fDA&ixlib=rb-4.1.0&q=80&w=1080",
     alt: "Community leaders learning tech",
     caption: "Local community leaders embracing new technologies"
   },
   {
     id: 6,
+    src: "https://images.unsplash.com/photo-1543058871-74a1d669ba70?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxncmFkdWF0aW9uJTIwY29kaW5nJTIwYm9vdGNhbXAlMjBjZWxlYnJhdGlvbnxlbnwxfHx8fDE3NTc1NDk0NTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
     alt: "Graduation ceremony",
     caption: "Celebrating successful completion of our programming bootcamp"
   }
 ];
 
 export function VolunteerPage({ navigate }: VolunteerPageProps) {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    experienceLevel: '',
+    availability: '',
+    areaOfInterest: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const updateFormData = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      await submitVolunteerApplication(formData);
+      toast.success("Thank you for your interest in volunteering! We'll review your application and get back to you within 48 hours.");
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        experienceLevel: '',
+        availability: '',
+        areaOfInterest: '',
+        message: ''
+      });
+    } catch (error) {
+      console.error('Volunteer application error:', error);
+      toast.error("There was an error submitting your application. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleVolunteerClick = () => {
-    navigate?.('/volunteer-with-us/volunteer-form');
+    document.getElementById('volunteer-form')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleContactClick = () => {
@@ -439,7 +494,7 @@ export function VolunteerPage({ navigate }: VolunteerPageProps) {
                 <div key={image.id} className="group">
                   <div className="aspect-video bg-muted/20 rounded-lg overflow-hidden mb-3">
                     <ImageWithFallback
-                      src="/images/placeholder"
+                      src={image.src}
                       alt={image.alt}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       data-priority={image.id <= 2 ? "high" : undefined}
@@ -489,6 +544,183 @@ export function VolunteerPage({ navigate }: VolunteerPageProps) {
               </motion.div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* Volunteer Application Form */}
+      <div className="py-16" id="volunteer-form">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-8"
+          >
+            <div className="text-center space-y-4">
+              <h2 className="text-3xl font-bold">Join Our Volunteer Program</h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Ready to make an impact? Complete this form to express your interest in our Educational Outreach Program.
+              </p>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Volunteer Application</CardTitle>
+                <CardDescription>
+                  Help us bridge the digital divide by teaching coding and digital literacy to underserved communities.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Name Fields */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="firstName" className="text-base font-medium">First Name</Label>
+                      <Input
+                        id="firstName"
+                        value={formData.firstName}
+                        onChange={(e) => updateFormData('firstName', e.target.value)}
+                        className="mt-2"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="lastName" className="text-base font-medium">Last Name</Label>
+                      <Input
+                        id="lastName"
+                        value={formData.lastName}
+                        onChange={(e) => updateFormData('lastName', e.target.value)}
+                        className="mt-2"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Email and Phone */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="email" className="text-base font-medium">Email Address</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => updateFormData('email', e.target.value)}
+                        className="mt-2"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="phone" className="text-base font-medium">Phone Number</Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => updateFormData('phone', e.target.value)}
+                        className="mt-2"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Experience Level */}
+                  <div>
+                    <Label className="text-base font-medium">Your programming experience level</Label>
+                    <RadioGroup
+                      value={formData.experienceLevel}
+                      onValueChange={(value) => updateFormData('experienceLevel', value)}
+                      className="mt-2"
+                    >
+                      <div className="flex flex-col gap-3">
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="beginner" id="beginner" />
+                          <Label htmlFor="beginner">Beginner - I'm just starting out</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="intermediate" id="intermediate" />
+                          <Label htmlFor="intermediate">Intermediate - I have some experience</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="advanced" id="advanced" />
+                          <Label htmlFor="advanced">Advanced - I'm experienced and want to teach</Label>
+                        </div>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  {/* Availability */}
+                  <div>
+                    <Label className="text-base font-medium">When are you available to volunteer?</Label>
+                    <RadioGroup
+                      value={formData.availability}
+                      onValueChange={(value) => updateFormData('availability', value)}
+                      className="mt-2"
+                    >
+                      <div className="flex flex-col gap-3">
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="weekends" id="weekends" />
+                          <Label htmlFor="weekends">Weekends (Saturday/Sunday)</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="evenings" id="evenings" />
+                          <Label htmlFor="evenings">Weekday evenings</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="flexible" id="flexible" />
+                          <Label htmlFor="flexible">Flexible - depends on schedule</Label>
+                        </div>
+                      </div>
+                    </RadioGroup>
+                  </div>
+
+                  {/* Interest Areas */}
+                  <div>
+                    <Label htmlFor="areaOfInterest" className="text-base font-medium">Which volunteer activities interest you most?</Label>
+                    <Select value={formData.areaOfInterest} onValueChange={(value) => updateFormData('areaOfInterest', value)}>
+                      <SelectTrigger className="mt-2">
+                        <SelectValue placeholder="Select your interest" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="teaching-coding">Teaching basic programming</SelectItem>
+                        <SelectItem value="digital-literacy">Digital literacy workshops</SelectItem>
+                        <SelectItem value="mentoring">Mentoring students</SelectItem>
+                        <SelectItem value="curriculum">Curriculum development</SelectItem>
+                        <SelectItem value="events">Community tech events</SelectItem>
+                        <SelectItem value="all">All of the above</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Why volunteer */}
+                  <div>
+                    <Label htmlFor="message" className="text-base font-medium">Why do you want to volunteer with us?</Label>
+                    <Textarea
+                      id="message"
+                      value={formData.message}
+                      onChange={(e) => updateFormData('message', e.target.value)}
+                      className="mt-2"
+                      rows={4}
+                      placeholder="Tell us about your motivation to volunteer and how you'd like to contribute..."
+                      required
+                    />
+                  </div>
+
+                  {/* Privacy Notice */}
+                  <div className="text-sm text-muted-foreground bg-muted/30 p-4 rounded-lg">
+                    <p>Thank you for your interest in volunteering! We'll review your application and get back to you within 48 hours.</p>
+                  </div>
+
+                  {/* Submit Button */}
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-primary hover:bg-primary/90"
+                    disabled={isSubmitting}
+                  >
+                    <Send className="w-4 h-4 mr-2" />
+                    {isSubmitting ? 'Submitting...' : 'Submit Volunteer Application'}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
       </div>
 

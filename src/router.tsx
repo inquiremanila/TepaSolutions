@@ -30,6 +30,7 @@ import { ContactSupportPage } from './pages/ContactSupportPage';
 import { ContactVolunteerPage } from './pages/ContactVolunteerPage';
 import { ContactEventHostPage } from './pages/ContactEventHostPage';
 import { ContactInvestorPage } from './pages/ContactInvestorPage';
+import { ContactCareersPage } from './pages/ContactCareersPage';
 import { ArticlePage } from './pages/ArticlePage';
 import { EventPage } from './pages/EventPage';
 import { JobPage } from './pages/JobPage';
@@ -203,20 +204,7 @@ export const routes: RouteConfig[] = [
     description: 'Get expert technical support from Tepa Solutions team. Customer service, technical assistance, project support, and ongoing maintenance for your digital solutions.',
     keywords: 'technical support, customer service Philippines, software support, application maintenance, technical assistance'
   },
-  {
-    path: '/contact-us/volunteer',
-    component: ContactVolunteerPage,
-    title: 'Volunteer Program | Community Tech Education | Coding Workshops | Tepa Solutions',
-    description: 'Join Tepa Solutions volunteer program! Help teach coding and digital literacy in underserved communities. Make a difference through technology education and mentorship.',
-    keywords: 'tech volunteer Philippines, coding education volunteer, digital literacy program, community tech outreach, programming mentorship'
-  },
-  {
-    path: '/volunteer-with-us/volunteer-form',
-    component: ContactVolunteerPage,
-    title: 'Volunteer Application Form | Join Our Tech Education Mission | Tepa Solutions',
-    description: 'Apply to join Tepa Solutions volunteer program. Help teach coding, digital literacy, and technology skills to underserved communities across the Philippines.',
-    keywords: 'volunteer application form, tech education volunteer, coding mentor application, digital literacy volunteer, community outreach volunteer'
-  },
+
   {
     path: '/contact-us/event-hosting',
     component: ContactEventHostPage,
@@ -230,6 +218,13 @@ export const routes: RouteConfig[] = [
     title: 'Investor Relations Contact | Investment Inquiries | Funding Opportunities | Tepa Solutions',
     description: 'Connect with Tepa Solutions investor relations team. Investment opportunities, funding rounds, partnership inquiries, and financial information for potential investors.',
     keywords: 'startup investment contact, tech company funding, investor relations Philippines, venture capital inquiry, investment opportunities'
+  },
+  {
+    path: '/contact-us/careers',
+    component: ContactCareersPage,
+    title: 'Apply for Jobs | Career Applications | Job Opportunities | Tepa Solutions',
+    description: 'Apply for exciting career opportunities at Tepa Solutions. Submit your job application and join our growing team of passionate tech professionals.',
+    keywords: 'job application form, career opportunities Philippines, tech job applications, software developer jobs, apply for tech jobs'
   }
 ];
 
@@ -275,6 +270,17 @@ export function Router({ initialPath }: RouterProps) {
 
   // Find matching route
   const findRoute = (path: string): RouteConfig | undefined => {
+    // Handle dynamic routes
+    if (path.startsWith('/articles/') && path.split('/').length === 3) {
+      return routes.find(route => route.path === '/articles');
+    }
+    if (path.startsWith('/events/') && path.split('/').length === 3) {
+      return routes.find(route => route.path === '/events');
+    }
+    if (path.startsWith('/careers/') && path.split('/').length === 3) {
+      return routes.find(route => route.path === '/careers');
+    }
+    
     return routes.find(route => {
       if (route.exact) {
         return route.path === path;
@@ -312,13 +318,35 @@ export function Router({ initialPath }: RouterProps) {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           </div>
         ) : (
-          <Component 
-            navigate={navigate} 
-            currentPath={currentPath}
-            articleSlug={currentPath.startsWith('/articles/') ? currentPath.split('/')[2] : undefined}
-            eventSlug={currentPath.startsWith('/events/') ? currentPath.split('/')[2] : undefined}
-            jobSlug={currentPath.startsWith('/careers/') ? currentPath.split('/')[2] : undefined}
-          />
+          (() => {
+            // Determine which component to render based on path
+            if (currentPath.startsWith('/articles/') && currentPath.split('/').length === 3) {
+              return <ArticlePage 
+                navigate={navigate} 
+                currentPath={currentPath}
+                articleSlug={currentPath.split('/')[2]}
+              />;
+            }
+            if (currentPath.startsWith('/events/') && currentPath.split('/').length === 3) {
+              return <EventPage 
+                navigate={navigate} 
+                currentPath={currentPath}
+                eventSlug={currentPath.split('/')[2]}
+              />;
+            }
+            if (currentPath.startsWith('/careers/') && currentPath.split('/').length === 3) {
+              return <JobPage 
+                navigate={navigate} 
+                currentPath={currentPath}
+                jobSlug={currentPath.split('/')[2]}
+              />;
+            }
+            
+            return <Component 
+              navigate={navigate} 
+              currentPath={currentPath}
+            />;
+          })()
         )}
       </main>
       

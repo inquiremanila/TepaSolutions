@@ -14,8 +14,8 @@ interface EventsPageProps {
 export const events = [
   {
     id: 1,
-    slug: 'introduction-to-how-to-make-a-roblox-game',
-    title: "Introduction to How to make a Roblox Game",
+    slug: 'free-introduction-roblox-game-development',
+    title: "Free Introduction of Roblox Game Development",
     description: "Join our comprehensive workshop where you'll learn the fundamentals of Roblox game development using Roblox Studio and Lua scripting. Perfect for beginners and aspiring game developers!",
     fullDescription: `
       <h2>About This Workshop</h2>
@@ -73,7 +73,7 @@ export const events = [
     `,
     type: "Workshop",
     category: "Development",
-    date: "2025-02-27",
+    date: "2025-09-27",
     time: "4:00 PM - 6:00 PM",
     duration: "2 hours",
     location: "Zoom Meeting",
@@ -107,114 +107,166 @@ export const events = [
   },
   {
     id: 2,
-    slug: 'web-development-bootcamp-react-nodejs',
-    title: "Web Development Bootcamp: React & Node.js",
-    description: "Intensive 3-day bootcamp covering modern web development with React frontend and Node.js backend. Build a complete full-stack application from scratch.",
-    type: "Bootcamp",
+    slug: 'introduction-to-html-and-css',
+    title: "Introduction to HTML and CSS",
+    description: "Learn the fundamentals of web development with HTML and CSS. Perfect for beginners who want to start their journey in web development and create beautiful, responsive websites.",
+    fullDescription: `
+      <h2>About This Workshop</h2>
+      <p>Start your web development journey with the building blocks of the web! This beginner-friendly workshop will introduce you to HTML and CSS, the essential technologies that power every website on the internet.</p>
+      
+      <h3>What You'll Learn</h3>
+      <p>Our hands-on curriculum covers everything you need to get started with web development:</p>
+      
+      <h4>HTML Fundamentals</h4>
+      <ul>
+        <li>Understanding HTML structure and syntax</li>
+        <li>Working with elements, tags, and attributes</li>
+        <li>Creating semantic markup for accessibility</li>
+        <li>Building forms and interactive elements</li>
+        <li>Working with images, links, and media</li>
+      </ul>
+      
+      <h4>CSS Styling Essentials</h4>
+      <ul>
+        <li>CSS syntax and selectors</li>
+        <li>Colors, fonts, and typography</li>
+        <li>Box model and layout principles</li>
+        <li>Responsive design basics</li>
+        <li>Flexbox and Grid layouts</li>
+      </ul>
+      
+      <h4>Hands-On Project</h4>
+      <p>You'll build a complete personal portfolio website including:</p>
+      <ul>
+        <li>Professional homepage with navigation</li>
+        <li>About section with personal information</li>
+        <li>Portfolio showcase section</li>
+        <li>Contact form and footer</li>
+        <li>Responsive design for mobile devices</li>
+        <li>Basic animations and interactions</li>
+      </ul>
+      
+      <h3>Who Should Attend</h3>
+      <p>This workshop is ideal for:</p>
+      <ul>
+        <li>Complete beginners with no coding experience</li>
+        <li>Students interested in web development</li>
+        <li>Business owners wanting to understand web basics</li>
+        <li>Designers looking to learn implementation</li>
+        <li>Anyone curious about how websites are built</li>
+      </ul>
+    `,
+    type: "Workshop",
     category: "Development",
-    date: "2025-03-15",
-    time: "9:00 AM - 5:00 PM",
-    duration: "3 days",
-    location: "BGC, Taguig",
-    locationDetails: "Tepa Solutions Office, BGC",
-    capacity: "15 participants",
+    date: "2025-09-20",
+    time: "2:00 PM - 5:00 PM",
+    duration: "3 hours",
+    location: "Zoom Meeting",
+    locationDetails: "Interactive online workshop via Zoom",
+    capacity: "25 participants",
     status: "registration-open",
     featured: false,
-    instructor: "Jerrie Mataya",
-    instructorRole: "Full-Stack Developer",
-    level: "Intermediate",
-    price: "₱15,000",
+    instructor: "Sarah Chen",
+    instructorRole: "Frontend Developer",
+    level: "Beginner",
+    price: "Free",
     image: "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHdlYiUyMGRldmVsb3BtZW50fGVufDF8fHx8MTc1NzQ1MDM1Nnww&ixlib=rb-4.1.0&q=80&w=1080",
-    certificate: "Professional Certificate",
+    certificate: "Completion Certificate",
     topics: [
-      "React fundamentals and hooks",
-      "State management with Redux",
-      "Node.js and Express.js backend",
-      "Database integration with MongoDB",
-      "RESTful API development",
-      "Authentication and security",
-      "Deployment strategies",
-      "Best practices and testing"
+      "HTML structure and elements",
+      "CSS fundamentals and styling",
+      "Responsive design principles",
+      "Building a portfolio website",
+      "Web development best practices",
+      "Browser developer tools",
+      "Deployment and hosting basics"
     ],
     requirements: [
-      "Basic HTML, CSS, and JavaScript knowledge",
-      "Own laptop with development environment",
-      "Node.js and VS Code installed",
-      "GitHub account"
+      "Computer with internet connection",
+      "Text editor (VS Code recommended)",
+      "Modern web browser (Chrome, Firefox, Safari)",
+      "Basic computer skills",
+      "Enthusiasm to learn!"
     ]
   },
   {
     id: 3,
-    slug: 'ai-automation-business-workshop',
-    title: "AI & Automation for Business Leaders",
-    description: "Executive workshop on implementing AI and automation solutions in your business. Learn practical strategies to increase efficiency and reduce costs.",
-    type: "Executive Workshop",
+    slug: 'introduction-to-website-funnel',
+    title: "Introduction to Website Funnel",
+    description: "Learn how to create effective website funnels that convert visitors into customers. Master the psychology and strategy behind high-converting sales funnels for your business.",
+    fullDescription: `
+      <h2>About This Workshop</h2>
+      <p>Transform your website into a powerful sales machine! This comprehensive workshop will teach you how to design and implement effective website funnels that guide visitors through a strategic journey from awareness to conversion.</p>
+      
+      <h3>What You'll Learn</h3>
+      <p>Master the art and science of funnel creation with our proven framework:</p>
+      
+      <h4>Funnel Strategy Fundamentals</h4>
+      <ul>
+        <li>Understanding the customer journey and buyer psychology</li>
+        <li>Different types of funnels and when to use them</li>
+        <li>Mapping your ideal customer's path to purchase</li>
+        <li>Creating compelling value propositions</li>
+      </ul>
+      
+      <h4>Funnel Design and Implementation</h4>
+      <ul>
+        <li>Landing page design principles</li>
+        <li>Writing persuasive copy and headlines</li>
+        <li>Call-to-action optimization</li>
+        <li>Lead magnets and opt-in strategies</li>
+        <li>Email sequence automation</li>
+      </ul>
+      
+      <h4>Optimization and Analytics</h4>
+      <ul>
+        <li>A/B testing methodologies</li>
+        <li>Conversion rate optimization techniques</li>
+        <li>Analytics and performance tracking</li>
+        <li>Identifying and fixing funnel leaks</li>
+      </ul>
+      
+      <h3>Practical Workshop Project</h3>
+      <p>You'll create your own funnel strategy including:</p>
+      <ul>
+        <li>Customer avatar and journey mapping</li>
+        <li>Funnel wireframes and flow design</li>
+        <li>Landing page copy and structure</li>
+        <li>Email sequence outline</li>
+        <li>Conversion tracking setup</li>
+      </ul>
+    `,
+    type: "Workshop",
     category: "Business",
-    date: "2025-04-10",
-    time: "2:00 PM - 5:00 PM",
+    date: "2025-10-04",
+    time: "1:00 PM - 4:00 PM",
     duration: "3 hours",
-    location: "Makati City",
-    locationDetails: "Marriott Hotel Manila, Makati",
-    capacity: "30 participants",
+    location: "BGC, Taguig",
+    locationDetails: "Tepa Solutions Office, BGC",
+    capacity: "20 participants",
     status: "registration-open",
     featured: false,
     instructor: "Manuel Rodriguez",
-    instructorRole: "Business Automation Consultant",
-    level: "Executive",
-    price: "₱8,500",
-    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHJhaSUyMGF1dG9tYXRpb258ZW58MXx8fHwxNzU3NDUwMzU2fDA&ixlib=rb-4.1.0&q=80&w=1080",
-    certificate: "Executive Certificate",
-    topics: [
-      "AI landscape and business opportunities",
-      "Process automation strategies",
-      "ROI calculation for automation projects",
-      "Change management and team adoption",
-      "Vendor selection and implementation",
-      "Case studies and success stories",
-      "Future trends and planning",
-      "Networking and Q&A session"
-    ],
-    requirements: [
-      "Business leadership experience",
-      "Basic understanding of business processes",
-      "Laptop or tablet for exercises"
-    ]
-  },
-  {
-    id: 4,
-    slug: 'mobile-app-design-ux-workshop',
-    title: "Mobile App Design & UX Workshop",
-    description: "Learn mobile app design principles, user experience best practices, and hands-on prototyping using Figma. Perfect for designers and product managers.",
-    type: "Workshop",
-    category: "Design",
-    date: "2025-05-08",
-    time: "10:00 AM - 4:00 PM",
-    duration: "6 hours",
-    location: "Zoom Meeting",
-    locationDetails: "Interactive online workshop via Zoom",
-    capacity: "25 participants",
-    status: "coming-soon",
-    featured: false,
-    instructor: "Sarah Chen",
-    instructorRole: "Senior UX Designer",
+    instructorRole: "Digital Marketing Strategist",
     level: "Intermediate",
-    price: "₱5,000",
-    image: "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfG1vYmlsZSUyMGFwcCUyMGRlc2lnbnxlbnwxfHx8fDE3NTc0NTAzNTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    certificate: "Design Certificate",
+    price: "₱2,500",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYXJrZXRpbmclMjBmdW5uZWwlMjBzdHJhdGVneXxlbnwxfHx8fDE3NTc0NTAzNTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    certificate: "Marketing Certificate",
     topics: [
-      "Mobile design principles and guidelines",
-      "User research and persona development",
-      "Information architecture for mobile",
-      "Prototyping with Figma",
-      "Usability testing and iteration",
-      "Accessibility in mobile design",
-      "Design systems and component libraries",
-      "Collaboration with developers"
+      "Funnel psychology and strategy",
+      "Customer journey mapping",
+      "Landing page optimization",
+      "Conversion copywriting",
+      "Lead generation tactics",
+      "Email marketing automation",
+      "Analytics and optimization",
+      "A/B testing fundamentals"
     ],
     requirements: [
-      "Basic design knowledge",
-      "Figma account (free tier sufficient)",
-      "Understanding of mobile platforms"
+      "Basic understanding of digital marketing",
+      "Laptop for hands-on exercises",
+      "Existing business or business idea",
+      "Willingness to share and collaborate"
     ]
   }
 ];

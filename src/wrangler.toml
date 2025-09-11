@@ -126,6 +126,17 @@ from = "/websites"
 to = "/website-development"
 status = 301
 
+# Volunteer page redirects
+[[redirects]]
+from = "/volunteer"
+to = "/volunteer-with-us"
+status = 301
+
+[[redirects]]
+from = "/contact-us/volunteer"
+to = "/volunteer-with-us"
+status = 301
+
 # Fallback for SPA routes (catch-all)
 [[redirects]]
 from = "/*"
