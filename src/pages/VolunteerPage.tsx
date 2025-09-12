@@ -54,10 +54,10 @@ const volunteerOpportunities = [
 ];
 
 const impactStats = [
-  { number: "500+", label: "Students Reached", period: "Since 2024" },
-  { number: "12", label: "Partner Schools", period: "Across Philippines" },
-  { number: "25+", label: "Active Volunteers", period: "Growing Team" },
-  { number: "20", label: "Workshops Conducted", period: "This Year" }
+  { number: "120+", label: "Students Reached", period: "Since 2024" },
+  { number: "2", label: "Partner Schools", period: "Across Philippines" },
+  { number: "15+", label: "Active Volunteers", period: "Growing Team" },
+  { number: "6", label: "Workshops Conducted", period: "This Year" }
 ];
 
 const testimonials = [
@@ -77,7 +77,7 @@ const testimonials = [
   },
   {
     id: 3,
-    name: "Sarah Kim",
+    name: "Kim Marquez",
     role: "Volunteer Mentor",
     quote: "Volunteering with Tepa has been incredibly rewarding. Seeing students discover their passion for tech is amazing.",
     location: "Manila"
@@ -87,37 +87,38 @@ const testimonials = [
 const pastEvents = [
   {
     id: 1,
-    title: "Code for Good Hackathon",
-    date: "November 2024",
-    location: "BGC, Taguig",
-    participants: "50+ students",
-    description: "48-hour hackathon where students built solutions for local NGOs and community organizations."
-  },
-  {
-    id: 2,
     title: "Digital Skills for Seniors",
     date: "October 2024",
     location: "Community Center, Makati",
     participants: "30 seniors",
-    description: "Teaching elderly community members how to use smartphones, social media, and online banking safely."
+    description: "Helping seniors learn to use smartphones, social media, and online services safely."
+  },
+  {
+    id: 2,
+    title: "Intro to Coding for Kids",
+    date: "September 2024",
+    location: "Local Library, Pasig",
+    participants: "25 kids",
+    description: "Fun beginner coding games and activities to spark interest in technology."
   },
   {
     id: 3,
-    title: "Women in Tech Workshop",
-    date: "September 2024",
-    location: "University of the Philippines",
-    participants: "75 women students",
-    description: "Empowering women students with tech skills and career guidance from female industry professionals."
+    title: "Small Business Tech Tips",
+    date: "August 2024",
+    location: "Barangay Hall, Quezon City",
+    participants: "20 local business owners",
+    description: "Basic training on using free digital tools to improve small business operations."
   },
   {
     id: 4,
-    title: "Youth Programming Bootcamp",
-    date: "August 2024",
-    location: "Quezon City Public Schools",
-    participants: "100+ students",
-    description: "5-day intensive programming bootcamp covering web development fundamentals and project building."
+    title: "Community Internet Safety Talk",
+    date: "July 2024",
+    location: "School Gym, Taguig",
+    participants: "50 parents and students",
+    description: "Simple tips on staying safe online for families and kids."
   }
 ];
+
 
 const galleryImages = [
   {
@@ -433,81 +434,7 @@ export function VolunteerPage({ navigate }: VolunteerPageProps) {
         </div>
       </div>
 
-      {/* Past Events & Gallery */}
-      <div className="py-16" id="impact-stories">
-        <div className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl font-bold mb-4">Our Recent Initiatives</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              See how our volunteers are making a difference through hands-on workshops, mentorship programs, and community events.
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
-            {pastEvents.map((event, index) => (
-              <motion.div
-                key={event.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="h-full">
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <CardTitle className="text-lg mb-2">{event.title}</CardTitle>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="w-4 h-4" />
-                            {event.date}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <MapPin className="w-4 h-4" />
-                            {event.location}
-                          </div>
-                        </div>
-                      </div>
-                      <Badge variant="secondary">{event.participants}</Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground">{event.description}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Photo Gallery */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-12"
-          >
-            <h3 className="text-2xl font-bold text-center mb-8">Event Highlights</h3>
-            <div className="grid md:grid-cols-3 gap-6">
-              {galleryImages.map((image) => (
-                <div key={image.id} className="group">
-                  <div className="aspect-video bg-muted/20 rounded-lg overflow-hidden mb-3">
-                    <ImageWithFallback
-                      src={image.src}
-                      alt={image.alt}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      data-priority={image.id <= 2 ? "high" : undefined}
-                    />
-                  </div>
-                  <p className="text-sm text-muted-foreground text-center">{image.caption}</p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </div>
-
+     
       {/* Testimonials */}
       <div className="py-16 bg-muted/30">
         <div className="container mx-auto px-6">
