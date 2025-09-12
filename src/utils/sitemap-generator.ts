@@ -173,22 +173,22 @@ export const sitemapUrls: SitemapUrl[] = [
     priority: 0.7,
     images: [
       {
-        url: `${baseUrl}/images/placeholder`,
+        url: `${baseUrl}/images/roblox-workshop.jpg`,
         caption: 'Roblox game development workshop in progress',
         title: 'Students learning Roblox game development fundamentals'
       },
       {
-        url: `${baseUrl}/images/placeholder`,
+        url: `${baseUrl}/images/web-dev-bootcamp.jpg`,
         caption: 'Web development bootcamp participants coding',
         title: 'Participants building their first full-stack web application'
       },
       {
-        url: `${baseUrl}/images/placeholder`,
+        url: `${baseUrl}/images/ai-workshop.jpg`,
         caption: 'AI and automation workshop for business leaders',
         title: 'Business executives learning AI implementation strategies'
       },
       {
-        url: `${baseUrl}/images/placeholder`,
+        url: `${baseUrl}/images/mobile-design-workshop.jpg`,
         caption: 'Mobile app design workshop with Figma',
         title: 'Designers creating mobile app prototypes and wireframes'
       }
@@ -201,32 +201,32 @@ export const sitemapUrls: SitemapUrl[] = [
     priority: 0.7,
     images: [
       {
-        url: `${baseUrl}/images/placeholder`,
+        url: `${baseUrl}/images/student-coding.jpg`,
         caption: 'Students coding their first website',
         title: 'Young students learning web development basics during our coding workshop'
       },
       {
-        url: `${baseUrl}/images/placeholder`,
+        url: `${baseUrl}/images/digital-literacy.jpg`,
         caption: 'Digital literacy workshop in progress',
         title: 'Community members learning essential computer skills'
       },
       {
-        url: `${baseUrl}/images/placeholder`,
+        url: `${baseUrl}/images/mentorship.jpg`,
         caption: 'Mentorship session',
         title: 'One-on-one mentoring session between volunteer and student'
       },
       {
-        url: `${baseUrl}/images/placeholder`,
+        url: `${baseUrl}/images/hackathon-team.jpg`,
         caption: 'Hackathon team collaboration',
         title: 'Teams collaborating during our Code for Good hackathon'
       },
       {
-        url: `${baseUrl}/images/placeholder`,
+        url: `${baseUrl}/images/community-leaders.jpg`,
         caption: 'Community leaders learning tech',
         title: 'Local community leaders embracing new technologies'
       },
       {
-        url: `${baseUrl}/images/placeholder`,
+        url: `${baseUrl}/images/graduation.jpg`,
         caption: 'Graduation ceremony',
         title: 'Celebrating successful completion of our programming bootcamp'
       }
@@ -394,13 +394,13 @@ ${sitemapElements}
 </sitemapindex>`;
 };
 
-// Helper function to escape XML characters
+// Helper function to escape XML characters - FIXED
 const escapeXml = (unsafe: string): string => {
   return unsafe.replace(/[<>&'"]/g, (c) => {
     switch (c) {
-      case '<': return '<';
-      case '>': return '>';
-      case '&': return '&';
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '&': return '&amp;';  // Fixed: was missing 'amp;'
       case '\'': return '&apos;';
       case '"': return '&quot;';
       default: return c;
