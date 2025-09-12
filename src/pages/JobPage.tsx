@@ -3,7 +3,7 @@ import { MapPin, Clock, DollarSign, Calendar, ArrowLeft, Send, Users, CheckCircl
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { jobPositions } from './CareersPage';
+import { jobPositions } from './form3-careers-page';
 
 interface JobPageProps {
   navigate?: (path: string) => void;

@@ -10,7 +10,7 @@ import { articles } from '../pages/ArticlesPage';
 import { events } from '../pages/EventsPage';
 
 // Import careers data
-import { jobPositions } from '../pages/CareersPage';
+import { jobPositions } from '../pages/form3-careers-page';
 
 // Utility function to generate slug from title
 export function generateSlug(title: string): string {
