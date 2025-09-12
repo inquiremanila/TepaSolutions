@@ -1,8 +1,39 @@
 import { createClient } from '@supabase/supabase-js';
-import { projectId, publicAnonKey } from './supabase/info';
 
-const supabaseUrl = `https://${projectId}.supabase.co`;
-const supabase = createClient(supabaseUrl, publicAnonKey);
+// Alternative way to access Vite environment variables
+const supabaseUrl = (import.meta as any).env?.VITE_SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+
+// Fallback if still undefined - check if running in browser vs node
+const getEnvVar = (name: string): string | undefined => {
+  // Try import.meta.env first (Vite)
+  if (typeof window !== 'undefined' && (window as any).__VITE_ENV__) {
+    return (window as any).__VITE_ENV__[name];
+  }
+  
+  // Try import.meta if available
+  try {
+    return (import.meta as any).env?.[name];
+  } catch (e) {
+    // Ignore error
+  }
+  
+  // Try process.env (Node.js)
+  if (typeof process !== 'undefined' && process.env) {
+    return process.env[name];
+  }
+  
+  return undefined;
+};
+
+const finalSupabaseUrl = supabaseUrl || getEnvVar('VITE_SUPABASE_URL') || 'https://ruhsxjeiegdeshcnbuxy.supabase.co';
+const finalSupabaseKey = supabaseAnonKey || getEnvVar('VITE_SUPABASE_ANON_KEY') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1aHN4amVpZWdkZXNoY25idXh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMDczNDMsImV4cCI6MjA3MjU4MzM0M30.ua-Et2U4A0bRH0CSKA0Q6iT5YWvjSIi-_nPoeclay0U';
+
+if (!finalSupabaseUrl || !finalSupabaseKey) {
+  console.error('Missing Supabase configuration. Using fallback values.');
+}
+
+const supabase = createClient(finalSupabaseUrl, finalSupabaseKey);
 
 export async function submitContactForm(data: {
   type: 'sales' | 'support' | 'volunteer' | 'event-host' | 'investor';

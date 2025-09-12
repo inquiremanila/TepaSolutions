@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Phone, Mail, ArrowLeft, Send, CheckCircle, AlertCircle, Upload } from 'lucide-react';
 import { submitContactForm, submitVolunteerApplication } from '../utils/api';
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';

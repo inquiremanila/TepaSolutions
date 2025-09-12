@@ -1,7 +1,6 @@
-import { Hono } from 'npm:hono'
-import { cors } from 'npm:hono/cors'
-import { logger } from 'npm:hono/logger'
-import { createClient } from 'npm:@supabase/supabase-js@2'
+import { Hono } from 'hono'
+import { cors } from 'hono/cors'
+import { logger } from 'hono/logger'
 
 const app = new Hono()
 
@@ -14,15 +13,27 @@ app.use('*', cors({
 
 app.use('*', logger(console.log))
 
-// Create Supabase client
-const supabase = createClient(
-  Deno.env.get('SUPABASE_URL')!,
-  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-)
+// Get environment variables with error checking
+const supabaseUrl = Deno.env.get('SUPABASE_URL');
+const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  console.error('Missing required environment variables:');
+  console.error('SUPABASE_URL:', supabaseUrl ? '✓ Set' : '✗ Missing');
+  console.error('SUPABASE_SERVICE_ROLE_KEY:', supabaseServiceKey ? '✓ Set' : '✗ Missing');
+  throw new Error('Missing required Supabase environment variables');
+}
 
 // Health check endpoint
 app.get('/make-server-33917803/health', (c) => {
-  return c.json({ status: 'healthy', timestamp: new Date().toISOString() })
+  return c.json({ 
+    status: 'healthy', 
+    timestamp: new Date().toISOString(),
+    env_check: {
+      supabase_url: !!supabaseUrl,
+      supabase_key: !!supabaseServiceKey
+    }
+  })
 })
 
 // Contact form submission
