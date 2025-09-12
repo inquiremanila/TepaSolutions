@@ -6,6 +6,7 @@ import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { SupabaseImage } from "../components/SupabaseImage";
 
 interface ArticlesPageProps {
   navigate?: (path: string) => void;
@@ -18,10 +19,10 @@ export const articles = [
     slug: 'iphone-17-review-philippines-pricing-release',
     title: "iPhone 17 Review: Philippines Pricing and Release Date Revealed",
     excerpt: "Everything you need to know about Apple's latest iPhone 17, including comprehensive reviews, Philippines pricing, availability, and release timeline. Is it worth the upgrade?",
-    featuredImage: "/images/iphone-17-devices.png",
+    featuredImage: "https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/iphone-17-5-new-features.webp",
     content: `
       <h2>iPhone 17: Apple's Latest Innovation</h2>
-      <img src="/images/iphone-17-devices.png" alt="iPhone 17 features and design showcase" class="w-full h-64 object-cover rounded-lg my-6" />
+     <supabase-image id="iphone-17-devices" class="w-full h-64 object-cover rounded-lg my-6"></supabase-image> alt="iPhone 18 features and design showcase" class="w-full h-64 object-cover rounded-lg my-6" />
       <p>Apple has officially unveiled the iPhone 17, and it's generating significant buzz in the Philippines tech community. With groundbreaking features and a premium design, the iPhone 17 promises to set new standards for mobile technology in 2025.</p>
       
       <h3>Key Features and Specifications</h3>
@@ -30,7 +31,7 @@ export const articles = [
       <p>The iPhone 17 is powered by Apple's new A19 Bionic chip, built on a 3nm process that delivers up to 20% better performance while consuming 15% less power than its predecessor. This translates to smoother multitasking, enhanced gaming performance, and significantly improved battery life.</p>
       
       <h4>Advanced Camera System</h4>
-      <img src="/images/iphone-17-camera.jpg" alt="iPhone 17 camera system and photo samples" class="w-full h-48 object-cover rounded-lg my-4" />
+<img src="https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/iPhone-17-Pro-Max-release-date-price-and-features.jpg" alt="iPhone 17 48P For all 3 Lens" class="w-full h-60 object-cover rounded-lg my-4" />
       <p>The triple-camera system features a 50MP main sensor with improved low-light performance, a 12MP ultra-wide lens with macro capabilities, and a 12MP telephoto lens with 5x optical zoom. The new Cinematic mode now supports 4K recording at 30fps.</p>
       
       <h4>Display and Design</h4>
@@ -101,10 +102,10 @@ export const articles = [
     slug: 'quantum-chip-technology-breakthrough-2025',
     title: "Quantum Chip Revolution: The Future of Computing is Here",
     excerpt: "Explore the groundbreaking developments in quantum chip technology that are set to revolutionize computing, artificial intelligence, and scientific research in 2025 and beyond.",
-    featuredImage: "/images/quantum-chip-technology.jpg",
+    featuredImage: "https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/quantumcomputor1.jpg",
     content: `
       <h2>The Quantum Computing Breakthrough</h2>
-      <img src="/images/quantum-chip-lab.jpg" alt="Quantum chip development in laboratory setting" class="w-full h-64 object-cover rounded-lg my-6" />
+      <img src="https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/Microsoft-Quantum-chip-2025.jpg" alt="Quantum chip development in laboratory setting" class="w-full h-64 object-cover rounded-lg my-6" />
       <p>The year 2025 marks a pivotal moment in computing history as quantum chip technology transitions from experimental laboratories to practical applications. Major tech companies have achieved significant breakthroughs that promise to transform industries from cryptography to drug discovery.</p>
       
       <h3>Understanding Quantum Chips</h3>
@@ -207,10 +208,9 @@ export const articles = [
     slug: 'big-tech-news-2025-major-developments',
     title: "Big Tech News 2025: Major Developments Shaping the Industry",
     excerpt: "Stay updated with the latest major developments in the tech industry, from AI breakthroughs to regulatory changes, mergers, and innovations that are reshaping the digital landscape.",
-    featuredImage: "/images/big-tech-news-2025.jpg",
+    featuredImage: "https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/article/futute-of-tech.jpg",
     content: `
       <h2>The Year of Transformation in Big Tech</h2>
-      <img src="/images/tech-industry-2025.jpg" alt="Major tech companies and industry developments" class="w-full h-64 object-cover rounded-lg my-6" />
       <p>2025 has been a landmark year for the technology industry, marked by groundbreaking AI developments, significant regulatory changes, and major corporate restructuring. Here's a comprehensive look at the biggest tech news that's reshaping the digital landscape.</p>
       
       <h3>AI Revolution Accelerates</h3>
@@ -222,7 +222,7 @@ export const articles = [
       <p>Google announced a major breakthrough in quantum computing, achieving quantum error correction at scale. This development could revolutionize cryptography, drug discovery, and complex optimization problems within the next decade.</p>
       
       <h4>Meta's AR/VR Expansion</h4>
-      <img src="/images/meta-ar-vr-2025.jpg" alt="Meta's latest AR/VR technology and metaverse developments" class="w-full h-48 object-cover rounded-lg my-4" />
+      <img src="https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/article/Big%20Tech%20News%202025:%20Major%20Developments%20Shaping%20the%20Industry/Meta's%20AR:VR%20Expansion.webp" alt="Meta's latest AR/VR technology and metaverse developments" class="w-full h-48 object-cover rounded-lg my-4" />
       <p>Meta unveiled its next-generation AR glasses and announced partnerships with major brands to create immersive shopping experiences. The company's investment in the metaverse is finally showing promising returns with increased user engagement.</p>
       
       <h3>Regulatory Landscape Shifts</h3>
@@ -321,14 +321,14 @@ export const articles = [
     slug: 'top-10-ai-video-generation-tools-comparison-2025',
     title: "Top 10 AI Video Generation Tools: Complete Comparison Guide 2025",
     excerpt: "Comprehensive comparison of the best AI video generation tools available in 2025. From features and pricing to use cases and limitations, find the perfect AI video tool for your needs.",
-    featuredImage: "/images/ai-video-generation-tools.jpg",
+    featuredImage: "https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/article/Top-10-video-ai-generator.jpg",
     content: `
       <h2>The AI Video Generation Revolution</h2>
-      <img src="/images/ai-video-tools-overview.jpg" alt="Overview of AI video generation tools and interfaces" class="w-full h-64 object-cover rounded-lg my-6" />
       <p>AI video generation has transformed from experimental technology to practical tools that content creators, marketers, and businesses use daily. In 2025, the landscape is dominated by sophisticated platforms that can create professional-quality videos from simple text prompts. Here's our comprehensive comparison of the top 10 AI video generation tools.</p>
       
       <h3>1. RunwayML Gen-3</h3>
-      
+            <img src="https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/article/%20RunwayML%20Gen-3.jpg" alt="Overview of AI video generation tools and interfaces" class="w-full h-70 object-cover rounded-lg my-6" />
+
       <h4>Overview</h4>
       <p>RunwayML's latest generation model leads the industry with photorealistic video generation and advanced motion control capabilities.</p>
       
@@ -352,9 +352,10 @@ export const articles = [
       <p>Professional video creators, marketing agencies, and businesses requiring high-quality commercial content.</p>
       
       <h3>2. Pika Labs 1.5</h3>
+      <img src="https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/article/Pika%20Labs%201.5.jpg" alt="Pika Labs AI video generation interface" class="w-full h-70 object-cover rounded-lg my-4" />
+
       
       <h4>Overview</h4>
-      <img src="/images/pika-labs-interface.jpg" alt="Pika Labs AI video generation interface" class="w-full h-48 object-cover rounded-lg my-4" />
       <p>Pika Labs focuses on user-friendly video generation with excellent results for social media and marketing content.</p>
       
       <h4>Key Features</h4>
@@ -377,6 +378,8 @@ export const articles = [
       <p>Social media creators, small businesses, and content marketers looking for quick video generation.</p>
       
       <h3>3. Synthesia 2.0</h3>
+                  <img src="https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/article/Synthesia%202.0.webp" alt="Overview of AI video generation tools and interfaces" class="w-full h-70 object-cover rounded-lg my-6" />
+
       
       <h4>Overview</h4>
       <p>Synthesia specializes in AI avatar-based videos, perfect for corporate training, presentations, and educational content.</p>
@@ -401,6 +404,8 @@ export const articles = [
       <p>Corporate communications, e-learning platforms, and multilingual content creation.</p>
       
       <h3>4. Stable Video Diffusion</h3>
+                  <img src="https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/article/Stable%20Video%20Diffusion.webp" alt="Overview of AI video generation tools and interfaces" class="w-full h-70 object-cover rounded-lg my-6" />
+
       
       <h4>Overview</h4>
       <p>Open-source video generation model that offers flexibility and customization for developers and tech-savvy users.</p>
@@ -422,7 +427,10 @@ export const articles = [
       <h4>Best For</h4>
       <p>Developers, researchers, and organizations needing customizable AI video solutions.</p>
       
+
       <h3>5. Luma Dream Machine</h3>
+                  <img src="https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/article/Luma%20Dream%20Machine.webp" alt="Overview of AI video generation tools and interfaces" class="w-full h-70 object-cover rounded-lg my-6" />
+
       
       <h4>Overview</h4>
       <p>Luma's Dream Machine excels at creating cinematic-quality videos with impressive motion dynamics and visual effects.</p>
@@ -446,9 +454,10 @@ export const articles = [
       <p>Film production, advertising agencies, and high-end creative projects.</p>
       
       <h3>6. Invideo AI</h3>
+                  <img src="https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/article/Invideo%20AI.jpeg" alt="Overview of AI video generation tools and interfaces" class="w-full h-70 object-cover rounded-lg my-6" />
+
       
       <h4>Overview</h4>
-      <img src="/images/invideo-ai-features.jpg" alt="Invideo AI video editing and generation features" class="w-full h-48 object-cover rounded-lg my-4" />
       <p>Invideo AI combines video generation with comprehensive editing tools, making it ideal for complete video production workflows.</p>
       
       <h4>Key Features</h4>
@@ -471,6 +480,8 @@ export const articles = [
       <p>Content creators, YouTubers, and marketers needing end-to-end video production.</p>
       
       <h3>7. Kaiber AI</h3>
+                  <img src="https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/article/Kaiber%20AI.jpg" alt="Overview of AI video generation tools and interfaces" class="w-full h-70 object-cover rounded-lg my-6" />
+
       
       <h4>Overview</h4>
       <p>Kaiber specializes in artistic and stylized video generation, popular among musicians and creative professionals.</p>
@@ -494,7 +505,8 @@ export const articles = [
       <p>Musicians, artists, and creative professionals seeking stylized video content.</p>
       
       <h3>8. D-ID Creative Reality Studio</h3>
-      
+                        <img src="https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/article/D-ID%20Creative%20Reality%20Studio.jpg" alt="Overview of AI video generation tools and interfaces" class="w-full h-70 object-cover rounded-lg my-6" />
+
       <h4>Overview</h4>
       <p>D-ID focuses on talking head videos and digital human creation, perfect for customer service and educational applications.</p>
       
@@ -517,6 +529,8 @@ export const articles = [
       <p>Customer service, e-learning, and applications requiring realistic digital humans.</p>
       
       <h3>9. HeyGen</h3>
+                        <img src="https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/article/HeyGen.jpg" alt="Overview of AI video generation tools and interfaces" class="w-full h-70 object-cover rounded-lg my-6" />
+
       
       <h4>Overview</h4>
       <p>HeyGen specializes in multilingual video generation with AI avatars, making it ideal for global businesses.</p>
@@ -541,6 +555,8 @@ export const articles = [
       <p>Global businesses, international marketing, and multilingual content creation.</p>
       
       <h3>10. Pictory AI</h3>
+                        <img src="https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/article/Pictory%20AI.jpeg" alt="Overview of AI video generation tools and interfaces" class="w-full h-70 object-cover rounded-lg my-6" />
+
       
       <h4>Overview</h4>
       <p>Pictory transforms long-form content into engaging short videos, perfect for social media and content repurposing.</p>

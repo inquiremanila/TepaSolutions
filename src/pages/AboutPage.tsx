@@ -280,15 +280,18 @@ export function AboutPage({ navigate }: AboutPageProps) {
                     </div>
                   </div>
                   
-                  <div className="bg-muted/30 rounded-lg p-6 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="text-6xl mb-4">🏢</div>
-                      <p className="text-muted-foreground">
-                        Modern office space in the heart of BGC's business district
-                      </p>
-                    </div>
-                  </div>
-                </div>
+  <iframe
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3861.1979063475284!2d121.04152231525868!3d14.554729982212691!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3397c8fb31e94e0f%3A0x37d24c8961f4a93e!2sBonifacio%20Global%20City!5e0!3m2!1sen!2sph!4v1631202940212!5m2!1sen!2sph"
+    width="100%"
+    height="350"
+    style={{ border: 0 }}
+    allowFullScreen={true}
+    loading="lazy"
+    referrerPolicy="no-referrer-when-downgrade"
+    className="rounded-lg shadow-md"
+  ></iframe>
+</div>
+
               </CardContent>
             </Card>
           </div>

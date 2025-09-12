@@ -85,7 +85,7 @@ export const events = [
     instructorRole: "Senior Game Developer",
     level: "Beginner",
     price: "Free",
-    image: "https://images.unsplash.com/photo-1704244377777-fc9d78f11643?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb2Jsb3glMjBnYW1lJTIwZGV2ZWxvcG1lbnR8ZW58MXx8fHwxNzU3NDUwMzU2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/events/course/free-roblox-game-dev.jpeg",
     certificate: "Completion Certificate",
     topics: [
       "Introduction to Roblox Studio",
@@ -166,11 +166,11 @@ export const events = [
     capacity: "25 participants",
     status: "registration-open",
     featured: false,
-    instructor: "Sarah Chen",
+    instructor: "Jerrie Mataya",
     instructorRole: "Frontend Developer",
     level: "Beginner",
     price: "Free",
-    image: "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHdlYiUyMGRldmVsb3BtZW50fGVufDF8fHx8MTc1NzQ1MDM1Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/events/course/learn-html-css-free.jpg",
     certificate: "Completion Certificate",
     topics: [
       "HTML structure and elements",
@@ -238,19 +238,19 @@ export const events = [
     `,
     type: "Workshop",
     category: "Business",
-    date: "2025-10-04",
+    date: "Coming Soon",
     time: "1:00 PM - 4:00 PM",
     duration: "3 hours",
-    location: "BGC, Taguig",
-    locationDetails: "Tepa Solutions Office, BGC",
+    location: "Zoom Meeting",
+    locationDetails: "Remote",
     capacity: "20 participants",
-    status: "registration-open",
+    status: "Coming Soon",
     featured: false,
-    instructor: "Manuel Rodriguez",
-    instructorRole: "Digital Marketing Strategist",
-    level: "Intermediate",
-    price: "₱2,500",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYXJrZXRpbmclMjBmdW5uZWwlMjBzdHJhdGVneXxlbnwxfHx8fDE3NTc0NTAzNTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    instructor: "Coming Soon",
+    instructorRole: "Coming Soon",
+    level: "Begginer",
+    price: "TBA",
+    image: "https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/events/course/learn-website-funneling.jpg",
     certificate: "Marketing Certificate",
     topics: [
       "Funnel psychology and strategy",
@@ -564,44 +564,7 @@ export function EventsPage({ navigate }: EventsPageProps) {
         </div>
       </div>
 
-      {/* Event Gallery */}
-      <div className="py-16 bg-muted/30">
-        <div className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl font-bold mb-4">Event Highlights</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Take a look at our past events and workshops. See the learning, collaboration, 
-              and innovation happening in our tech community.
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-6 mb-16">
-            {eventGalleryImages.map((image) => (
-              <motion.div
-                key={image.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: image.id * 0.1 }}
-                className="group"
-              >
-                <div className="aspect-video bg-muted/20 rounded-lg overflow-hidden mb-3">
-                  <ImageWithFallback
-                    src="/images/placeholder"
-                    alt={image.alt}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    data-priority={image.id <= 3 ? "high" : undefined}
-                  />
-                </div>
-                <p className="text-sm text-muted-foreground text-center">{image.caption}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
+      
 
       {/* Call to Action */}
       <div className="py-16">

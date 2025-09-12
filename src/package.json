@@ -31,6 +31,11 @@
     "clean": "rm -rf dist",
     "deploy": "npm run build && npm run deploy:cloudflare",
     "deploy:cloudflare": "wrangler pages publish dist",
+    "upload-to-supabase": "node scripts/upload-to-supabase.js",
+    "migrate-to-supabase": "node scripts/migrate-to-supabase.js",
+    "supabase:check": "node scripts/migrate-to-supabase.js check",
+    "supabase:analyze": "node scripts/migrate-to-supabase.js analyze",
+    "supabase:config": "node scripts/migrate-to-supabase.js config",
     "sitemap": "tsx utils/sitemap-generator.ts",
     "seo-audit": "lighthouse --only-categories=seo --output=json --output-path=./seo-audit.json https://tepasolutions.asia",
     "performance-audit": "lighthouse --only-categories=performance --output=json --output-path=./performance-audit.json https://tepasolutions.asia"
