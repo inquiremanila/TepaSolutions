@@ -190,8 +190,7 @@ export function SEOHead({
             "name": "Jerrie Mataya"
           },
           "foundingDate": "2024",
-          "description": "Leading digital transformation agency in the Philippines specializing in web development, mobile app development, business automation, and AI-powered solutions for businesses worldwide.",
-          "sameAs": [
+            "description": "Specialized in web development, mobile app development, business automation, and AI-powered solutions for businesses worldwide. Open to partnerships and collaboration opportunities.",          "sameAs": [
             "https://linkedin.com/company/tepa-solutions",
             "https://twitter.com/tepasolutions",
             "https://facebook.com/tepasolutions"
@@ -211,7 +210,7 @@ export function SEOHead({
           "@type": "WebSite",
           "@id": "https://tepasolutions.com/#website",
           "url": "https://tepasolutions.com",
-          "name": "Tepa Solutions - Digital Innovation Agency Philippines",
+          "name": "Tepa Solutions - Software Provider Philippines",
           "publisher": {
             "@id": "https://tepasolutions.com/#organization"
           },
@@ -278,7 +277,32 @@ export const generateKeywords = (primary: string[], secondary: string[] = []) =>
     'full-stack development',
     'scalable web applications',
     'Tepa Solutions',
-    'Jerrie Mataya'
+    'affordable website',
+    'professional web design',
+    'responsive web design',
+    'small business website',
+    'shopify website',
+    'wordpress website',
+    'customer service automation',
+    'customer service philippines',
+    'mobile app maker',
+    'mobile app developer',
+    'mobile app development company',
+    'mobile app development philippines',
+    'mobile app development services',
+    'business process automation',
+    'business process automation tools',
+    'business process automation services',
+    'business process automation software',
+    'fintech solutions',
+    'fintech philippines',
+    'ecommerce solutions',
+    'sales automation',
+    'marketing automation',
+    'hr automation',
+    'inventory management automation',
+    'finance automation'
+    
   ];
   
   return [...primary, ...secondary, ...baseKeywords].join(', ');

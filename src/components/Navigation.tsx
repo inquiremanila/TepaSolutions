@@ -76,7 +76,7 @@ export function Navigation({ navigate, currentPath }: NavigationProps) {
           'who-we-serve': '/who-we-serve',
           'contact-sales': '/contact-us/sales',
           'contact-support': '/contact-us/support',
-          'contact-volunteer': '/contact-us/volunteer',
+          'contact-volunteer': '/volunteer-with-us',
           'contact-event-host': '/contact-us/event-hosting',
           'contact-investor': '/contact-us/investors'
         };

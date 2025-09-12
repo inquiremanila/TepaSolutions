@@ -1,4 +1,4 @@
-// Static Site Generator for Tepa Solutions
+// Static Site Generator for Tepa Solutions - FIXED VERSION
 import { writeFileSync, mkdirSync, existsSync, readFileSync, copyFileSync } from 'fs';
 import { join, dirname } from 'path';
 
@@ -23,7 +23,7 @@ const careersData = [
     type: 'Full-time',
     department: 'Engineering',
     postedDate: '2024-12-10',
-    description: 'Join our growing team as a Senior Frontend Developer...',
+    description: 'Join our growing team as a Senior Frontend Developer specializing in React and TypeScript. Build scalable web applications and mentor junior developers.',
     requirements: ['5+ years React experience', 'TypeScript expertise', 'Remote work experience'],
     salary: 'Competitive + Benefits'
   },
@@ -34,9 +34,8 @@ const careersData = [
     type: 'Full-time',
     department: 'Engineering',
     postedDate: '2024-12-08',
-    description: 'Build scalable backend systems for our clients...',
+    description: 'Build scalable backend systems for our clients using Node.js and cloud technologies.',
     requirements: ['3+ years Node.js', 'AWS/Azure experience', 'Database design'],
-    salary: '₱80,000 - ₱120,000'
   },
   {
     id: 'ui-ux-designer-1',
@@ -45,9 +44,8 @@ const careersData = [
     type: 'Full-time',
     department: 'Design',
     postedDate: '2024-12-05',
-    description: 'Design beautiful and functional user experiences...',
+    description: 'Design beautiful and functional user experiences for web and mobile applications.',
     requirements: ['Figma expertise', 'User research experience', 'Portfolio required'],
-    salary: '₱60,000 - ₱90,000'
   }
 ];
 
@@ -116,7 +114,6 @@ const eventsData = [
     type: 'Masterclass',
     instructor: 'Jerrie Mataya',
     capacity: 50,
-    price: '₱2,500',
     category: 'Web Development',
     tags: ['React', 'JavaScript', 'Advanced', 'Web Development'],
     featured: true
@@ -131,12 +128,25 @@ const eventsData = [
     type: 'Workshop',
     instructor: 'AI Solutions Team',
     capacity: 75,
-    price: '₱3,500',
     category: 'Business Automation',
     tags: ['AI', 'Automation', 'Business', 'Implementation'],
     featured: false
   }
 ];
+
+// Helper function to escape HTML entities for XML
+function escapeXml(unsafe: string): string {
+  return unsafe.replace(/[<>&'"]/g, function (c) {
+    switch (c) {
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '&': return '&amp;';
+      case '\'': return '&apos;';
+      case '"': return '&quot;';
+      default: return c;
+    }
+  });
+}
 
 // Define all routes with their SEO configurations
 const routes: Array<{ path: string; file: string; seo: SEOConfig }> = [
@@ -146,8 +156,8 @@ const routes: Array<{ path: string; file: string; seo: SEOConfig }> = [
     file: 'index.html',
     seo: {
       title: 'Tepa Solutions - Leading Digital Transformation Agency Philippines | Web & Mobile App Development',
-      description: 'Transform your business with Tepa Solutions, the premier digital innovation agency in Philippines. We specialize in AI-powered web applications, mobile app development, business automation, and cloud solutions for startups to Fortune 500 companies worldwide.',
-      keywords: 'digital transformation agency Philippines, web application development, mobile app development company, business automation solutions, AI-powered solutions, custom software development, cloud migration services, enterprise digital transformation',
+      description: 'We specialize in AI-powered web applications, mobile app development, business automation, and cloud solutions for startups to Fortune 500 companies worldwide.',
+      keywords: 'Tech company in the Philippines, web application development, mobile app development company, business automation solutions, AI-powered solutions, custom software development, cloud migration services, enterprise digital transformation',
       canonical: 'https://tepasolutions.asia/',
       priority: '1.0',
       changefreq: 'weekly'
@@ -173,7 +183,7 @@ const routes: Array<{ path: string; file: string; seo: SEOConfig }> = [
     seo: {
       title: 'Mobile App Development Philippines | iOS & Android Apps | Tepa Solutions',
       description: 'Create powerful mobile applications with Tepa Solutions. Expert iOS & Android app development using React Native, Flutter, and native technologies. From startups to enterprise - we build scalable, user-centric mobile solutions.',
-      keywords: 'mobile app development Philippines, iOS app development, Android app development, React Native development, Flutter app development, cross-platform mobile apps, native app development',
+      keywords: 'mobile app development Philippines, iOS app development, Android app development, React Native development, Flutter app development, cross-platform mobile apps, native app development, mobile app make philippines',
       canonical: 'https://tepasolutions.asia/mobile-app-development',
       priority: '0.9',
       changefreq: 'monthly'
@@ -356,7 +366,7 @@ const routes: Array<{ path: string; file: string; seo: SEOConfig }> = [
     file: 'who-we-serve/index.html',
     seo: {
       title: 'Industries We Serve | Startup to Enterprise Solutions | Global Tech Services | Tepa Solutions',
-      description: 'Tepa Solutions serves diverse industries worldwide - from startups to Fortune 500 companies. Fintech, healthcare, education, retail, manufacturing, and more. Tailored solutions for every business size.',
+      description: 'Tepa Solutions serves diverse industries worldwide - Fintech, healthcare, education, retail, manufacturing, and more. Tailored solutions for every business size.',
       keywords: 'enterprise software solutions, startup technology services, fintech development, healthcare technology, retail automation, manufacturing digitization, Fortune 500 tech partner',
       canonical: 'https://tepasolutions.asia/who-we-serve',
       priority: '0.7',
@@ -370,8 +380,8 @@ const routes: Array<{ path: string; file: string; seo: SEOConfig }> = [
     file: 'contact-us/sales/index.html',
     seo: {
       title: 'Contact Sales | Get Quote | Business Solutions Consultation | Tepa Solutions',
-      description: 'Ready to transform your business? Contact Tepa Solutions sales team for custom quotes, project consultation, and digital transformation planning. Free initial consultation available.',
-      keywords: 'contact tech company, software development quote, digital transformation consultation, business solution quote, project estimation, technology consulting',
+      description: 'From business websites to Automation. Contact Tepa Solutions sales team for custom quotes, project consultation, and digital transformation planning. Free initial consultation available.',
+      keywords: 'contact tech company, affordable workforce philippines, customer service philippines, cheap website, website funneling,software development quote, mobile app maker, website maker philippines, workflow automation, customer service ai, delivery app, business solution quote, project estimation, technology consulting',
       canonical: 'https://tepasolutions.asia/contact-us/sales',
       priority: '0.8',
       changefreq: 'monthly'
@@ -383,7 +393,7 @@ const routes: Array<{ path: string; file: string; seo: SEOConfig }> = [
     seo: {
       title: 'Customer Support | Technical Help | Service Assistance | Tepa Solutions',
       description: 'Get expert technical support from Tepa Solutions team. Customer service, technical assistance, project support, and ongoing maintenance for your digital solutions.',
-      keywords: 'technical support, customer service Philippines, software support, application maintenance, technical assistance',
+      keywords: 'technical support philippines, affordable customer service, contractual customer support philippines, AI customer service, customer service Philippines, software support philippines, application maintenance, technical assistance',
       canonical: 'https://tepasolutions.asia/contact-us/support',
       priority: '0.7',
       changefreq: 'monthly'
@@ -407,7 +417,7 @@ const routes: Array<{ path: string; file: string; seo: SEOConfig }> = [
     seo: {
       title: 'Host Tech Event | Speaking Opportunities | Workshop Proposals | Tepa Solutions',
       description: 'Partner with Tepa Solutions to host tech events, workshops, and conferences. Speaking opportunities, venue partnerships, and collaborative educational programs.',
-      keywords: 'tech event hosting, speaking opportunities Philippines, workshop partnerships, tech conference collaboration, developer events',
+      keywords: 'tech event hosting, Public Speaking opportunities Philippines, workshop partnerships, tech conference collaboration, developer events, educational programs, host an event, Public Speaking workhop, Free coding bootcamp, Free game development workshop, Website funneling workshop',
       canonical: 'https://tepasolutions.asia/contact-us/event-hosting',
       priority: '0.6',
       changefreq: 'monthly'
@@ -418,8 +428,8 @@ const routes: Array<{ path: string; file: string; seo: SEOConfig }> = [
     file: 'contact-us/investors/index.html',
     seo: {
       title: 'Investor Relations Contact | Investment Inquiries | Funding Opportunities | Tepa Solutions',
-      description: 'Connect with Tepa Solutions investor relations team. Investment opportunities, funding rounds, partnership inquiries, and financial information for potential investors.',
-      keywords: 'startup investment contact, tech company funding, investor relations Philippines, venture capital inquiry, investment opportunities',
+      description: 'Explore investment opportunities, funding rounds, partnership inquiries, and financial information.Connect with Tepa Solutions investor relations team.',
+      keywords: 'startup investment contact, tech company funding, investor relations Philippines, venture capital inquiry, investment opportunities, invest in Philippines, small investment',
       canonical: 'https://tepasolutions.asia/contact-us/investors',
       priority: '0.6',
       changefreq: 'monthly'
@@ -472,7 +482,7 @@ function generateDynamicRoutes(): Array<{ path: string; file: string; seo: SEOCo
       path: `/articles/${article.id}`,
       file: `articles/${article.id}/index.html`,
       seo: {
-        title: `${article.title} | Tepa Solutions Blog`,
+        title: `${article.title} | Tepa Solutions Tech Blog`,
         description: article.excerpt,
         keywords: `${article.tags.join(', ')}, tech blog Philippines, ${article.category}`,
         canonical: `https://tepasolutions.asia/articles/${article.id}`,
@@ -506,7 +516,7 @@ function generateDynamicRoutes(): Array<{ path: string; file: string; seo: SEOCo
       path: `/events/${event.id}`,
       file: `events/${event.id}/index.html`,
       seo: {
-        title: `${event.title} | Tepa Solutions Events`,
+        title: `${event.title} | Tepa Solutions Workshop`,
         description: `${event.description} Join us on ${event.date} at ${event.time}. ${event.location}. ${event.price}.`,
         keywords: `${event.tags.join(', ')}, tech events Philippines, ${event.category}, ${event.type}`,
         canonical: `https://tepasolutions.asia/events/${event.id}`,
@@ -531,7 +541,7 @@ function generateDynamicRoutes(): Array<{ path: string; file: string; seo: SEOCo
           "offers": {
             "@type": "Offer",
             "price": event.price === 'Free' ? '0' : event.price.replace('₱', ''),
-            "priceCurrency": event.price === 'Free' ? 'PHP' : 'PHP'
+            "priceCurrency": "PHP"
           }
         }
       }
@@ -547,6 +557,11 @@ function generateHTMLTemplate(route: { path: string; file: string; seo: SEOConfi
     ? `<script type="application/ld+json">${JSON.stringify(route.seo.structuredData, null, 2)}</script>`
     : '';
 
+  // Escape HTML entities in meta content
+  const title = escapeXml(route.seo.title);
+  const description = escapeXml(route.seo.description);
+  const keywords = escapeXml(route.seo.keywords);
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -554,9 +569,9 @@ function generateHTMLTemplate(route: { path: string; file: string; seo: SEOConfi
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <!-- SEO Meta Tags -->
-  <title>${route.seo.title}</title>
-  <meta name="description" content="${route.seo.description}" />
-  <meta name="keywords" content="${route.seo.keywords}" />
+  <title>${title}</title>
+  <meta name="description" content="${description}" />
+  <meta name="keywords" content="${keywords}" />
   <meta name="author" content="Tepa Solutions" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1" />
@@ -566,8 +581,8 @@ function generateHTMLTemplate(route: { path: string; file: string; seo: SEOConfi
   
   <!-- Open Graph Meta Tags -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="${route.seo.title}" />
-  <meta property="og:description" content="${route.seo.description}" />
+  <meta property="og:title" content="${title}" />
+  <meta property="og:description" content="${description}" />
   <meta property="og:url" content="${route.seo.canonical}" />
   <meta property="og:site_name" content="Tepa Solutions" />
   <meta property="og:image" content="https://tepasolutions.asia/images/og-tepa-solutions.jpg" />
@@ -577,8 +592,8 @@ function generateHTMLTemplate(route: { path: string; file: string; seo: SEOConfi
   
   <!-- Twitter Card Meta Tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="${route.seo.title}" />
-  <meta name="twitter:description" content="${route.seo.description}" />
+  <meta name="twitter:title" content="${title}" />
+  <meta name="twitter:description" content="${description}" />
   <meta name="twitter:image" content="https://tepasolutions.asia/images/og-tepa-solutions.jpg" />
   <meta name="twitter:site" content="@tepasolutions" />
   <meta name="twitter:creator" content="@jerriemataya" />
@@ -634,7 +649,7 @@ function generateHTMLTemplate(route: { path: string; file: string; seo: SEOConfi
     "name": "Tepa Solutions",
     "url": "https://tepasolutions.asia",
     "logo": "https://tepasolutions.asia/images/logo.png",
-    "description": "Leading digital transformation agency in Philippines specializing in web development, mobile apps, and business automation.",
+    "description": "Website, Mobile App, and Business Automation Developer in the Philippines",
     "address": {
       "@type": "PostalAddress",
       "addressCountry": "PH",
@@ -753,7 +768,7 @@ function generateHTMLTemplate(route: { path: string; file: string; seo: SEOConfi
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'GA_MEASUREMENT_ID', {
-      page_title: '${route.seo.title}',
+      page_title: '${escapeXml(route.seo.title)}',
       page_location: '${route.seo.canonical}'
     });
   </script>
@@ -761,20 +776,25 @@ function generateHTMLTemplate(route: { path: string; file: string; seo: SEOConfi
 </html>`;
 }
 
-// Generate sitemap.xml
+// Generate sitemap.xml - FIXED VERSION
 function generateSitemap(allRoutes: Array<{ path: string; file: string; seo: SEOConfig }>): string {
   const baseUrl = 'https://tepasolutions.asia';
-  const currentDate = new Date().toISOString();
+  const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+
+  const urlEntries = allRoutes.map(route => {
+    const loc = escapeXml(`${baseUrl}${route.path}`);
+    return `  <url>
+    <loc>${loc}</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>${route.seo.changefreq}</changefreq>
+    <priority>${route.seo.priority}</priority>
+  </url>`;
+  }).join('\n');
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-${allRoutes.map(route => `  <url>
-    <loc>${baseUrl}${route.path}</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>${route.seo.changefreq}</changefreq>
-    <priority>${route.seo.priority}</priority>
-  </url>`).join('\n')}
+${urlEntries}
 </urlset>`;
 }
 
@@ -842,6 +862,65 @@ User-agent: facebookexternalhit
 Allow: /`;
 }
 
+// Generate additional SEO files
+function generateAdditionalSEOFiles(): void {
+  // Generate manifest.json for PWA
+  const manifest = {
+    name: "Tepa Solutions",
+    short_name: "Tepa",
+    description: "Website, Mobile App, and Business Automation Developer in the Philippines",
+    start_url: "/",
+    display: "standalone",
+    background_color: "#ffffff",
+    theme_color: "#030213",
+    icons: [
+      {
+        src: "/images/android-chrome-192x192.png",
+        sizes: "192x192",
+        type: "image/png"
+      },
+      {
+        src: "/images/android-chrome-512x512.png",
+        sizes: "512x512",
+        type: "image/png"
+      }
+    ]
+  };
+  
+  writeFileSync('manifest.json', JSON.stringify(manifest, null, 2), 'utf8');
+  console.log('✅ Generated: manifest.json');
+
+  // Generate browserconfig.xml for Microsoft
+  const browserConfig = `<?xml version="1.0" encoding="utf-8"?>
+<browserconfig>
+  <msapplication>
+    <tile>
+      <square150x150logo src="/images/mstile-150x150.png"/>
+      <TileColor>#030213</TileColor>
+    </tile>
+  </msapplication>
+</browserconfig>`;
+  
+  writeFileSync('browserconfig.xml', browserConfig, 'utf8');
+  console.log('✅ Generated: browserconfig.xml');
+
+  // Generate security.txt
+  const securityTxt = `Contact: security@tepasolutions.asia
+Expires: ${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()}
+Encryption: https://tepasolutions.asia/.well-known/pgp-key.txt
+Preferred-Languages: en, tl
+Canonical: https://tepasolutions.asia/.well-known/security.txt
+Policy: https://tepasolutions.asia/security-policy`;
+
+  // Create .well-known directory
+  if (!existsSync('.well-known')) {
+    mkdirSync('.well-known', { recursive: true });
+  }
+  
+  writeFileSync('.well-known/security.txt', securityTxt, 'utf8');
+  console.log('✅ Generated: .well-known/security.txt');
+}
+
 // Main build function
 export function buildStaticSite(): void {
   console.log('🚀 Building static site with SEO optimization...');
@@ -878,17 +957,22 @@ export function buildStaticSite(): void {
   writeFileSync('robots.txt', robotsContent, 'utf8');
   console.log('✅ Generated: robots.txt');
   
+  // Generate additional SEO files
+  generateAdditionalSEOFiles();
+  
   console.log('\n🎉 Static site generation complete!');
   console.log(`📊 SEO Summary:`);
   console.log(`   • ${allRoutes.length} crawlable pages`);
   console.log(`   • ${allRoutes.filter(r => r.seo.structuredData).length} pages with structured data`);
   console.log(`   • Individual SEO optimization for each page`);
-  console.log(`   • Proper favicon and asset serving`);
-  console.log(`   • Complete sitemap with priorities`);
+  console.log(`   • Proper XML sitemap with valid URLs`);
+  console.log(`   • PWA manifest and browser config`);
+  console.log(`   • Security.txt for responsible disclosure`);
   console.log('\n📝 Next steps:');
   console.log('   1. Run "npm run build" to build the React app');
   console.log('   2. Deploy to Cloudflare Pages');
-  console.log('   3. Verify with Google Search Console');
+  console.log('   3. Verify sitemap in Google Search Console');
+  console.log('   4. Test robots.txt at /robots.txt');
 }
 
 // Export data for use in components
