@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Phone, Mail, ArrowLeft, Send, CheckCircle, AlertCircle, Upload } from 'lucide-react';
 import { submitContactForm, submitVolunteerApplication } from '../utils/api';
 import { toast } from "sonner@2.0.3";

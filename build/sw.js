@@ -14,8 +14,8 @@ const CRITICAL_RESOURCES = [
 
 // API endpoints to cache
 const API_CACHE_PATTERNS = [
-  /^https:\/\/api\.tepasolutions\.com\//,
-  /^https:\/\/tepasolutions\.com\/api\//
+  /^https:\/\/api\.tepasolutions\.asia\//,
+  /^https:\/\/tepasolutions\.asia\/api\//
 ];
 
 // Image optimization patterns
@@ -399,7 +399,7 @@ self.addEventListener('notificationclick', event => {
   
   if (event.action === 'view') {
     event.waitUntil(
-      clients.openWindow('https://tepasolutions.com')
+      clients.openWindow('https://tepasolutions.asia')
     );
   }
 });

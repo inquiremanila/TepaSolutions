@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Calendar, Clock, MapPin, Users, ExternalLink, Play, Trophy, Code, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { submitEventRegistration } from '../../utils/api';
 import { toast } from "sonner@2.0.3";

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { MapPin, Clock, Users, Heart, Code, Palette, GraduationCap, Laptop, Send, CheckCircle, AlertCircle, ArrowRight, Calendar, DollarSign } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';

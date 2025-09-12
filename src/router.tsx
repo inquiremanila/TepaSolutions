@@ -1,8 +1,8 @@
 // Router system for multi-page architecture
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigation } from './components/Navigation';
 import { Footer } from './components/Footer';
-import { SEOHead } from './components/SEOHead';
+import { SEOHead } from './components/seo4-head';
 import { Toaster } from "./components/ui/sonner";
 
 // Import all page components
@@ -27,7 +27,6 @@ import { WhoWeServePage } from './pages/WhoWeServePage';
 import { VolunteerPage } from './pages/VolunteerPage';
 import { ContactSalesPage } from './pages/ContactSalesPage';
 import { ContactSupportPage } from './pages/ContactSupportPage';
-import { ContactVolunteerPage } from './pages/ContactVolunteerPage';
 import { ContactEventHostPage } from './pages/ContactEventHostPage';
 import { ContactInvestorPage } from './pages/ContactInvestorPage';
 import { ContactCareersPage } from './pages/ContactCareersPage';

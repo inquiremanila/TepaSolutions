@@ -1,244 +1,162 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  <!-- Homepage -->
   <url>
     <loc>https://tepasolutions.asia/</loc>
-    <lastmod>2025-01-15</lastmod>
+    <lastmod>2025-09-12</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <priority>1</priority>
   </url>
-  
-  <!-- Service Pages -->
   <url>
     <loc>https://tepasolutions.asia/web-application-development</loc>
-    <lastmod>2025-01-15</lastmod>
+    <lastmod>2025-09-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://tepasolutions.asia/mobile-app-development</loc>
-    <lastmod>2025-01-15</lastmod>
+    <lastmod>2025-09-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://tepasolutions.asia/website-development</loc>
-    <lastmod>2025-01-15</lastmod>
+    <lastmod>2025-09-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://tepasolutions.asia/seo-services</loc>
-    <lastmod>2025-01-15</lastmod>
+    <lastmod>2025-09-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
-  
-  <!-- Business Automation Pages -->
   <url>
     <loc>https://tepasolutions.asia/business-automation</loc>
-    <lastmod>2025-01-15</lastmod>
+    <lastmod>2025-09-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://tepasolutions.asia/business-automation/sales-process-automation</loc>
-    <lastmod>2025-01-15</lastmod>
+    <loc>https://tepasolutions.asia/digital-transformation</loc>
+    <lastmod>2025-09-12</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
-  <url>
-    <loc>https://tepasolutions.asia/business-automation/marketing-automation</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://tepasolutions.asia/business-automation/hr-automation</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://tepasolutions.asia/business-automation/finance-automation</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://tepasolutions.asia/business-automation/inventory-automation</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://tepasolutions.asia/business-automation/support-automation</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <!-- Content Pages -->
   <url>
     <loc>https://tepasolutions.asia/articles</loc>
-    <lastmod>2025-01-15</lastmod>
+    <lastmod>2025-09-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tepasolutions.asia/events</loc>
+    <lastmod>2025-09-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tepasolutions.asia/careers</loc>
+    <lastmod>2025-09-12</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://tepasolutions.asia/about</loc>
+    <lastmod>2025-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://tepasolutions.asia/contact</loc>
+    <lastmod>2025-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://tepasolutions.asia/volunteer</loc>
+    <lastmod>2025-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://tepasolutions.asia/articles/iphone-17-review-philippines-pricing-release</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://images.unsplash.com/photo-1696272440000-0808a203c852?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlJTIwd29ya3BsYWNlJTIwdHJhbnNmb3JtYXRpb258ZW58MXx8fHwxNzU3NTQ4MTEzfDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080</image:loc>
-      <image:title>AI Transforming Workforce 2025</image:title>
+      <image:loc>https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/iphone-17-5-new-features.webp</image:loc>
+      <image:title>iPhone 17 Review: Philippines Pricing and Release Date Revealed</image:title>
+      <image:caption>Everything you need to know about Apple's latest iPhone 17, including comprehensive reviews, Philippines pricing, availability, and release timeline. Is it worth the upgrade?</image:caption>
     </image:image>
   </url>
-  
-  <!-- Individual Articles -->
   <url>
-    <loc>https://tepasolutions.asia/articles/ai-transforming-workforce-2025</loc>
+    <loc>https://tepasolutions.asia/articles/how-ai-is-transforming-the-workforce-in-2025</loc>
     <lastmod>2025-01-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1696272440000-0808a203c852?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlJTIwd29ya3BsYWNlJTIwdHJhbnNmb3JtYXRpb258ZW58MXx8fHwxNzU3NTQ4MTEzfDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080</image:loc>
-      <image:title>How AI is Transforming the Workforce in 2025</image:title>
-    </image:image>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1531535807748-218331acbcb4?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWFtJTIwY29sbGFib3JhdGlvbiUyMHRlY2hub2xvZ3l8ZW58MXx8fHwxNzU3NTQ4MTE1fDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080</image:loc>
-      <image:title>Team collaboration with AI technology</image:title>
-    </image:image>
   </url>
   <url>
-    <loc>https://tepasolutions.asia/articles/complete-guide-business-process-automation</loc>
+    <loc>https://tepasolutions.asia/articles/the-complete-guide-to-business-process-automation</loc>
     <lastmod>2025-01-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1647427060118-4911c9821b82?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHByb2Nlc3MlMjBhdXRvbWF0aW9uJTIwd29ya2Zsb3d8ZW58MXx8fHwxNzU3NTQ4MTEzfDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080</image:loc>
-      <image:title>The Complete Guide to Business Process Automation</image:title>
-    </image:image>
   </url>
   <url>
-    <loc>https://tepasolutions.asia/articles/mobile-app-development-trends-2025</loc>
+    <loc>https://tepasolutions.asia/articles/mobile-app-development-trends-for-2025</loc>
     <lastmod>2025-01-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1726935068680-73cef7e8412b?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBkZXZlbG9wbWVudCUyMHRyZW5kc3xlbnwxfHx8fDE3NTc1NDgxMTR8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080</image:loc>
-      <image:title>Mobile App Development Trends for 2025</image:title>
-    </image:image>
   </url>
   <url>
-    <loc>https://tepasolutions.asia/articles/seo-strategies-that-work-2025</loc>
+    <loc>https://tepasolutions.asia/articles/seo-strategies-that-actually-work-in-2025</loc>
     <lastmod>2024-12-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://images.unsplash.com/photo-1709281847780-2b34c28853c0?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxTRU8lMjBzdHJhdGVneSUyMGRpZ2l0YWwlMjBtYXJrZXRpbmd8ZW58MXx8fHwxNzU3NTQ4MTE0fDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=1080</image:loc>
-      <image:title>SEO Strategies That Actually Work in 2025</image:title>
-    </image:image>
   </url>
-  
-  <!-- Events -->
   <url>
-    <loc>https://tepasolutions.asia/events</loc>
-    <lastmod>2025-01-15</lastmod>
+    <loc>https://tepasolutions.asia/events/free-introduction-roblox-game-development</loc>
+    <lastmod>2025-09-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/events/course/free-roblox-game-dev.jpeg</image:loc>
+      <image:title>Free Introduction of Roblox Game Development</image:title>
+      <image:caption>Join our comprehensive workshop where you'll learn the fundamentals of Roblox game development using Roblox Studio and Lua scripting. Perfect for beginners and aspiring game developers!</image:caption>
+    </image:image>
   </url>
   <url>
-    <loc>https://tepasolutions.asia/events/introduction-to-how-to-make-a-roblox-game</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://tepasolutions.asia/events/introduction-to-html-and-css</loc>
+    <lastmod>2025-10-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/events/course/html-css-intro.jpeg</image:loc>
+      <image:title>Introduction to HTML and CSS</image:title>
+      <image:caption>Learn the fundamentals of web development with HTML and CSS. Perfect for beginners who want to start their journey in web development and create beautiful, responsive websites.</image:caption>
+    </image:image>
   </url>
   <url>
-    <loc>https://tepasolutions.asia/events/web-development-bootcamp-react-nodejs</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://tepasolutions.asia/events/ai-automation-business-workshop</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://tepasolutions.asia/events/mobile-app-design-ux-workshop</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <!-- Careers -->
-  <url>
-    <loc>https://tepasolutions.asia/careers</loc>
+    <loc>https://tepasolutions.asia/careers/intern-frontend-developer</loc>
     <lastmod>2025-01-15</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <!-- Volunteer -->
-  <url>
-    <loc>https://tepasolutions.asia/volunteer-with-us</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://tepasolutions.asia/volunteer-with-us/volunteer-form</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <!-- Company Pages -->
-  <url>
-    <loc>https://tepasolutions.asia/about</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://tepasolutions.asia/who-we-serve</loc>
+    <loc>https://tepasolutions.asia/careers/intern-backend-developer</loc>
     <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://tepasolutions.asia/investors</loc>
+    <loc>https://tepasolutions.asia/careers/intern-article-writer</loc>
     <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <!-- Contact Pages -->
-  <url>
-    <loc>https://tepasolutions.asia/contact-us/sales</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://tepasolutions.asia/contact-us/support</loc>
+    <loc>https://tepasolutions.asia/careers/intern-seo-specialist</loc>
     <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://tepasolutions.asia/contact-us/event-hosting</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://tepasolutions.asia/contact-us/investor</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://tepasolutions.asia/volunteer-with-us</loc>
-    <lastmod>2025-01-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
   </url>
 </urlset>

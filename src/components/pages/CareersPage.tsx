@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { MapPin, Clock, Users, Heart, Code, Palette, GraduationCap, Laptop, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { submitCareerApplication } from '../../utils/api';
 import { toast } from "sonner@2.0.3";
