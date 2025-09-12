@@ -136,16 +136,16 @@ const eventsData = [
 
 // Helper function to escape HTML entities for XML
 function escapeXml(unsafe: string): string {
-  return unsafe.replace(/[<>&'"]/g, function (c) {
-    switch (c) {
-      case '<': return '&lt;';
-      case '>': return '&gt;';
-      case '&': return '&amp;';
-      case '\'': return '&apos;';
-      case '"': return '&quot;';
-      default: return c;
-    }
-  });
+  if (typeof unsafe !== 'string') {
+    return String(unsafe);
+  }
+  
+  return unsafe
+    .replace(/&/g, '&amp;')    // Must be first to avoid double-escaping
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
 }
 
 // Define all routes with their SEO configurations
@@ -464,7 +464,7 @@ function generateDynamicRoutes(): Array<{ path: string; file: string; seo: SEOCo
             "@type": "Organization",
             "name": "Tepa Solutions",
             "sameAs": "https://tepasolutions.asia",
-            "logo": "https://tepasolutions.asia/images/logo.png"
+            "logo": "https://tepasolutions.asia/images/tepa.png"
           },
           "jobLocation": {
             "@type": "Place",
@@ -501,7 +501,7 @@ function generateDynamicRoutes(): Array<{ path: string; file: string; seo: SEOCo
           "publisher": {
             "@type": "Organization",
             "name": "Tepa Solutions",
-            "logo": "https://tepasolutions.asia/images/logo.png"
+            "logo": "https://tepasolutions.asia/images/tepa.png"
           },
           "mainEntityOfPage": `https://tepasolutions.asia/articles/${article.id}`,
           "image": `https://tepasolutions.asia/images/articles/${article.id}-og.jpg`
@@ -551,16 +551,16 @@ function generateDynamicRoutes(): Array<{ path: string; file: string; seo: SEOCo
   return dynamicRoutes;
 }
 
-// HTML template generator
 function generateHTMLTemplate(route: { path: string; file: string; seo: SEOConfig }): string {
   const structuredDataScript = route.seo.structuredData 
     ? `<script type="application/ld+json">${JSON.stringify(route.seo.structuredData, null, 2)}</script>`
     : '';
 
-  // Escape HTML entities in meta content
+  // Escape HTML entities in meta content - but NOT for HTML attributes in script tags
   const title = escapeXml(route.seo.title);
   const description = escapeXml(route.seo.description);
   const keywords = escapeXml(route.seo.keywords);
+  const canonicalUrl = escapeXml(route.seo.canonical);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -577,13 +577,13 @@ function generateHTMLTemplate(route: { path: string; file: string; seo: SEOConfi
   <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1" />
   
   <!-- Canonical URL -->
-  <link rel="canonical" href="${route.seo.canonical}" />
+  <link rel="canonical" href="${canonicalUrl}" />
   
   <!-- Open Graph Meta Tags -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="${title}" />
   <meta property="og:description" content="${description}" />
-  <meta property="og:url" content="${route.seo.canonical}" />
+  <meta property="og:url" content="${canonicalUrl}" />
   <meta property="og:site_name" content="Tepa Solutions" />
   <meta property="og:image" content="https://tepasolutions.asia/images/og-tepa-solutions.jpg" />
   <meta property="og:image:width" content="1200" />
@@ -648,7 +648,7 @@ function generateHTMLTemplate(route: { path: string; file: string; seo: SEOConfi
     "@type": "Organization",
     "name": "Tepa Solutions",
     "url": "https://tepasolutions.asia",
-    "logo": "https://tepasolutions.asia/images/logo.png",
+    "logo": "https://tepasolutions.asia/images/tepa.png",
     "description": "Website, Mobile App, and Business Automation Developer in the Philippines",
     "address": {
       "@type": "PostalAddress",
@@ -670,7 +670,7 @@ function generateHTMLTemplate(route: { path: string; file: string; seo: SEOConfi
   
   <!-- Initial Route for React -->
   <script>
-    window.__INITIAL_ROUTE__ = '${route.path}';
+    window.__INITIAL_ROUTE__ = '${route.path.replace(/'/g, "\\'")}';
   </script>
   
   <!-- Critical CSS -->
@@ -768,26 +768,53 @@ function generateHTMLTemplate(route: { path: string; file: string; seo: SEOConfi
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'GA_MEASUREMENT_ID', {
-      page_title: '${escapeXml(route.seo.title)}',
-      page_location: '${route.seo.canonical}'
+      page_title: '${title.replace(/'/g, "\\'")}',
+      page_location: '${canonicalUrl}'
     });
   </script>
 </body>
 </html>`;
 }
 
-// Generate sitemap.xml - FIXED VERSION
+
+// Debug function to validate XML before writing
+function validateXMLContent(content: string, filename: string): boolean {
+  try {
+    // Basic validation - check for unescaped entities
+    const problematicChars = content.match(/&(?!(amp|lt|gt|quot|apos);)/g);
+    if (problematicChars) {
+      console.error(`❌ XML Validation Error in ${filename}:`);
+      console.error(`Found unescaped ampersands: ${problematicChars.join(', ')}`);
+      return false;
+    }
+    
+    // Check for other common XML issues
+    if (content.includes('<>') || content.includes('><')) {
+      console.warn(`⚠️  Potential XML structure issue in ${filename}`);
+    }
+    
+    return true;
+  } catch (error) {
+    console.error(`❌ XML Validation Error in ${filename}:`, error);
+    return false;
+  }
+}
+
+// Generate sitemap.xml - FIXED VERSION with proper XML escaping
 function generateSitemap(allRoutes: Array<{ path: string; file: string; seo: SEOConfig }>): string {
   const baseUrl = 'https://tepasolutions.asia';
   const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
 
   const urlEntries = allRoutes.map(route => {
-    const loc = escapeXml(`${baseUrl}${route.path}`);
+    // Ensure proper URL construction and escaping
+    const fullUrl = route.path === '/' ? baseUrl : `${baseUrl}${route.path}`;
+    const loc = escapeXml(fullUrl);
+    
     return `  <url>
     <loc>${loc}</loc>
     <lastmod>${currentDate}</lastmod>
-    <changefreq>${route.seo.changefreq}</changefreq>
-    <priority>${route.seo.priority}</priority>
+    <changefreq>${escapeXml(route.seo.changefreq)}</changefreq>
+    <priority>${escapeXml(route.seo.priority)}</priority>
   </url>`;
   }).join('\n');
 
