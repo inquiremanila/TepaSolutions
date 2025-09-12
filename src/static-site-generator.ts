@@ -510,43 +510,47 @@ function generateDynamicRoutes(): Array<{ path: string; file: string; seo: SEOCo
     });
   });
 
-  // Event pages
-  eventsData.forEach(event => {
-    dynamicRoutes.push({
-      path: `/events/${event.id}`,
-      file: `events/${event.id}/index.html`,
-      seo: {
-        title: `${event.title} | Tepa Solutions Workshop`,
-        description: `${event.description} Join us on ${event.date} at ${event.time}. ${event.location}. ${event.price}.`,
-        keywords: `${event.tags.join(', ')}, tech events Philippines, ${event.category}, ${event.type}`,
-        canonical: `https://tepasolutions.asia/events/${event.id}`,
-        priority: '0.7',
-        changefreq: 'weekly',
-        structuredData: {
-          "@context": "https://schema.org",
-          "@type": "Event",
-          "name": event.title,
-          "description": event.description,
-          "startDate": `${event.date}T${event.time.split(' - ')[0]}`,
-          "endDate": `${event.date}T${event.time.split(' - ')[1]}`,
-          "location": {
-            "@type": "Place",
-            "name": event.location
-          },
-          "organizer": {
-            "@type": "Organization",
-            "name": "Tepa Solutions",
-            "url": "https://tepasolutions.asia"
-          },
-          "offers": {
-            "@type": "Offer",
-            "price": event.price === 'Free' ? '0' : event.price.replace('₱', ''),
-            "priceCurrency": "PHP"
-          }
-        }
+// Event pages
+eventsData.forEach(event => {
+  // Handle potential undefined price
+  const priceInfo = event.price ? {
+    "@type": "Offer",
+    "price": event.price === 'Free' ? '0' : event.price.replace('₱', ''),
+    "priceCurrency": "PHP"
+  } : undefined;
+
+  dynamicRoutes.push({
+    path: `/events/${event.id}`,
+    file: `events/${event.id}/index.html`,
+    seo: {
+      title: `${event.title} | Tepa Solutions Workshop`,
+      description: `${event.description} Join us on ${event.date} at ${event.time}. ${event.location}. ${event.price || 'Free'}.`,
+      keywords: `${event.tags.join(', ')}, tech events Philippines, ${event.category}, ${event.type}`,
+      canonical: `https://tepasolutions.asia/events/${event.id}`,
+      priority: '0.7',
+      changefreq: 'weekly',
+      structuredData: {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": event.title,
+        "description": event.description,
+        "startDate": `${event.date}T${event.time.split(' - ')[0]}`,
+        "endDate": `${event.date}T${event.time.split(' - ')[1]}`,
+        "location": {
+          "@type": "Place",
+          "name": event.location
+        },
+        "organizer": {
+          "@type": "Organization",
+          "name": "Tepa Solutions",
+          "url": "https://tepasolutions.asia"
+        },
+        // Only include offers if priceInfo exists
+        ...(priceInfo && { offers: priceInfo })
       }
-    });
+    }
   });
+});
 
   return dynamicRoutes;
 }
@@ -819,8 +823,7 @@ function generateSitemap(allRoutes: Array<{ path: string; file: string; seo: SEO
   }).join('\n');
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urlEntries}
 </urlset>`;
 }
