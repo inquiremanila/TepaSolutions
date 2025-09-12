@@ -108,7 +108,7 @@ function escapeXML(str: string): string {
 
 function generateSitemapXML(entries: SitemapEntry[]): string {
   const header = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">`;
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
 
   const footer = `</urlset>`;
 
@@ -119,23 +119,7 @@ function generateSitemapXML(entries: SitemapEntry[]): string {
     <changefreq>${entry.changefreq}</changefreq>
     <priority>${entry.priority}</priority>`;
 
-    if (entry.images && entry.images.length > 0) {
-      entry.images.forEach(image => {
-        url += `
-    <image:image>
-      <image:loc>${escapeXML(image.loc)}</image:loc>`;
-        if (image.title) {
-          url += `
-      <image:title>${escapeXML(image.title)}</image:title>`;
-        }
-        if (image.caption) {
-          url += `
-      <image:caption>${escapeXML(image.caption)}</image:caption>`;
-        }
-        url += `
-    </image:image>`;
-      });
-    }
+    // Remove image tags for now to simplify XML structure
 
     url += `
   </url>`;

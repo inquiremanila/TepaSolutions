@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://tepasolutions.asia/</loc>
     <lastmod>2025-09-12</lastmod>
@@ -83,11 +83,6 @@
     <lastmod>2025-01-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/iphone-17-5-new-features.webp</image:loc>
-      <image:title>iPhone 17 Review: Philippines Pricing and Release Date Revealed</image:title>
-      <image:caption>Everything you need to know about Apple&apos;s latest iPhone 17, including comprehensive reviews, Philippines pricing, availability, and release timeline. Is it worth the upgrade?</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>https://tepasolutions.asia/articles/how-ai-is-transforming-the-workforce-in-2025</loc>
@@ -118,22 +113,12 @@
     <lastmod>2025-09-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/events/course/free-roblox-game-dev.jpeg</image:loc>
-      <image:title>Free Introduction of Roblox Game Development</image:title>
-      <image:caption>Join our comprehensive workshop where you&apos;ll learn the fundamentals of Roblox game development using Roblox Studio and Lua scripting. Perfect for beginners and aspiring game developers!</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>https://tepasolutions.asia/events/introduction-to-html-and-css</loc>
     <lastmod>2025-10-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
-    <image:image>
-      <image:loc>https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/events/course/html-css-intro.jpeg</image:loc>
-      <image:title>Introduction to HTML and CSS</image:title>
-      <image:caption>Learn the fundamentals of web development with HTML and CSS. Perfect for beginners who want to start their journey in web development and create beautiful, responsive websites.</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>https://tepasolutions.asia/careers/intern-frontend-developer</loc>
