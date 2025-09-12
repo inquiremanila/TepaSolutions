@@ -97,6 +97,15 @@ function generateAllSitemapEntries(): SitemapEntry[] {
   return [...staticPages, ...articlePages, ...eventPages, ...careerPages];
 }
 
+function escapeXML(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
 function generateSitemapXML(entries: SitemapEntry[]): string {
   const header = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">`;
@@ -105,7 +114,7 @@ function generateSitemapXML(entries: SitemapEntry[]): string {
 
   const urls = entries.map(entry => {
     let url = `  <url>
-    <loc>${entry.url}</loc>
+    <loc>${escapeXML(entry.url)}</loc>
     <lastmod>${entry.lastmod}</lastmod>
     <changefreq>${entry.changefreq}</changefreq>
     <priority>${entry.priority}</priority>`;
@@ -114,14 +123,14 @@ function generateSitemapXML(entries: SitemapEntry[]): string {
       entry.images.forEach(image => {
         url += `
     <image:image>
-      <image:loc>${image.loc}</image:loc>`;
+      <image:loc>${escapeXML(image.loc)}</image:loc>`;
         if (image.title) {
           url += `
-      <image:title>${image.title}</image:title>`;
+      <image:title>${escapeXML(image.title)}</image:title>`;
         }
         if (image.caption) {
           url += `
-      <image:caption>${image.caption}</image:caption>`;
+      <image:caption>${escapeXML(image.caption)}</image:caption>`;
         }
         url += `
     </image:image>`;
@@ -191,11 +200,16 @@ async function generateDynamicSitemap() {
     
     console.log('🎉 DYNAMIC sitemap generation completed successfully!');
     
-  } catch (error) {
-    console.error('❌ Error generating dynamic sitemap:', error);
+  } catch (error: unknown) {
+  if (error instanceof Error) {
+    console.error('❌ Error generating dynamic sitemap:', error.message);
     console.error('Stack trace:', error.stack);
-    process.exit(1);
+  } else {
+    console.error('❌ Unknown error:', error);
   }
+  process.exit(1);
+}
+
 }
 
 // Run the dynamic generator
