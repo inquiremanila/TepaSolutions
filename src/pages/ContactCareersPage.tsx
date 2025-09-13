@@ -7,9 +7,9 @@ import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
-import { submitCareerApplication } from '../utils/form5-api-handlers';
+import { submitCareerApplication } from '../utils/api';
 import { toast } from "sonner@2.0.3";
-import { jobPositions } from './form3-careers-page';
+import { jobPositions } from './CareersPage';
 
 interface ContactCareersPageProps {
   navigate?: (path: string) => void;

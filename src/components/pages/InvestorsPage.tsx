@@ -4,7 +4,7 @@ import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Tepabot } from '../form2-tepabot-support';
+import { Tepabot } from '../Tepabot';
 
 interface InvestorsPageProps {
   onNavigate: (target: string) => void;

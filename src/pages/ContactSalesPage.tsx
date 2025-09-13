@@ -1,4 +1,4 @@
-import { ContactForms } from '../components/form1-contact-forms';
+import { ContactForms } from '../components/ContactForms';
 
 interface ContactSalesPageProps {
   navigate: (path: string) => void;

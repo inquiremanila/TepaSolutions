@@ -19,7 +19,7 @@ import { HRAutomationPage } from './pages/HRAutomationPage';
 import { FinanceAutomationPage } from './pages/FinanceAutomationPage';
 import { InventoryAutomationPage } from './pages/InventoryAutomationPage';
 import { AboutPage } from './pages/AboutPage';
-import { CareersPage } from './pages/form3-careers-page';
+import { CareersPage } from './pages/CareersPage';
 import { EventsPage } from './pages/EventsPage';
 import { ArticlesPage } from './pages/ArticlesPage';
 import { InvestorsPage } from './pages/InvestorsPage';
@@ -31,7 +31,7 @@ import { ContactEventHostPage } from './pages/ContactEventHostPage';
 import { ContactInvestorPage } from './pages/ContactInvestorPage';
 import { ContactCareersPage } from './pages/ContactCareersPage';
 import { ArticlePage } from './pages/ArticlePage';
-import { EventPage } from './pages/form4-event-registration';
+import { EventPage } from './pages/EventPage';
 import { JobPage } from './pages/JobPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
