@@ -4,6 +4,34 @@ import { projectId, publicAnonKey } from './supabase/info';
 const supabaseUrl = `https://${projectId}.supabase.co`;
 const supabase = createClient(supabaseUrl, publicAnonKey);
 
+export async function uploadFile(file: File, folderPath: string = 'uploads'): Promise<string> {
+  try {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+    const filePath = `${folderPath}/${fileName}`;
+
+    // Upload to tepa-images bucket (note: this should be a private bucket in production)
+    const { data, error } = await supabase.storage
+      .from('tepa-images')
+      .upload(filePath, file, {
+        cacheControl: '31536000',
+        upsert: false
+      });
+
+    if (error) {
+      console.error('File upload error:', error);
+      throw new Error(error.message || 'Failed to upload file');
+    }
+
+    // Return the file path for admin access (not public URL for security)
+    // In production, admins should access files via signed URLs
+    return filePath;
+  } catch (error) {
+    console.error('File upload error:', error);
+    throw error;
+  }
+}
+
 export async function submitContactForm(data: {
   type: 'sales' | 'support' | 'volunteer' | 'event-host' | 'investor';
   name: string;
@@ -53,6 +81,7 @@ export async function submitCareerApplication(data: {
   phone?: string;
   resume: string;
   coverLetter?: string;
+  coverLetterFileUrl?: string;
   portfolio?: string;
   experience?: string;
   location?: string;
@@ -68,6 +97,7 @@ export async function submitCareerApplication(data: {
         phone: data.phone,
         resume_text: data.resume,
         cover_letter: data.coverLetter,
+        cover_letter_file_url: data.coverLetterFileUrl,
         portfolio_url: data.portfolio,
         experience_level: data.experience,
         preferred_location: data.location,

@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import '../styles/globals.css';
 import { Router } from '../router';
 import { initializePerformanceMonitoring } from '../utils/performance';
+import { Toaster } from '../components/ui/sonner';
 
 // Initialize performance monitoring
 initializePerformanceMonitoring();
@@ -15,6 +16,7 @@ const root = createRoot(document.getElementById('root')!);
 root.render(
   <StrictMode>
     <Router initialPath={initialPath} />
+    <Toaster />
   </StrictMode>
 );
 

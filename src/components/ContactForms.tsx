@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Phone, Mail, ArrowLeft, Send, CheckCircle, AlertCircle, Upload } from 'lucide-react';
 import { submitContactForm, submitVolunteerApplication } from '../utils/api';
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -64,6 +64,8 @@ export function ContactForms({ formType, onBack }: ContactFormsProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [supportType, setSupportType] = useState('');
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submissionMessage, setSubmissionMessage] = useState('');
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -118,12 +120,21 @@ export function ContactForms({ formType, onBack }: ContactFormsProps) {
         await submitContactForm(submissionData);
       }
       
-      toast.success('Form submitted successfully!', {
-        description: 'We will contact you shortly.',
-        icon: <CheckCircle className="w-4 h-4" />,
-      });
+      // Check if this is the landing page (show toast + keep form) or other pages (show contextual message)
+      const isLandingPage = window.location.pathname === '/';
+      
+      if (isLandingPage) {
+        toast.success('Form submitted successfully!', {
+          description: 'We will contact you shortly.',
+          icon: <CheckCircle className="w-4 h-4" />,
+        });
+      } else {
+        // For non-landing pages, show contextual message and hide form
+        setIsSubmitted(true);
+        setSubmissionMessage(getSubmissionMessage(formType));
+      }
 
-      // Reset form
+      // Reset form data
       setFormData({
         firstName: '',
         lastName: '',
@@ -156,6 +167,58 @@ export function ContactForms({ formType, onBack }: ContactFormsProps) {
   const updateFormData = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
+
+  const getSubmissionMessage = (type: FormType) => {
+    switch (type) {
+      case 'sales':
+        return 'Thank you for your sales inquiry! Our sales team will contact you within 24 hours to discuss your project requirements and provide a detailed quote.';
+      case 'support':
+        return 'Your support request has been received! Our technical support team will review your issue and respond within 4-6 business hours with a solution.';
+      case 'volunteer':
+        return 'Thank you for your interest in volunteering with us! We will review your application and contact you within 48 hours to discuss available opportunities.';
+      case 'event-host':
+        return 'Thank you for your interest in hosting an event with us! Our events team will contact you within 24 hours to discuss your requirements and available dates.';
+      case 'investor':
+        return 'Thank you for your interest in investment opportunities! Our investor relations team will review your inquiry and respond within 48 hours with relevant information.';
+      default:
+        return 'Thank you for contacting us! We will get back to you shortly.';
+    }
+  };
+
+  // Show success message for non-landing page forms
+  if (isSubmitted && window.location.pathname !== '/') {
+    return (
+      <div className="min-h-screen bg-background py-20">
+        <div className="container mx-auto px-6 max-w-2xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center space-y-6"
+          >
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+              <CheckCircle className="w-10 h-10 text-green-600" />
+            </div>
+            <h1 className="text-3xl font-bold text-green-800">Thank You!</h1>
+            <p className="text-lg text-muted-foreground">{submissionMessage}</p>
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">
+                Need immediate assistance? Contact us directly:
+              </p>
+              <p className="font-medium">📞 63 2 8 558 1237</p>
+              <p className="font-medium">✉️ hello@tepasolutions.asia</p>
+            </div>
+            <Button 
+              onClick={() => window.location.reload()} 
+              variant="outline"
+              className="mt-6"
+            >
+              Submit Another Form
+            </Button>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
 
   if (formType === 'sales') {
     return (

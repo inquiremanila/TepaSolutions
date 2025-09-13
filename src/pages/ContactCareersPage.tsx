@@ -7,8 +7,8 @@ import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
-import { submitCareerApplication } from '../utils/api';
-import { toast } from "sonner@2.0.3";
+import { submitCareerApplication, uploadFile } from '../utils/api';
+import { toast } from "sonner";
 import { jobPositions } from './CareersPage';
 
 interface ContactCareersPageProps {
@@ -31,6 +31,9 @@ export function ContactCareersPage({ navigate }: ContactCareersPageProps) {
     portfolio: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [coverLetterFile, setCoverLetterFile] = useState<File | null>(null);
+  const [coverLetterType, setCoverLetterType] = useState<'text' | 'file'>('text');
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   // Get position from URL parameters if available
   const urlParams = new URLSearchParams(window.location.search);
@@ -48,28 +51,69 @@ export function ContactCareersPage({ navigate }: ContactCareersPageProps) {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      // Validate file type (PDF, DOC, DOCX, TXT)
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
+      if (allowedTypes.includes(file.type)) {
+        setCoverLetterFile(file);
+        setCoverLetterType('file');
+      } else {
+        toast.error('Invalid file type', {
+          description: 'Please upload a PDF, DOC, DOCX, or TXT file for your cover letter.',
+        });
+      }
+    }
+  };
+
+  const removeCoverLetterFile = () => {
+    setCoverLetterFile(null);
+    setCoverLetterType('text');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
+      let coverLetterFileUrl;
+      let coverLetterContent = '';
+      
+      // Upload cover letter file if provided
+      if (coverLetterType === 'file' && coverLetterFile) {
+        try {
+          coverLetterFileUrl = await uploadFile(coverLetterFile, 'cover-letters');
+          coverLetterContent = `Cover letter file uploaded: ${coverLetterFile.name}`;
+        } catch (uploadError) {
+          console.error('Cover letter upload failed:', uploadError);
+          toast.error('Failed to upload cover letter file', {
+            description: 'Please try again or use text format.',
+            icon: <AlertCircle className="w-4 h-4" />,
+          });
+          setIsSubmitting(false);
+          return;
+        }
+      } else if (coverLetterType === 'text') {
+        coverLetterContent = formData.coverLetter;
+      }
+
       await submitCareerApplication({
         position: formData.position,
         name: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
         phone: formData.phone,
         resume: formData.resume,
-        coverLetter: formData.coverLetter,
+        coverLetter: coverLetterContent,
+        coverLetterFileUrl: coverLetterFileUrl,
         portfolio: formData.portfolio,
         experience: formData.experience,
         location: formData.location,
         availability: formData.availability
       });
 
-      toast.success('Application submitted successfully!', {
-        description: 'We will review your application and get back to you within 48 hours.',
-        icon: <CheckCircle className="w-4 h-4" />,
-      });
+      // Show contextual message instead of toast for career applications
+      setIsSubmitted(true);
 
       // Reset form
       setFormData({
@@ -85,6 +129,8 @@ export function ContactCareersPage({ navigate }: ContactCareersPageProps) {
         coverLetter: '',
         portfolio: ''
       });
+      setCoverLetterFile(null);
+      setCoverLetterType('text');
 
     } catch (error) {
       console.error('Career application submission error:', error);
@@ -100,6 +146,51 @@ export function ContactCareersPage({ navigate }: ContactCareersPageProps) {
   const handleBackClick = () => {
     navigate?.('/careers');
   };
+
+  // Show success message after submission
+  if (isSubmitted) {
+    return (
+      <div className="min-h-screen bg-background py-20">
+        <div className="container mx-auto px-6 max-w-2xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center space-y-6"
+          >
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+              <CheckCircle className="w-10 h-10 text-green-600" />
+            </div>
+            <h1 className="text-3xl font-bold text-green-800">Application Submitted!</h1>
+            <p className="text-lg text-muted-foreground">
+              Thank you for your interest in joining our team! We will review your application 
+              and get back to you within 48 hours with next steps.
+            </p>
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">
+                Questions about your application? Contact our HR team:
+              </p>
+              <p className="font-medium">📞 63 2 8 558 1237</p>
+              <p className="font-medium">✉️ careers@tepasolutions.asia</p>
+            </div>
+            <div className="flex gap-4 justify-center">
+              <Button 
+                onClick={() => window.location.reload()} 
+                variant="outline"
+              >
+                Submit Another Application
+              </Button>
+              <Button 
+                onClick={handleBackClick}
+                variant="default"
+              >
+                View Other Positions
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background py-20">
@@ -274,15 +365,81 @@ export function ContactCareersPage({ navigate }: ContactCareersPageProps) {
 
                 {/* Cover Letter */}
                 <div>
-                  <Label htmlFor="coverLetter" className="text-base font-medium">Cover Letter</Label>
-                  <Textarea
-                    id="coverLetter"
-                    value={formData.coverLetter}
-                    onChange={(e) => updateFormData('coverLetter', e.target.value)}
-                    className="mt-2"
-                    rows={6}
-                    placeholder="Tell us why you're interested in this position and why you'd be a great fit for our team..."
-                  />
+                  <Label className="text-base font-medium">Cover Letter</Label>
+                  <div className="mt-2 space-y-4">
+                    {/* Cover Letter Type Selection */}
+                    <div className="flex gap-4">
+                      <Button
+                        type="button"
+                        variant={coverLetterType === 'text' ? 'default' : 'outline'}
+                        onClick={() => {
+                          setCoverLetterType('text');
+                          setCoverLetterFile(null);
+                        }}
+                        size="sm"
+                      >
+                        Write Text
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={coverLetterType === 'file' ? 'default' : 'outline'}
+                        onClick={() => setCoverLetterType('file')}
+                        size="sm"
+                      >
+                        Upload File
+                      </Button>
+                    </div>
+
+                    {/* Text Area for Cover Letter */}
+                    {coverLetterType === 'text' && (
+                      <Textarea
+                        id="coverLetter"
+                        value={formData.coverLetter}
+                        onChange={(e) => updateFormData('coverLetter', e.target.value)}
+                        rows={6}
+                        placeholder="Tell us why you're interested in this position and why you'd be a great fit for our team..."
+                      />
+                    )}
+
+                    {/* File Upload for Cover Letter */}
+                    {coverLetterType === 'file' && (
+                      <div className="space-y-3">
+                        {!coverLetterFile ? (
+                          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                            <input
+                              type="file"
+                              id="coverLetterFile"
+                              accept=".pdf,.doc,.docx,.txt"
+                              onChange={handleFileUpload}
+                              className="hidden"
+                            />
+                            <label htmlFor="coverLetterFile" className="cursor-pointer">
+                              <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                              <p className="text-sm text-gray-600">Click to upload your cover letter</p>
+                              <p className="text-xs text-gray-500 mt-1">Supports: PDF, DOC, DOCX, TXT (Max 5MB)</p>
+                            </label>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                            <div className="flex items-center gap-2">
+                              <CheckCircle className="w-4 h-4 text-green-600" />
+                              <span className="text-sm font-medium text-green-800">{coverLetterFile.name}</span>
+                              <span className="text-xs text-green-600">({(coverLetterFile.size / 1024 / 1024).toFixed(2)} MB)</span>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={removeCoverLetterFile}
+                              className="text-red-600 hover:text-red-800"
+                            >
+                              Remove
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Portfolio */}

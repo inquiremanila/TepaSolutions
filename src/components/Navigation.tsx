@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, ChevronDown } from 'lucide-react';
 import { Button } from './ui/button';
 import { Logo } from './Logo';
 import { navItems } from './data/navigation-data';
@@ -142,7 +142,7 @@ export function Navigation({ navigate, currentPath }: NavigationProps) {
   return (
     <>
       <motion.nav
-        className={`fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-[9999] transition-all duration-300 ${
           isScrolled 
             ? 'bg-background/80 backdrop-blur-lg border-b shadow-sm' 
             : 'bg-transparent'
@@ -181,7 +181,7 @@ export function Navigation({ navigate, currentPath }: NavigationProps) {
                       <AnimatePresence>
                         {activeDesktopDropdown === item.label && (
                           <div 
-                            className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-50"
+                            className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 z-[10000]"
                             onMouseEnter={handleDropdownMouseEnter}
                             onMouseLeave={handleDropdownMouseLeave}
                           >

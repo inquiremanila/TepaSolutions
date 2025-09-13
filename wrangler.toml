@@ -1,0 +1,62 @@
+
+name = "tepasolutions"
+main = "src/worker.ts"
+compatibility_date = "2024-01-01"
+
+[assets]
+directory = "./build"
+serve_single_page_app = false
+
+[vars]
+VITE_SUPABASE_URL = "https://ruhsxjeiegdeshcnbuxy.supabase.co"
+VITE_SUPABASE_ANON_KEY = "eeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1aHN4amVpZWdkZXNoY25idXh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMDczNDMsImV4cCI6MjA3MjU4MzM0M30.ua-Et2U4A0bRH0CSKA0Q6iT5YWvjSIi-_nPoeclay0U"
+
+[env.production.vars]
+SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1aHN4amVpZWdkZXNoY25idXh5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NzAwNzM0MywiZXhwIjoyMDcyNTgzMzQzfQ.4iw-R_ov_uvgU3Bw2D1L3MNNi0ylAZpaFltIeKQdvXs"
+
+[env.production]
+# Optional: Custom domain route
+# route = "tepasolutions.com/*"
+
+# OPTION 2: Cloudflare Pages (simpler, no custom worker needed)
+# Use this if you want Cloudflare Pages to handle everything
+# Delete src/worker.ts and use this instead:
+
+# name = "tepasolutions"
+# compatibility_date = "2024-01-01"
+# pages_build_output_dir = "build"
+
+# [[redirects]]
+# from = "/business-automation/*"
+# to = "/SEO/business-automation/:splat.html"
+# status = 200
+# conditions = {Cookie = "bot-detected"}
+
+# [[redirects]]
+# from = "/articles/*"
+# to = "/SEO/articles/:splat.html" 
+# status = 200
+# conditions = {Cookie = "bot-detected"}
+
+# [[redirects]]
+# from = "/events/*"
+# to = "/SEO/events/:splat.html"
+# status = 200
+# conditions = {Cookie = "bot-detected"}
+
+# [[redirects]]
+# from = "/careers/*"
+# to = "/SEO/careers/:splat.html"
+# status = 200
+# conditions = {Cookie = "bot-detected"}
+
+# [[redirects]]
+# from = "/"
+# to = "/SEO/index.html"
+# status = 200
+# conditions = {Cookie = "bot-detected"}
+
+# [[redirects]]
+# from = "/*"
+# to = "/index.html"
+# status = 200

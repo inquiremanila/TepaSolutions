@@ -264,10 +264,10 @@ export function MobileNavigationSheet({ isOpen, onClose, onAction }: MobileNavig
 
           {/* Sheet */}
           <motion.div
-            className="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-background border-r shadow-xl z-50 md:hidden"
-            initial={{ x: '-100%' }}
+            className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-background border-l shadow-xl z-50 md:hidden"
+            initial={{ x: '100%' }}
             animate={{ x: 0 }}
-            exit={{ x: '-100%' }}
+            exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
           >
             <div className="flex flex-col h-full">
