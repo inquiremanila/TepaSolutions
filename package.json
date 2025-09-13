@@ -2,7 +2,9 @@
     "name": "tepasolutions",
     "version": "0.1.0",
     "private": true,
+    "type": "module",
     "dependencies": {
+        "@hono/node-server": "^1.19.2",
         "@radix-ui/react-accordion": "^1.2.3",
         "@radix-ui/react-alert-dialog": "^1.1.6",
         "@radix-ui/react-aspect-ratio": "^1.1.2",
@@ -30,6 +32,8 @@
         "@radix-ui/react-toggle-group": "^1.1.2",
         "@radix-ui/react-tooltip": "^1.1.8",
         "@supabase/supabase-js": "^2.44.0",
+        "@types/react": "^19.1.13",
+        "@types/react-dom": "^19.1.9",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "cmdk": "^1.1.1",
@@ -59,11 +63,13 @@
     },
     "scripts": {
         "dev": "vite",
-        "build": "vite build && npm run sitemap:dynamic",
+        "build": "npm run seo:generate && npm run seo:homepage && vite build && npm run sitemap:dynamic",
         "preview": "vite preview --host 0.0.0.0 --port 5000",
-        "start": "serve -s build -l 5000",
+        "start": "node server.js",
         "sitemap": "node scripts/seo5-build-sitemap.js --simple",
         "sitemap:dynamic": "tsx scripts/seo5-build-sitemap-dynamic.ts",
-        "sitemap:old": "node scripts/seo5-build-sitemap.js"
+        "sitemap:old": "node scripts/seo5-build-sitemap.js",
+        "seo:generate": "tsx scripts/seo-html-generator.ts",
+        "seo:homepage": "tsx scripts/create-homepage-seo.ts"
     }
 }

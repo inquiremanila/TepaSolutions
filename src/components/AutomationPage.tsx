@@ -1,7 +1,7 @@
 import { motion, useInView } from 'framer-motion';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Card, CardHeader, CardTitle } from './ui/card';
 import { Progress } from './ui/progress';
 import { 
   TrendingUp, 
@@ -15,7 +15,6 @@ import {
   Clock,
   CheckCircle,
   ArrowRight,
-  BarChart3,
   Target,
   Sparkles,
   Play,
@@ -36,9 +35,10 @@ const iconMap = {
 
 interface AutomationPageProps {
   onBackToMain: () => void;
+  navigate?: (path: string) => void;
 }
 
-export function AutomationPage({ onBackToMain }: AutomationPageProps) {
+export function AutomationPage({ onBackToMain, navigate }: AutomationPageProps) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-muted/30 to-background">
       {/* Header */}
@@ -92,7 +92,7 @@ export function AutomationPage({ onBackToMain }: AutomationPageProps) {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            {Object.entries(automationStats).map(([key, value], index) => (
+            {Object.entries(automationStats).map(([key, value]) => (
               <motion.div
                 key={key}
                 className="text-center p-4 rounded-lg bg-card border"
@@ -110,7 +110,7 @@ export function AutomationPage({ onBackToMain }: AutomationPageProps) {
           {/* Automation Types */}
           <div className="space-y-20">
             {automationTypes.map((automation, index) => (
-              <AutomationShowcase key={automation.id} automation={automation} index={index} />
+              <AutomationShowcase key={automation.id} automation={automation} index={index} navigate={navigate} />
             ))}
           </div>
 
@@ -127,11 +127,12 @@ export function AutomationPage({ onBackToMain }: AutomationPageProps) {
               Start your automation journey today and see immediate results.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="group">
+              <Button 
+                size="lg" 
+                className="group"
+                onClick={() => navigate?.('/contact-us/sales')}
+              >
                 <Sparkles className="size-4 mr-2 group-hover:animate-spin" />
-                Start Your Automation Journey
-              </Button>
-              <Button variant="outline" size="lg">
                 Schedule Free Consultation
               </Button>
             </div>
@@ -142,7 +143,7 @@ export function AutomationPage({ onBackToMain }: AutomationPageProps) {
   );
 }
 
-function AutomationShowcase({ automation, index }: { automation: any; index: number }) {
+function AutomationShowcase({ automation, index, navigate }: { automation: any; index: number; navigate?: (path: string) => void }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, margin: "-20% 0px -20% 0px" });
   const [currentProcess, setCurrentProcess] = useState(0);
@@ -186,7 +187,6 @@ function AutomationShowcase({ automation, index }: { automation: any; index: num
           <div className="relative scale-75 sm:scale-90 lg:scale-100">
             <AutomationVisualDemo 
               automation={automation} 
-              isVisible={isInView}
               currentProcess={currentProcess}
               isPlaying={isPlaying}
               onTogglePlay={() => setIsPlaying(!isPlaying)}
@@ -241,7 +241,7 @@ function AutomationShowcase({ automation, index }: { automation: any; index: num
           <div className="grid grid-cols-2 gap-4">
             {Object.entries(automation.metrics).map(([key, value]) => (
               <div key={key} className="p-3 bg-muted/50 rounded-lg border">
-                <div className="text-lg font-bold text-primary">{value}</div>
+                <div className="text-lg font-bold text-primary">{value as string}</div>
                 <div className="text-xs text-muted-foreground capitalize">
                   {key.replace(/([A-Z])/g, ' $1').trim()}
                 </div>
@@ -249,7 +249,10 @@ function AutomationShowcase({ automation, index }: { automation: any; index: num
             ))}
           </div>
 
-          <Button className="group">
+          <Button 
+            className="group"
+            onClick={() => navigate?.('/contact-us/sales')}
+          >
             <Target className="size-4 mr-2 group-hover:rotate-45 transition-transform" />
             Inquire About This Implementation
           </Button>
@@ -261,13 +264,11 @@ function AutomationShowcase({ automation, index }: { automation: any; index: num
 
 function AutomationVisualDemo({ 
   automation, 
-  isVisible, 
   currentProcess, 
   isPlaying, 
   onTogglePlay 
 }: { 
   automation: any; 
-  isVisible: boolean; 
   currentProcess: number;
   isPlaying: boolean;
   onTogglePlay: () => void;

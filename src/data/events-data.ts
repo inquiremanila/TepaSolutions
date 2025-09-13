@@ -43,5 +43,25 @@ export const events = [
     level: "Beginner",
     price: "Free",
     image: "https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/events/course/html-css-intro.jpeg"
+  },
+  {
+    id: 3,
+    slug: 'introduction-to-website-funnel',
+    title: "Introduction to Website Funnel",
+    description: "Learn how to create effective website funnels that convert visitors into customers. Discover the principles of funnel design, user journey optimization, and conversion strategies.",
+    type: "Workshop",
+    category: "Marketing",
+    date: "2025-10-12",
+    time: "2:00 PM - 4:00 PM",
+    duration: "2 hours",
+    location: "Zoom Meeting",
+    capacity: "30 participants",
+    status: "registration-open",
+    featured: false,
+    instructor: "Carlos Mendez",
+    instructorRole: "Digital Marketing Strategist",
+    level: "Beginner",
+    price: "Free",
+    image: "https://ruhsxjeiegdeshcnbuxy.supabase.co/storage/v1/object/public/tepa-images/September%202025/events/course/website-funnel-intro.jpeg"
   }
 ];

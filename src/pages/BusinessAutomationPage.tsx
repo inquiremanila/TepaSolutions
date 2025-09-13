@@ -10,5 +10,5 @@ export function BusinessAutomationPage({ navigate }: BusinessAutomationPageProps
     navigate('/');
   };
 
-  return <AutomationPage onBackToMain={handleBackToMain} />;
+  return <AutomationPage onBackToMain={handleBackToMain} navigate={navigate} />;
 }

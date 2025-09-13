@@ -61,6 +61,8 @@ Allow: *.woff2$
 Crawl-delay: 1
 
 # Sitemap location
+Sitemap: https://tepasolutions.asia/bot/sitemap.xml
+
 Sitemap: https://tepasolutions.asia/sitemap.xml
 Sitemap: https://tepasolutions.asia/sitemap-index.xml
 

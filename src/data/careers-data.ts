@@ -55,5 +55,70 @@ export const jobPositions = [
     description: "Learn search engine optimization and digital marketing strategies while helping improve our clients' online visibility and search rankings.",
     postedDate: "2025-01-15",
     applicationDeadline: "2025-10-30"
+  },
+  {
+    id: 5,
+    slug: 'intern-admin-assistant',
+    title: "Admin Assistant Intern",
+    department: "Administration",
+    type: "Internship",
+    location: "Remote",
+    experience: "Entry Level",
+    salary: "",
+    description: "Support our operations team with administrative tasks, data entry, and office coordination. Perfect for organized individuals looking to gain business experience.",
+    postedDate: "2025-01-15",
+    applicationDeadline: "2025-10-30"
+  },
+  {
+    id: 6,
+    slug: 'intern-business-development',
+    title: "Business Development Intern",
+    department: "Business Development",
+    type: "Internship",
+    location: "Remote",
+    experience: "Entry Level",
+    salary: "",
+    description: "Learn business development strategies, client relationship management, and market research while helping expand our client base.",
+    postedDate: "2025-01-15",
+    applicationDeadline: "2025-10-30"
+  },
+  {
+    id: 7,
+    slug: 'contract-mobile-app-developer',
+    title: "Mobile App Developer",
+    department: "Engineering",
+    type: "Contract",
+    location: "Remote",
+    experience: "Mid-Level",
+    salary: "Competitive",
+    description: "Develop high-quality mobile applications for iOS and Android platforms using React Native, Flutter, or native technologies. Work on diverse client projects.",
+    postedDate: "2025-01-15",
+    applicationDeadline: "2025-12-31"
+  },
+  {
+    id: 8,
+    slug: 'contract-ios-developer',
+    title: "iOS Developer",
+    department: "Engineering",
+    type: "Contract",
+    location: "Remote",
+    experience: "Mid-Level",
+    salary: "Competitive",
+    description: "Create exceptional iOS applications using Swift and SwiftUI. Work with cutting-edge iOS technologies and deliver pixel-perfect user experiences.",
+    postedDate: "2025-01-15",
+    applicationDeadline: "2025-12-31"
+  },
+  {
+    id: 9,
+    slug: 'contract-backend-developer',
+    title: "Backend Developer",
+    department: "Engineering",
+    type: "Contract",
+    location: "Remote",
+    experience: "Mid-Level",
+    salary: "Competitive",
+    description: "Build robust backend systems and APIs using Node.js, Python, or other modern technologies. Work on scalable solutions for enterprise clients.",
+    postedDate: "2025-01-15",
+    applicationDeadline: "2025-12-31"
   }
 ];
