@@ -42,7 +42,7 @@ export function AutomationPage({ onBackToMain, navigate }: AutomationPageProps) 
   return (
     <div className="min-h-screen bg-gradient-to-b from-muted/30 to-background">
       {/* Header */}
-      <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-sm border-b">
+      <div className="sticky top-0 z-29 bg-background/80 backdrop-blur-sm border-b">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center gap-4">
             <Button 
