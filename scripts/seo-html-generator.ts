@@ -26,7 +26,6 @@ interface SEOPageData {
 }
 
 const BASE_URL = 'https://tepasolutions.asia';
-const WORKER_URL = 'https://tepasolutions.apicall.workers.dev';
 
 function generateHTMLPage(data: SEOPageData): string {
   return `<!DOCTYPE html>
@@ -75,10 +74,11 @@ function generateHTMLPage(data: SEOPageData): string {
     <!-- Canonical URL -->
     <link rel="canonical" href="${data.url}">
     
-    <!-- Redirect to SPA for humans -->
+    <!-- Redirect to SPA for humans - FIXED: Don't redirect if already on /bot/ path -->
     <script>
-        // Only redirect if this is likely a human (has JavaScript enabled)
-        if (navigator.userAgent.indexOf('bot') === -1 && 
+        // Only redirect if this is likely a human (has JavaScript enabled) and not already on a /bot/ path
+        if (!window.location.pathname.includes('/bot/') &&
+            navigator.userAgent.indexOf('bot') === -1 && 
             navigator.userAgent.indexOf('crawler') === -1 && 
             navigator.userAgent.indexOf('spider') === -1) {
             window.location.href = '${data.url.replace(BASE_URL, '')}';

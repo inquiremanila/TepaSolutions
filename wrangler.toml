@@ -3,6 +3,7 @@ main = "worker.js"
 compatibility_date = "2024-01-01"
 
 # Assets binding for static files (including SEO files)
+# This should point to your build directory where SEO files are generated
 [assets]
 directory = "./build"
 binding = "ASSETS"
@@ -19,11 +20,8 @@ binding = "ASSETS"
 [env.production.vars]
 # SUPABASE_SERVICE_KEY should be set via `wrangler secret put SUPABASE_SERVICE_KEY` instead of committed here
 
-# Custom domain routes
-[[env.production.route]]
-pattern = "tepasolutions.asia/*"
-zone_id = "44f08db3ccbe99d82d123d3eb0f331b4"
-
+# No routes needed - using Custom Domain in Cloudflare dashboard
+# Configure Custom Domain: Workers & Pages > tepasolutions > Settings > Custom Domains > Add tepasolutions.asia
 
 # Security and performance headers
 [[env.production.rules]]
@@ -44,3 +42,10 @@ src = "*.{js,css,png,jpg,jpeg,gif,ico,svg,woff,woff2}"
 [env.production.rules.headers]
 Cache-Control = "public, max-age=31536000, immutable"
 
+# No cache for HTML files to ensure fresh content
+[[env.production.rules]]
+type = "Header"
+src = "*.html"
+
+[env.production.rules.headers]
+Cache-Control = "no-cache, no-store, must-revalidate"

@@ -25,4 +25,4 @@
 /                          /SEO/index.html                           200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
 
 # SPA fallback for all other routes
-/*  /index.html  200
+/*  /home.html  200

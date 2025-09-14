@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Main pages
-Allow: /
+Allow: /bot/
 Allow: /services/
 Allow: /about/
 Allow: /contact/
@@ -52,37 +52,42 @@ Allow: /*.svg$
 Allow: /*.webp$
 Allow: /*.ico$
 Allow: /*.woff$
-Allow: *.woff2$
+Allow: /*.woff2$
 
 # Crawl-delay for respectful crawling
 Crawl-delay: 1
 
-# Sitemap location (FIXED PATHS)
-Sitemap: https://tepasolutions.asia/sitemap.xml
-Sitemap: https://tepasolutions.asia/sitemap-index.xml
+# Sitemap location (point to bot-specific sitemap)
+Sitemap: https://tepasolutions.asia/bot/sitemap.xml
 
 # Special bot instructions
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 1
+Disallow: /bot/  # Don't crawl bot-specific paths
 
 User-agent: Bingbot
 Allow: /
 Crawl-delay: 1
+Disallow: /bot/  # Don't crawl bot-specific paths
 
 User-agent: Slurp
 Allow: /
 Crawl-delay: 2
+Disallow: /bot/  # Don't crawl bot-specific paths
 
 # Social media crawlers
 User-agent: facebookexternalhit
 Allow: /
+Disallow: /bot/  # Don't crawl bot-specific paths
 
 User-agent: Twitterbot
 Allow: /
+Disallow: /bot/  # Don't crawl bot-specific paths
 
 User-agent: LinkedInBot
 Allow: /
+Disallow: /bot/  # Don't crawl bot-specific paths
 
 # Block problematic bots
 User-agent: CCBot
@@ -96,6 +101,8 @@ Disallow: /
 
 User-agent: AhrefsBot
 Crawl-delay: 10
+Disallow: /bot/  # Don't crawl bot-specific paths
 
 User-agent: SemrushBot
 Crawl-delay: 10
+Disallow: /bot/  # Don't crawl bot-specific paths
