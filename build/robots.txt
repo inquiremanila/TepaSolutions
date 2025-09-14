@@ -14,18 +14,15 @@ Allow: /automation/
 Allow: /volunteer-with-us/
 
 # Service pages
-Allow: /services/app-development/
-Allow: /services/web-development/
-Allow: /services/seo-services/
-Allow: /services/business-automation/
+Allow: /mobile-app-development/
+Allow: /web-application-development/
+Allow: /website-development/
+Allow: /seo-services/
+Allow: /business-automation/
 
 # Contact forms
-Allow: /contact/sales/
-Allow: /contact/support/
-Allow: /contact/volunteer/
-Allow: /contact/events/
-Allow: /contact/investors/
-Allow: /volunteer-with-us/volunteer-form/
+Allow: /contact-us/
+Allow: /volunteer-with-us/
 
 # Block admin and temporary files
 Disallow: /admin/
@@ -60,9 +57,7 @@ Allow: *.woff2$
 # Crawl-delay for respectful crawling
 Crawl-delay: 1
 
-# Sitemap location
-Sitemap: https://tepasolutions.asia/bot/sitemap.xml
-
+# Sitemap location (FIXED PATHS)
 Sitemap: https://tepasolutions.asia/sitemap.xml
 Sitemap: https://tepasolutions.asia/sitemap-index.xml
 

@@ -141,9 +141,9 @@ async function generateDynamicSitemap() {
     const sitemapXML = generateSitemapXML(entries);
     
     // Write to public/sitemap.xml (for development)
-    const publicPath = path.join(process.cwd(), 'public', 'sitemap.xml');
+    const publicPath = path.join(process.cwd(), 'build', 'sitemap.xml');
     fs.writeFileSync(publicPath, sitemapXML, 'utf8');
-    console.log('✅ Generated public/sitemap.xml');
+    console.log('✅ Generated build/sitemap.xml');
     
     // Write to build/sitemap.xml (for production)
     const buildDir = path.join(process.cwd(), 'build');

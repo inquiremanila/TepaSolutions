@@ -274,7 +274,7 @@ function generateSitemap() {
   
   const sitemapXML = `${header}${urls}${footer}`;
   
-  fs.writeFileSync('public/sitemap.xml', sitemapXML, 'utf8');
+  fs.writeFileSync('build/sitemap.xml', sitemapXML, 'utf8');
   console.log(`✓ Generated sitemap with ${entries.length} URLs`);
 }
 
@@ -288,7 +288,7 @@ try {
   
   console.log('\\n✅ All SEO files generated successfully!');
   console.log(`📁 HTML files: ${OUTPUT_DIR}`);
-  console.log('📄 Sitemap: public/sitemap.xml');
+  console.log('📄 Sitemap: build/sitemap.xml');
   
 } catch (error) {
   console.error('❌ Error generating SEO files:', error);

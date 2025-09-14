@@ -62,13 +62,15 @@
         "@vitejs/plugin-react-swc": "^3.10.2",
         "vite": "6.3.5"
     },
-    "scripts": {
-        "dev": "vite",
-        "build": "npm run seo:generate && npm run seo:homepage && vite build && npm run sitemap:dynamic",
-        "preview": "vite preview --host 0.0.0.0 --port 5000",
-        "start": "node server.js",
-        "sitemap:dynamic": "tsx scripts/seo5-build-sitemap-dynamic.ts",
-        "seo:generate": "tsx scripts/seo-html-generator.ts",
-        "seo:homepage": "tsx scripts/create-homepage-seo.ts"
-    }
+
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run seo:generate && npm run seo:homepage && vite build && npm run sitemap:dynamic",
+    "preview": "vite preview --host 0.0.0.0 --port 5000",
+    "start": "node server.js",
+    "sitemap:dynamic": "tsx scripts/seo5-build-sitemap-dynamic.ts",
+    "seo:generate": "tsx scripts/seo-html-generator.ts",
+    "seo:homepage": "tsx scripts/create-homepage-seo.ts"
+  }
+
 }

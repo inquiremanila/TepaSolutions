@@ -2,7 +2,7 @@
 
 /**
  * SEO HTML Generator - Creates static HTML pages for bots
- * Generates SEO-optimized HTML pages in public/SEO/ folder structure
+ * Generates SEO-optimized HTML pages in build/SEO/ folder structure
  */
 
 import fs from 'fs';
@@ -144,7 +144,7 @@ function generateBusinessAutomationPages(): void {
     }
   ];
 
-  const businessAutomationDir = path.join(process.cwd(), 'public', 'SEO', 'business-automation');
+  const businessAutomationDir = path.join(process.cwd(), 'build', 'SEO', 'business-automation');
   createDirectoryIfNotExists(businessAutomationDir);
 
   automationTypes.forEach(automation => {
@@ -192,7 +192,7 @@ function generateServicePages(): void {
     }
   ];
 
-  const seoDir = path.join(process.cwd(), 'public', 'SEO');
+  const seoDir = path.join(process.cwd(), 'build', 'SEO');
 
   services.forEach(service => {
     const pageData: SEOPageData = {
@@ -212,7 +212,7 @@ function generateServicePages(): void {
 }
 
 function generateArticlePages(): void {
-  const articlesDir = path.join(process.cwd(), 'public', 'SEO', 'articles');
+  const articlesDir = path.join(process.cwd(), 'build', 'SEO', 'articles');
   createDirectoryIfNotExists(articlesDir);
 
   // Generate index page
@@ -249,7 +249,7 @@ function generateArticlePages(): void {
 }
 
 function generateEventPages(): void {
-  const eventsDir = path.join(process.cwd(), 'public', 'SEO', 'events');
+  const eventsDir = path.join(process.cwd(), 'build', 'SEO', 'events');
   createDirectoryIfNotExists(eventsDir);
 
   // Generate index page
@@ -284,7 +284,7 @@ function generateEventPages(): void {
 }
 
 function generateCareerPages(): void {
-  const careersDir = path.join(process.cwd(), 'public', 'SEO', 'careers');
+  const careersDir = path.join(process.cwd(), 'build', 'SEO', 'careers');
   createDirectoryIfNotExists(careersDir);
 
   // Generate index page
@@ -319,7 +319,7 @@ function generateCareerPages(): void {
 }
 
 function generateStaticPages(): void {
-  const seoDir = path.join(process.cwd(), 'public', 'SEO');
+  const seoDir = path.join(process.cwd(), 'build', 'SEO');
 
   const staticPages = [
     {
@@ -378,7 +378,7 @@ async function generateAllSEOPages(): Promise<void> {
     console.log('🚀 Starting SEO HTML page generation...');
 
     // Create main SEO directory
-    const seoDir = path.join(process.cwd(), 'public', 'SEO');
+    const seoDir = path.join(process.cwd(), 'build', 'SEO');
     createDirectoryIfNotExists(seoDir);
 
     // Generate all page types
@@ -390,7 +390,7 @@ async function generateAllSEOPages(): Promise<void> {
     generateStaticPages();
 
     console.log('🎉 SEO HTML page generation completed successfully!');
-    console.log(`📁 All pages saved to: public/SEO/`);
+    console.log(`📁 All pages saved to: build/SEO/`);
     
   } catch (error: unknown) {
     if (error instanceof Error) {

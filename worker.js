@@ -2,24 +2,11 @@ import { Hono } from 'hono';
 
 const app = new Hono();
 
-// Bot detection patterns - Updated for better Google Search Console compatibility
+// Bot detection patterns
 const BOT_PATTERNS = [
-  // Google bots (critical for Search Console)
-  'googlebot',
-  'adsbot-google',
-  'mediapartners-google',
-  'google-structured-data-testing-tool',
-  'google-read-aloud',
-  'google-adwords-instant',
-  'google page speed',
-  'google-site-verification',
-  
-  // Other search engines
-  'bingbot', 'slurp', 'duckduckbot', 'baiduspider', 'yandexbot',
-  'facebookexternalhit', 'twitterbot', 'linkedinbot', 'whatsapp', 'telegrambot',
-  'crawler', 'spider', 'bot', 'archiver', 'seo', 'lighthouse', 'pagespeed',
-  'applebot', 'ahrefsbot', 'semrushbot', 'petalbot', 'mj12bot', 'sogou',
-  'pinterestbot'
+  'googlebot', 'adsbot-google', 'mediapartners-google', 'bingbot', 'slurp', 
+  'duckduckbot', 'baiduspider', 'yandexbot', 'facebookexternalhit', 'twitterbot',
+  'crawler', 'spider', 'bot', 'lighthouse', 'pagespeed'
 ];
 
 function isBotRequest(userAgent) {
@@ -28,168 +15,199 @@ function isBotRequest(userAgent) {
   return BOT_PATTERNS.some(pattern => ua.includes(pattern));
 }
 
-function isGoogleBot(userAgent) {
-  if (!userAgent) return false;
-  const ua = userAgent.toLowerCase();
-  return ua.includes('googlebot') || ua.includes('google-') || ua.includes('adsbot-google');
-}
-
 function getSEOFileName(pathname) {
-  // Normalize trailing slashes (except root)
+  console.log(`🔍 Getting SEO file for pathname: ${pathname}`);
+  
+  // Remove trailing slash except for root
   const normalizedPath = pathname === '/' ? pathname : pathname.replace(/\/$/, '');
+  console.log(`📝 Normalized path: ${normalizedPath}`);
   
   const routeMap = {
     '/': 'index.html',
-    '/mobile-app-development': 'mobile-application-development.html',
+    '/mobile-app-development': 'mobile-app-development.html',
     '/web-application-development': 'web-application-development.html',
-    '/website-development': 'web-development.html',
-    '/seo-services': 'seo-solutions.html',
+    '/website-development': 'website-development.html',
+    '/seo-services': 'seo-services.html',
     '/business-automation': 'business-automation.html',
     '/articles': 'articles.html',
     '/events': 'events.html',
     '/careers': 'careers.html',
-    '/volunteer-with-us': 'volunteer-with-us.html',
-    '/learn-about-tepa': 'learn-about-tepa.html',
     '/about': 'learn-about-tepa.html',
-    '/investors': 'investors.html',
-    '/contact-us': 'contact-us.html',
     '/contact': 'contact-us.html'
   };
 
-  // Check direct route mapping
+  // Check static routes first
   if (routeMap[normalizedPath]) {
-    return `SEO/${routeMap[normalizedPath]}`;
+    const fileName = `SEO/${routeMap[normalizedPath]}`;
+    console.log(`✅ Found static route mapping: ${fileName}`);
+    return fileName;
   }
 
-  // Check dynamic routes
-  if (normalizedPath.startsWith('/business-automation/')) {
-    const slug = normalizedPath.replace('/business-automation/', '');
-    if (slug) {
-      return `SEO/business-automation/${slug}.html`;
-    }
-  }
-
+  // Dynamic routes
   if (normalizedPath.startsWith('/articles/')) {
     const slug = normalizedPath.replace('/articles/', '');
     if (slug) {
-      return `SEO/articles/${slug}.html`;
+      const fileName = `SEO/articles/${slug}.html`;
+      console.log(`✅ Found article route: ${fileName}`);
+      return fileName;
     }
   }
 
   if (normalizedPath.startsWith('/events/')) {
     const slug = normalizedPath.replace('/events/', '');
     if (slug) {
-      return `SEO/events/${slug}.html`;
+      const fileName = `SEO/events/${slug}.html`;
+      console.log(`✅ Found event route: ${fileName}`);
+      return fileName;
     }
   }
 
   if (normalizedPath.startsWith('/careers/')) {
     const slug = normalizedPath.replace('/careers/', '');
     if (slug) {
-      return `SEO/careers/${slug}.html`;
+      const fileName = `SEO/careers/${slug}.html`;
+      console.log(`✅ Found career route: ${fileName}`);
+      return fileName;
     }
   }
 
+  console.log(`❌ No SEO mapping found for: ${normalizedPath}`);
   return null;
 }
 
-// Bot detection middleware - Cloudflare Workers version
+// Debug middleware
+app.use('*', async (c, next) => {
+  const start = Date.now();
+  const userAgent = c.req.header('user-agent') || '';
+  const url = new URL(c.req.url);
+  
+  console.log(`🌐 Request: ${c.req.method} ${url.pathname}`);
+  console.log(`🤖 User Agent: ${userAgent.substring(0, 100)}...`);
+  console.log(`📋 Accept Header: ${c.req.header('accept')}`);
+  
+  try {
+    await next();
+    const duration = Date.now() - start;
+    console.log(`⏱️ Request completed in ${duration}ms`);
+  } catch (error) {
+    console.error(`❌ Request failed:`, error);
+    return c.text(`Error: ${error.message}`, 500);
+  }
+});
+
+// Bot detection and SEO serving middleware
 app.use('*', async (c, next) => {
   const userAgent = c.req.header('user-agent') || '';
   const acceptsHTML = c.req.header('accept')?.includes('text/html');
   const url = new URL(c.req.url);
   const isBot = isBotRequest(userAgent);
-  const isGoogle = isGoogleBot(userAgent);
   
-  // Log all bot requests for debugging
-  if (isBot) {
-    console.log(`🤖 Bot detected: ${userAgent} requesting ${url.pathname}`);
+  console.log(`🎯 Processing request for: ${url.pathname}`);
+  console.log(`🤖 Is bot: ${isBot}`);
+  console.log(`📄 Accepts HTML: ${acceptsHTML}`);
+  
+  // Only process HTML requests from bots
+  if (!acceptsHTML || !isBot) {
+    console.log(`⏭️ Skipping SEO processing - not a bot HTML request`);
+    return await next();
   }
   
-  if (acceptsHTML && isBot) {
-    const seoFileName = getSEOFileName(url.pathname);
+  console.log(`🤖 Bot detected: ${userAgent.substring(0, 50)}...`);
+  
+  const seoFileName = getSEOFileName(url.pathname);
+  
+  if (!seoFileName) {
+    console.log(`⚠️ No SEO file mapping found for ${url.pathname}`);
+    return await next();
+  }
+  
+  try {
+    console.log(`🔍 Attempting to fetch SEO file: ${seoFileName}`);
     
-    if (seoFileName) {
-      try {
-        // In Cloudflare Workers, we try to fetch the SEO file from assets
-        const seoResponse = await c.env.ASSETS.fetch(new URL(seoFileName, c.req.url));
-        
-        if (seoResponse.ok) {
-          const content = await seoResponse.text();
-          console.log(`✅ Serving SEO content: ${seoFileName}`);
-          
-          // Use different cache headers for Google vs other bots
-          const cacheControl = isGoogle ? 
-            'public, max-age=300, must-revalidate' :  // 5 minutes for Google
-            'public, max-age=3600';                   // 1 hour for others
-          
-          return c.html(content, 200, {
-            'Content-Type': 'text/html; charset=utf-8',
-            'Cache-Control': cacheControl,
-            'X-Robots-Tag': 'index, follow',
-            'X-Bot-Served': 'seo-prerendered'
-          });
-        }
-      } catch (error) {
-        console.error(`❌ Error serving SEO page ${seoFileName}:`, error);
-        // Fall through to serve SPA instead of failing
-      }
-    } else {
-      console.log(`⚠️  No SEO file found for ${url.pathname}, will serve SPA`);
+    // Check if ASSETS binding exists
+    if (!c.env?.ASSETS) {
+      console.error(`❌ ASSETS binding not found in environment`);
+      return await next();
     }
+    
+    const seoUrl = new URL(seoFileName, c.req.url);
+    console.log(`🌐 SEO URL: ${seoUrl.href}`);
+    
+    const seoResponse = await c.env.ASSETS.fetch(seoUrl);
+    console.log(`📊 SEO Response status: ${seoResponse.status}`);
+    
+    if (seoResponse.ok) {
+      const content = await seoResponse.text();
+      console.log(`✅ Successfully served SEO content: ${seoFileName} (${content.length} chars)`);
+      
+      return c.html(content, 200, {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, max-age=300, must-revalidate',
+        'X-Robots-Tag': 'index, follow',
+        'X-Bot-Served': 'seo-prerendered',
+        'X-SEO-File': seoFileName
+      });
+    } else {
+      console.log(`⚠️ SEO file not found: ${seoFileName} (${seoResponse.status})`);
+    }
+    
+  } catch (error) {
+    console.error(`❌ Error serving SEO file ${seoFileName}:`, error);
   }
   
+  console.log(`📄 Falling back to SPA for bot request`);
   await next();
 });
 
-// Serve static files (handled by Cloudflare Workers automatically)
+// Main route handler
 app.get('*', async (c) => {
-  const userAgent = c.req.header('user-agent') || '';
-  const isBot = isBotRequest(userAgent);
-  const isGoogle = isGoogleBot(userAgent);
+  const url = new URL(c.req.url);
+  console.log(`🎯 Handling route: ${url.pathname}`);
   
   try {
-    // Try to get the file from assets first
+    // Check if ASSETS binding exists
+    if (!c.env?.ASSETS) {
+      console.error(`❌ ASSETS binding not available`);
+      return c.text('ASSETS binding not configured', 500);
+    }
+    
+    // Try to serve static file first
+    console.log(`🔍 Checking for static file: ${url.pathname}`);
     const assetResponse = await c.env.ASSETS.fetch(c.req);
     
     if (assetResponse.ok) {
+      console.log(`✅ Serving static file: ${url.pathname}`);
       return assetResponse;
     }
     
-    // If no specific file found, serve index.html (SPA fallback)
+    console.log(`📄 Static file not found, serving SPA fallback`);
+    
+    // Serve SPA (index.html)
     const indexResponse = await c.env.ASSETS.fetch(new URL('/index.html', c.req.url));
     
     if (indexResponse.ok) {
       const content = await indexResponse.text();
+      console.log(`✅ Serving SPA: index.html (${content.length} chars)`);
       
-      // Log when serving SPA to bots (indicates potential SEO issue)
-      if (isBot) {
-        console.log(`📄 Serving SPA to bot: ${userAgent.substring(0, 50)}... for ${c.req.url}`);
-      }
-      
-      const headers = {
-        'Content-Type': 'text/html; charset=utf-8'
-      };
-      
-      // Add appropriate cache headers
-      if (isBot) {
-        headers['Cache-Control'] = isGoogle ? 
-          'public, max-age=300, must-revalidate' : 
-          'public, max-age=1800';
-        headers['X-Robots-Tag'] = 'index, follow';
-        headers['X-Bot-Served'] = 'spa-fallback';
-      } else {
-        headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
-      }
-      
-      return c.html(content, 200, headers);
+      return c.html(content, 200, {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
+      });
     }
     
-    return c.notFound();
+    console.log(`❌ index.html not found`);
+    return c.text('Application not found', 404);
+    
   } catch (error) {
-    console.error('Error serving static content:', error);
-    return c.notFound();
+    console.error(`❌ Error in main handler:`, error);
+    return c.text(`Server Error: ${error.message}`, 500);
   }
+});
+
+// Global error handler
+app.onError((err, c) => {
+  console.error(`🚨 Global error handler:`, err);
+  return c.text(`Internal Server Error: ${err.message}`, 500);
 });
 
 export default app;
