@@ -7,6 +7,8 @@ export interface SupabaseImage {
   bucket?: string;
   optimized?: boolean;
   priority?: boolean;
+  width?: number;
+  height?: number;
 }
 
 // Default bucket for images
@@ -23,7 +25,9 @@ export const supabaseImages: Record<string, SupabaseImage> = {
     title: 'Roblox Game Development Workshop',
     bucket: DEFAULT_BUCKET,
     optimized: true,
-    priority: false
+    priority: false,
+    width: 800,
+    height: 600
   },
   'iphone-17-devices': {
     id: 'iphone-17-devices',
@@ -33,7 +37,9 @@ export const supabaseImages: Record<string, SupabaseImage> = {
     title: 'iPhone 17 Device Collection',
     bucket: DEFAULT_BUCKET,
     optimized: true,
-    priority: false
+    priority: false,
+    width: 800,
+    height: 400
   },
   'placeholder': {
     id: 'placeholder',
@@ -43,7 +49,9 @@ export const supabaseImages: Record<string, SupabaseImage> = {
     title: 'Placeholder',
     bucket: DEFAULT_BUCKET,
     optimized: true,
-    priority: false
+    priority: false,
+    width: 800,
+    height: 192
   }
 };
 
@@ -70,6 +78,43 @@ export function getSupabaseImageUrl(imageId: string): string {
   return `${SUPABASE_BASE_URL}/tepa-images/placeholder.png`;
 }
 
+// NEW: Get image URL by filename (simplified usage)
+export function getImageByName(filename: string): string {
+  // Remove leading slash if present
+  const cleanFilename = filename.startsWith('/') ? filename.slice(1) : filename;
+  
+  // First, try to find by exact filename match
+  const imageEntry = Object.values(supabaseImages).find(img => img.filename === cleanFilename);
+  if (imageEntry) {
+    return getSupabaseImageUrl(imageEntry.id);
+  }
+  
+  // If not found in inventory, construct URL directly
+  return `${SUPABASE_BASE_URL}/${DEFAULT_BUCKET}/${cleanFilename}`;
+}
+
+// NEW: Get complete image data by filename
+export function getImageDataByName(filename: string): SupabaseImage | null {
+  const cleanFilename = filename.startsWith('/') ? filename.slice(1) : filename;
+  const imageEntry = Object.values(supabaseImages).find(img => img.filename === cleanFilename);
+  return imageEntry || null;
+}
+
+// NEW: Quick image component props generator
+export function getImageProps(filename: string, customAlt?: string, customWidth?: number, customHeight?: number) {
+  const cleanFilename = filename.startsWith('/') ? filename.slice(1) : filename;
+  const imageData = getImageDataByName(cleanFilename);
+  
+  return {
+    src: getImageByName(filename),
+    alt: customAlt || imageData?.alt || 'Image',
+    width: customWidth || imageData?.width || 800,
+    height: customHeight || imageData?.height || 192,
+    title: imageData?.title,
+    priority: imageData?.priority || false
+  };
+}
+
 // Get Supabase image data
 export function getSupabaseImage(imageId: string): SupabaseImage | null {
   return supabaseImages[imageId] || null;
@@ -81,7 +126,9 @@ export function addSupabaseImage(
   filename: string, 
   alt: string, 
   title?: string,
-  bucket?: string
+  bucket?: string,
+  width?: number,
+  height?: number
 ): void {
   const bucketName = bucket || DEFAULT_BUCKET;
   const url = `${SUPABASE_BASE_URL}/${bucketName}/${filename}`;
@@ -94,7 +141,9 @@ export function addSupabaseImage(
     title,
     bucket: bucketName,
     optimized: true,
-    priority: false
+    priority: false,
+    width,
+    height
   };
 }
 
@@ -103,7 +152,9 @@ export function addSupabaseImageByUrl(
   id: string,
   url: string,
   alt: string,
-  title?: string
+  title?: string,
+  width?: number,
+  height?: number
 ): void {
   supabaseImages[id] = {
     id,
@@ -111,7 +162,9 @@ export function addSupabaseImageByUrl(
     alt,
     title,
     optimized: true,
-    priority: false
+    priority: false,
+    width,
+    height
   };
 }
 
@@ -120,7 +173,20 @@ export function hasSupabaseImage(imageId: string): boolean {
   return imageId in supabaseImages;
 }
 
+// Check if image exists by filename
+export function hasImageByName(filename: string): boolean {
+  const cleanFilename = filename.startsWith('/') ? filename.slice(1) : filename;
+  return Object.values(supabaseImages).some(img => img.filename === cleanFilename);
+}
+
 // Get all available image IDs
 export function getAvailableImageIds(): string[] {
   return Object.keys(supabaseImages);
+}
+
+// Get all available filenames
+export function getAvailableFilenames(): string[] {
+  return Object.values(supabaseImages)
+    .filter(img => img.filename)
+    .map(img => img.filename!);
 }

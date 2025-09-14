@@ -1,0 +1,28 @@
+# Bot-specific redirects for SEO pages
+# These rules match requests with bot user agents
+
+# Dynamic routes
+/business-automation/:slug  /SEO/business-automation/:slug.html  200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/articles/:slug             /SEO/articles/:slug.html             200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/events/:slug               /SEO/events/:slug.html               200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/careers/:slug              /SEO/careers/:slug.html              200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+
+# Static routes
+/mobile-app-development     /SEO/mobile-application-development.html  200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/web-application-development /SEO/web-application-development.html    200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/website-development        /SEO/web-development.html                 200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/seo-services              /SEO/seo-solutions.html                   200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/business-automation       /SEO/business-automation.html             200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/articles                  /SEO/articles.html                        200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/events                    /SEO/events.html                          200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/careers                   /SEO/careers.html                         200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/volunteer-with-us         /SEO/volunteer-with-us.html               200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/learn-about-tepa          /SEO/learn-about-tepa.html                200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/about                     /SEO/learn-about-tepa.html                200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/investors                 /SEO/investors.html                       200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/contact-us                /SEO/contact-us.html                      200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/contact                   /SEO/contact-us.html                      200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+/                          /SEO/index.html                           200  Country=*  User-Agent=*bot*,*crawler*,*spider*,*google*
+
+# SPA fallback for all other routes
+/*  /index.html  200

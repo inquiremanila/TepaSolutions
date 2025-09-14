@@ -67,9 +67,7 @@
         "build": "npm run seo:generate && npm run seo:homepage && vite build && npm run sitemap:dynamic",
         "preview": "vite preview --host 0.0.0.0 --port 5000",
         "start": "node server.js",
-        "sitemap": "node scripts/seo5-build-sitemap.js --simple",
         "sitemap:dynamic": "tsx scripts/seo5-build-sitemap-dynamic.ts",
-        "sitemap:old": "node scripts/seo5-build-sitemap.js",
         "seo:generate": "tsx scripts/seo-html-generator.ts",
         "seo:homepage": "tsx scripts/create-homepage-seo.ts"
     }

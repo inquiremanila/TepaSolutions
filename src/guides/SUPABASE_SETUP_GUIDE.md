@@ -66,150 +66,174 @@ This guide will help you migrate from local images to Supabase Storage for bette
    - Check Storage in your Supabase dashboard
    - Ensure all images from `/public/images/` are uploaded
 
-### 5. Update Your Code
+### 5. Update Your Code - Enhanced Image Usage
 
-1. **Analyze current usage:**
-   ```bash
-   npm run supabase:analyze
-   ```
-
-2. **Replace LocalImage with SupabaseImage:**
+1. **Replace LocalImage with simplified Supabase usage:**
    ```tsx
    // Old:
-   import { LocalImage } from './LocalImage';
+   <img src="/images/image-name.png" alt="Alt text" width={800} height={192} />
    
-   // New:
-   import { SupabaseImage } from './SupabaseImage';
-   ```
-
-3. **Update component usage:**
-   ```tsx
-   // Old:
-   <LocalImage imageId="iphone-17-devices" className="w-full h-64" />
+   // New - Simple filename approach:
+   <img {...getImageProps("/image-name.png")} />
    
-   // New:
-   <SupabaseImage 
-     imageId="iphone-17-devices" 
-     className="w-full h-64" 
-     width={800} 
-     height={256} 
+   // Or with custom values:
+   <img {...getImageProps("/image-name.png", "Custom alt text", 1000, 500)} />
+   
+   // Just the URL if you need more control:
+   <img 
+     src={getImageByName("/image-name.png")} 
+     alt="Your alt text" 
+     width={800}
+     height={192} 
    />
+   ```
+
+2. **For Next.js Image component:**
+   ```tsx
+   import Image from 'next/image';
+   
+   // Simple usage
+   <Image {...getImageProps("roblox-group-photo.png")} />
+   
+   // Custom dimensions
+   <Image {...getImageProps("iphone-17-devices.png", "iPhone showcase", 1200, 600)} />
+   ```
+
+3. **For background images:**
+   ```tsx
+   <div style={{
+     backgroundImage: `url(${getImageByName("placeholder.png")})`
+   }} />
    ```
 
 ## 📁 File Structure
 
 ```
 ├── utils/
-│   └── supabase-images.ts         # Supabase image utilities
+│   └── supabase-images.ts         # Enhanced Supabase image utilities
 ├── components/
-│   └── SupabaseImage.tsx          # SupabaseImage components
+│   └── SupabaseImage.tsx          # SupabaseImage components (optional)
 ├── scripts/
 │   ├── upload-to-supabase.js      # Upload script
 │   └── migrate-to-supabase.js     # Migration helper
 └── .env                           # Environment variables
 ```
 
-## 🔧 Configuration
+## 🔧 Enhanced Image Utilities
 
-### Environment Variables
+### New Helper Functions
 
-```env
-# Required
-VITE_SUPABASE_URL=https://your-project-id.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-
-# Optional - for development fallback
-VITE_USE_LOCAL_FALLBACK=true
-```
-
-### Supabase Images Configuration
+The enhanced `supabase-images.ts` provides these simplified functions:
 
 ```typescript
-// In /utils/supabase-images.ts
-export const SUPABASE_CONFIG = {
-  USE_LOCAL_FALLBACK: process.env.NODE_ENV === 'development',
-  TRANSFORMATIONS: {
-    quality: 85,
-    progressive: true,
-    format: 'webp',
-  },
-  CDN: {
-    cacheDuration: 31536000, // 1 year
-    enableOptimization: true,
+// Get image URL by filename - handles /image-name.png format
+getImageByName("/image-name.png")
+
+// Get all props at once (src, alt, width, height)
+getImageProps("/image-name.png")
+getImageProps("/image-name.png", "Custom alt", 1200, 600)
+
+// Get complete image data
+getImageDataByName("/image-name.png")
+
+// Check if image exists
+hasImageByName("/image-name.png")
+```
+
+### Adding New Images
+
+```typescript
+// Add image with filename
+addSupabaseImage(
+  'new-image-id',
+  'new-image.png',
+  'Alt text for new image',
+  'Image Title',
+  'tepa-images', // bucket (optional)
+  800,           // width (optional)
+  600            // height (optional)
+);
+
+// Add image with direct URL
+addSupabaseImageByUrl(
+  'external-image-id',
+  'https://example.com/image.jpg',
+  'Alt text',
+  'Title',
+  1200,  // width
+  800    // height
+);
+```
+
+## 🖼️ Usage Examples
+
+### Basic HTML Images
+
+```tsx
+// Simplest usage - uses stored dimensions and alt text
+<img {...getImageProps("hero-image.png")} />
+
+// With custom alt text
+<img {...getImageProps("hero-image.png", "Custom description")} />
+
+// With custom dimensions
+<img {...getImageProps("hero-image.png", "Custom alt", 1200, 600)} />
+
+// Just the URL for more control
+<img 
+  src={getImageByName("hero-image.png")} 
+  alt="Hero image" 
+  className="rounded-lg shadow-md"
+  width={800}
+  height={400}
+/>
+```
+
+### React Components
+
+```tsx
+function HeroSection() {
+  return (
+    <div className="hero-section">
+      <img 
+        {...getImageProps("hero-banner.png")} 
+        className="w-full h-auto object-cover"
+      />
+    </div>
+  );
+}
+```
+
+### Background Images
+
+```tsx
+function BackgroundCard() {
+  return (
+    <div 
+      className="card-bg"
+      style={{
+        backgroundImage: `url(${getImageByName("card-background.jpg")})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
+      Content here
+    </div>
+  );
+}
+```
+
+### Conditional Images
+
+```tsx
+function ProductImage({ productType }: { productType: string }) {
+  const imageName = `${productType}-image.png`;
+  
+  if (!hasImageByName(imageName)) {
+    return <img {...getImageProps("placeholder.png")} />;
   }
-};
-```
-
-## 🖼️ Using SupabaseImage Components
-
-### Basic Usage
-
-```tsx
-import { SupabaseImage } from './components/SupabaseImage';
-
-<SupabaseImage
-  imageId="iphone-17-devices"
-  className="w-full h-64 object-cover rounded-lg"
-  width={800}
-  height={256}
-  priority={true}
-/>
-```
-
-### With Optimization
-
-```tsx
-<SupabaseImage
-  imageId="roblox-group-photo"
-  className="w-full h-48 object-cover rounded-lg"
-  width={800}
-  height={192}
-  optimization={{
-    quality: 85,
-    format: 'webp'
-  }}
-/>
-```
-
-### Lazy Loading
-
-```tsx
-import { LazySupabaseImage } from './components/SupabaseImage';
-
-<LazySupabaseImage
-  imageId="iphone-17-devices"
-  className="w-full h-64 object-cover rounded-lg"
-  width={800}
-  height={256}
-/>
-```
-
-### Responsive Images
-
-```tsx
-import { ResponsiveSupabaseImage } from './components/SupabaseImage';
-
-<ResponsiveSupabaseImage
-  imageId="roblox-group-photo"
-  className="w-full h-48 object-cover rounded-lg"
-  width={800}
-  height={192}
-  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px"
-/>
-```
-
-### Using the Hook
-
-```tsx
-import { useSupabaseImage } from './components/SupabaseImage';
-
-function MyComponent() {
-  const { loading, error, url, imageData } = useSupabaseImage('iphone-17-devices');
   
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  
-  return <img src={url} alt={imageData?.alt} />;
+  return <img {...getImageProps(imageName)} />;
 }
 ```
 
@@ -218,107 +242,217 @@ function MyComponent() {
 | Script | Description |
 |--------|-------------|
 | `npm run upload-to-supabase` | Upload images from `/public/images/` to Supabase |
-| `npm run migrate-to-supabase` | Run migration analysis |
+| `npm run migrate-to-supabase` | Run migration analysis and replace image paths |
 | `npm run supabase:check` | Check Supabase setup status |
-| `npm run supabase:analyze` | Analyze LocalImage usage |
+| `npm run supabase:analyze` | Analyze current image usage patterns |
 | `npm run supabase:config` | Generate Supabase configuration |
+
+## 🔄 Migration Process
+
+### Step 1: Inventory Your Images
+
+```typescript
+// Check what images you currently have
+console.log('Available images:', getAvailableFilenames());
+
+// Check if specific images exist
+if (hasImageByName('logo.png')) {
+  console.log('Logo found!');
+}
+```
+
+### Step 2: Replace Image Usage
+
+```tsx
+// Old approach:
+<img src="/images/hero-banner.jpg" alt="Hero banner" width={1200} height={600} />
+
+// New approach:
+<img {...getImageProps("hero-banner.jpg")} />
+```
+
+### Step 3: Update Dynamic Images
+
+```tsx
+// Old:
+const imagePath = `/images/${category}-thumbnail.png`;
+
+// New:
+const imageProps = getImageProps(`${category}-thumbnail.png`);
+```
 
 ## 🔍 Migration Checklist
 
+### Setup Phase
 - [ ] ✅ Create Supabase project
 - [ ] ✅ Enable Storage and create "tepa-images" bucket
 - [ ] ✅ Configure environment variables
 - [ ] ✅ Upload images to Supabase
-- [ ] 🔄 Replace LocalImage imports with SupabaseImage
-- [ ] 🔄 Update component usage
-- [ ] 🔄 Replace direct image paths
-- [ ] ✅ Test application
-- [ ] ✅ Remove old LocalImage files
+- [ ] ✅ Update supabase-images.ts with enhanced utilities
+
+### Migration Phase
+- [ ] 🔄 Replace direct image paths with `getImageByName()`
+- [ ] 🔄 Replace img tags with `getImageProps()`
+- [ ] 🔄 Update background image styles
+- [ ] 🔄 Handle dynamic image paths
+- [ ] 🔄 Add missing images to inventory
+
+### Testing Phase
+- [ ] ✅ Test all image loads
+- [ ] ✅ Verify fallback behavior
+- [ ] ✅ Check responsive images
+- [ ] ✅ Test error handling
+
+### Cleanup Phase
+- [ ] ✅ Remove old local images
+- [ ] ✅ Clean up unused imports
+- [ ] ✅ Update documentation
 
 ## 🚨 Troubleshooting
 
 ### Images Not Loading
 
-1. **Check Supabase connection:**
-   ```bash
-   npm run supabase:check
+1. **Check if image exists in inventory:**
+   ```typescript
+   console.log('Image exists:', hasImageByName('your-image.png'));
+   console.log('Available images:', getAvailableFilenames());
    ```
 
-2. **Verify bucket permissions:**
-   - Go to Storage → tepa-images in Supabase dashboard
-   - Ensure bucket is public
-   - Check bucket policies
-
-3. **Test image URLs manually:**
-   - Copy an image URL from Supabase dashboard
-   - Open it in browser to verify access
-
-### Upload Failures
-
-1. **Check environment variables:**
-   ```bash
-   echo $VITE_SUPABASE_URL
-   echo $VITE_SUPABASE_ANON_KEY
+2. **Verify URL generation:**
+   ```typescript
+   console.log('Generated URL:', getImageByName('your-image.png'));
    ```
 
-2. **Verify bucket exists:**
-   - Check Storage section in Supabase dashboard
-   - Recreate bucket if missing
+3. **Check browser network tab:**
+   - Look for 404 errors
+   - Verify the generated URLs are correct
 
-3. **Check file permissions:**
-   - Ensure files in `public/images/` are readable
-   - Check file sizes (Supabase has upload limits)
-
-### Development Fallback
-
-If Supabase is not configured, the system will automatically fallback to local images during development:
+### Adding Missing Images
 
 ```typescript
-// This will use local images if Supabase is not configured
-export const SUPABASE_CONFIG = {
-  USE_LOCAL_FALLBACK: process.env.NODE_ENV === 'development',
-  // ...
-};
+// If an image isn't in your inventory, add it:
+addSupabaseImage(
+  'missing-image',
+  'missing-image.png', 
+  'Description of missing image',
+  'Title',
+  'tepa-images',
+  800,
+  600
+);
+
+// Or add by direct URL if it's external:
+addSupabaseImageByUrl(
+  'external-img',
+  'https://example.com/image.jpg',
+  'External image description',
+  'External Image',
+  1200,
+  800
+);
+```
+
+### Development vs Production
+
+```typescript
+// The utility automatically handles different environments
+// In development, it can fallback to local images if configured
+// In production, it uses Supabase URLs
+
+// Check current configuration:
+console.log('Supabase URL:', SUPABASE_BASE_URL);
+console.log('Default bucket:', DEFAULT_BUCKET);
 ```
 
 ## 🎯 Performance Benefits
 
+- **Simplified Usage**: Just use filename instead of full URLs
+- **Automatic Dimensions**: Stored width/height reduce layout shift
+- **Smart Fallbacks**: Automatic placeholder image for missing assets
 - **Global CDN**: Images served from Supabase's global CDN
-- **Automatic Optimization**: WebP conversion and compression
-- **Lazy Loading**: Built-in intersection observer
-- **Responsive Images**: Multiple format support
-- **Caching**: Aggressive browser and CDN caching
-- **Transform API**: On-the-fly image transformations
+- **Consistent Alt Text**: Centralized image metadata
+- **Easy Maintenance**: Add/update images in one place
 
-## 🔒 Security Features
+## 💡 Best Practices
 
-- **RLS Policies**: Row Level Security for access control
-- **JWT Authentication**: Secure API access
-- **CORS Support**: Proper cross-origin headers
-- **Rate Limiting**: Built-in DDoS protection
+### 1. Image Naming Convention
+```
+// Use descriptive, kebab-case names
+hero-banner.jpg
+product-thumbnail-1.png
+logo-dark-mode.svg
+```
 
-## 💰 Cost Optimization
+### 2. Dimension Management
+```typescript
+// Always specify dimensions when adding images
+addSupabaseImage(
+  'product-hero',
+  'product-hero.jpg',
+  'Product hero image',
+  'Product Hero',
+  'tepa-images',
+  1200,  // width - always specify
+  600    // height - always specify
+);
+```
 
-- **Free Tier**: 2GB storage, 2GB bandwidth per month
-- **Pro Tier**: $25/month for 8GB storage, 50GB bandwidth
-- **Pay-as-you-go**: Additional usage charged monthly
-- **CDN Included**: No additional CDN costs
+### 3. Alt Text Strategy
+```typescript
+// Use descriptive alt text
+addSupabaseImage(
+  'team-photo',
+  'team-photo.jpg',
+  'Tepa Solutions team members gathered in the office conference room',
+  'Team Photo'
+);
+```
 
-## 🤝 Support
+### 4. Error Handling
+```tsx
+function SafeImage({ filename, fallback = "placeholder.png" }: Props) {
+  if (!hasImageByName(filename)) {
+    return <img {...getImageProps(fallback)} />;
+  }
+  
+  return <img {...getImageProps(filename)} />;
+}
+```
 
-If you encounter issues:
+## 🔒 Security & Performance
 
-1. Check this troubleshooting guide
-2. Run `npm run supabase:check` to verify setup
-3. Check Supabase dashboard for error logs
-4. Review browser network tab for failed requests
+- **Public Bucket**: Images are publicly accessible via CDN
+- **No Authentication**: Required for public image serving
+- **Optimized Delivery**: Automatic compression and format optimization
+- **Caching Headers**: Long-term browser caching
+- **Lazy Loading**: Can be easily implemented with the URLs
 
 ## 🎉 Next Steps
 
 After successful migration:
 
-1. Set up image transformations for different screen sizes
-2. Implement automatic WebP conversion
-3. Add image upload functionality for admin users
-4. Set up monitoring and analytics
-5. Consider implementing a image optimization pipeline
+1. **Implement lazy loading:**
+   ```tsx
+   <img 
+     {...getImageProps("large-image.jpg")} 
+     loading="lazy"
+     className="fade-in"
+   />
+   ```
+
+2. **Add responsive images:**
+   ```tsx
+   <picture>
+     <source 
+       media="(max-width: 640px)" 
+       srcSet={getImageByName("mobile-hero.jpg")} 
+     />
+     <img {...getImageProps("desktop-hero.jpg")} />
+   </picture>
+   ```
+
+3. **Set up image upload interface** for content management
+
+4. **Implement image transformations** using Supabase's transform API
+
+5. **Add monitoring** for image load performance
