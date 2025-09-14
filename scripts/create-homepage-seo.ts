@@ -131,12 +131,12 @@ async function createHomepageSEO(): Promise<void> {
   try {
     console.log('🏠 Creating homepage SEO file...');
     
-    const seoDir = path.join(process.cwd(), 'build', 'SEO');
+    const buildDir = path.join(process.cwd(), 'build');
     const htmlContent = generateHomepageSEO();
-    const filePath = path.join(seoDir, 'index.html');
+    const filePath = path.join(buildDir, 'index.html');
     
     fs.writeFileSync(filePath, htmlContent, 'utf8');
-    console.log('✅ Created build/SEO/index.html');
+    console.log('✅ Created build/index.html');
     
   } catch (error: unknown) {
     if (error instanceof Error) {

@@ -9,24 +9,21 @@ binding = "ASSETS"
 
 # Environment variables for all environments
 [vars]
-VITE_SUPABASE_URL = "https://ruhsxjeiegdeshcnbuxy.supabase.co"
-VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1aHN4amVpZWdkZXNoY25idXh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMDczNDMsImV4cCI6MjA3MjU4MzM0M30.ua-Et2U4A0bRH0CSKA0Q6iT5YWvjSIi-_nPoeclay0U"
+# Supabase keys should be set via `wrangler secret put` instead of committed here
+# VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY should be injected at runtime
 
 # Production environment configuration
 [env.production]
 
 # Production-specific variables
 [env.production.vars]
-SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1aHN4amVpZWdkZXNoY25idXh5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NzAwNzM0MywiZXhwIjoyMDcyNTgzMzQzfQ.4iw-R_ov_uvgU3Bw2D1L3MNNi0ylAZpaFltIeKQdvXs"
+# SUPABASE_SERVICE_KEY should be set via `wrangler secret put SUPABASE_SERVICE_KEY` instead of committed here
 
 # Custom domain routes
 [[env.production.route]]
 pattern = "tepasolutions.asia/*"
 zone_id = "44f08db3ccbe99d82d123d3eb0f331b4"
 
-[[env.production.route]]
-pattern = "www.tepasolutions.asia/*" 
-zone_id = "44f08db3ccbe99d82d123d3eb0f331b4"
 
 # Security and performance headers
 [[env.production.rules]]
@@ -47,8 +44,3 @@ src = "*.{js,css,png,jpg,jpeg,gif,ico,svg,woff,woff2}"
 [env.production.rules.headers]
 Cache-Control = "public, max-age=31536000, immutable"
 
-# Development environment (optional)
-[env.development]
-routes = [
-    { pattern = "tepasolutions-dev.pages.dev/*" }
-]

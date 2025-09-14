@@ -144,7 +144,7 @@ function generateBusinessAutomationPages(): void {
     }
   ];
 
-  const businessAutomationDir = path.join(process.cwd(), 'build', 'SEO', 'business-automation');
+  const businessAutomationDir = path.join(process.cwd(), 'build', 'business-automation');
   createDirectoryIfNotExists(businessAutomationDir);
 
   automationTypes.forEach(automation => {
@@ -192,7 +192,7 @@ function generateServicePages(): void {
     }
   ];
 
-  const seoDir = path.join(process.cwd(), 'build', 'SEO');
+  const seoDir = path.join(process.cwd(), 'build');
 
   services.forEach(service => {
     const pageData: SEOPageData = {
@@ -212,7 +212,7 @@ function generateServicePages(): void {
 }
 
 function generateArticlePages(): void {
-  const articlesDir = path.join(process.cwd(), 'build', 'SEO', 'articles');
+  const articlesDir = path.join(process.cwd(), 'build', 'articles');
   createDirectoryIfNotExists(articlesDir);
 
   // Generate index page
@@ -225,7 +225,7 @@ function generateArticlePages(): void {
   };
 
   const indexHtml = generateHTMLPage(articleIndexData);
-  fs.writeFileSync(path.join(articlesDir, '../articles.html'), indexHtml, 'utf8');
+  fs.writeFileSync(path.join(process.cwd(), 'build', 'articles.html'), indexHtml, 'utf8');
 
   // Generate individual article pages
   articles.forEach(article => {
@@ -249,7 +249,7 @@ function generateArticlePages(): void {
 }
 
 function generateEventPages(): void {
-  const eventsDir = path.join(process.cwd(), 'build', 'SEO', 'events');
+  const eventsDir = path.join(process.cwd(), 'build', 'events');
   createDirectoryIfNotExists(eventsDir);
 
   // Generate index page
@@ -262,7 +262,7 @@ function generateEventPages(): void {
   };
 
   const indexHtml = generateHTMLPage(eventIndexData);
-  fs.writeFileSync(path.join(eventsDir, '../events.html'), indexHtml, 'utf8');
+  fs.writeFileSync(path.join(process.cwd(), 'build', 'events.html'), indexHtml, 'utf8');
 
   // Generate individual event pages
   events.forEach(event => {
@@ -284,7 +284,7 @@ function generateEventPages(): void {
 }
 
 function generateCareerPages(): void {
-  const careersDir = path.join(process.cwd(), 'build', 'SEO', 'careers');
+  const careersDir = path.join(process.cwd(), 'build', 'careers');
   createDirectoryIfNotExists(careersDir);
 
   // Generate index page
@@ -297,7 +297,7 @@ function generateCareerPages(): void {
   };
 
   const indexHtml = generateHTMLPage(careerIndexData);
-  fs.writeFileSync(path.join(careersDir, '../careers.html'), indexHtml, 'utf8');
+  fs.writeFileSync(path.join(process.cwd(), 'build', 'careers.html'), indexHtml, 'utf8');
   fs.writeFileSync(path.join(careersDir, 'index.html'), indexHtml, 'utf8');
 
   // Generate individual career pages
@@ -319,7 +319,7 @@ function generateCareerPages(): void {
 }
 
 function generateStaticPages(): void {
-  const seoDir = path.join(process.cwd(), 'build', 'SEO');
+  const seoDir = path.join(process.cwd(), 'build');
 
   const staticPages = [
     {
@@ -377,8 +377,8 @@ async function generateAllSEOPages(): Promise<void> {
   try {
     console.log('🚀 Starting SEO HTML page generation...');
 
-    // Create main SEO directory
-    const seoDir = path.join(process.cwd(), 'build', 'SEO');
+    // Ensure main build directory exists
+    const seoDir = path.join(process.cwd(), 'build');
     createDirectoryIfNotExists(seoDir);
 
     // Generate all page types
@@ -390,7 +390,7 @@ async function generateAllSEOPages(): Promise<void> {
     generateStaticPages();
 
     console.log('🎉 SEO HTML page generation completed successfully!');
-    console.log(`📁 All pages saved to: build/SEO/`);
+    console.log(`📁 All pages saved to: build/`);
     
   } catch (error: unknown) {
     if (error instanceof Error) {
