@@ -1,18 +1,19 @@
 import { motion } from 'framer-motion';
 import { Calendar, Clock, User, ArrowRight, ArrowLeft } from 'lucide-react';
+import { useParams } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
-import { articles } from './ArticlesPage';
+import { articles } from '../data/articles-data';
 
 interface ArticlePageProps {
   navigate?: (path: string) => void;
   currentPath?: string;
-  articleSlug?: string;
 }
 
-export function ArticlePage({ navigate, articleSlug }: ArticlePageProps) {
-  const article = articles.find(a => a.slug === articleSlug);
+export function ArticlePage({ navigate }: ArticlePageProps) {
+  const { slug } = useParams<{ slug: string }>();
+  const article = articles.find(a => a.slug === slug);
 
   if (!article) {
     return (

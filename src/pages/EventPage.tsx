@@ -1,18 +1,19 @@
 import { motion } from 'framer-motion';
 import { Calendar, Clock, MapPin, Users, ArrowLeft, Send, CheckCircle, Trophy, User } from 'lucide-react';
+import { useParams } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { events } from './EventsPage';
+import { events } from '../data/events-data';
 
 interface EventPageProps {
   navigate?: (path: string) => void;
   currentPath?: string;
-  eventSlug?: string;
 }
 
-export function EventPage({ navigate, eventSlug }: EventPageProps) {
-  const event = events.find(e => e.slug === eventSlug);
+export function EventPage({ navigate }: EventPageProps) {
+  const { slug } = useParams<{ slug: string }>();
+  const event = events.find(e => e.slug === slug);
 
   if (!event) {
     return (
@@ -171,7 +172,7 @@ export function EventPage({ navigate, eventSlug }: EventPageProps) {
                     <CardContent>
                       <div 
                         className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-ul:text-muted-foreground prose-li:text-muted-foreground"
-                        dangerouslySetInnerHTML={{ __html: event.fullDescription }}
+                        dangerouslySetInnerHTML={{ __html: event.fullDescription || event.description }}
                       />
                     </CardContent>
                   </Card>
@@ -193,7 +194,7 @@ export function EventPage({ navigate, eventSlug }: EventPageProps) {
                   </CardHeader>
                   <CardContent>
                     <ul className="grid md:grid-cols-2 gap-3">
-                      {event.topics.map((topic, index) => (
+                      {event.topics?.map((topic, index) => (
                         <li key={index} className="flex items-start gap-3">
                           <CheckCircle className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
                           <span className="text-muted-foreground">{topic}</span>
@@ -216,7 +217,7 @@ export function EventPage({ navigate, eventSlug }: EventPageProps) {
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-3">
-                      {event.requirements.map((requirement, index) => (
+                      {event.requirements?.map((requirement, index) => (
                         <li key={index} className="flex items-start gap-3">
                           <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
                           <span className="text-muted-foreground">{requirement}</span>

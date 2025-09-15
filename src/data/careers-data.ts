@@ -12,10 +12,30 @@ export const jobPositions = [
     type: "Internship",
     location: "Remote",
     experience: "Entry Level",
-    salary: "",
+    salary: "Competitive internship stipend",
     description: "Join our development team as a frontend developer intern. Learn React, TypeScript, and modern web technologies while working on real projects that impact businesses worldwide.",
     postedDate: "2025-01-15",
-    applicationDeadline: "2025-10-30"
+    applicationDeadline: "2025-10-30",
+    requirements: [
+      "Basic knowledge of HTML, CSS, and JavaScript",
+      "Familiarity with React or similar frontend frameworks",
+      "Understanding of version control (Git)",
+      "Strong problem-solving skills",
+      "Excellent communication skills"
+    ],
+    responsibilities: [
+      "Develop user-facing features using React and TypeScript",
+      "Collaborate with the design team to implement UI/UX designs",
+      "Write clean, maintainable code following best practices",
+      "Participate in code reviews and team discussions",
+      "Learn and implement new technologies as needed"
+    ],
+    niceToHave: [
+      "Experience with Next.js or Vite",
+      "Knowledge of CSS frameworks like Tailwind CSS",
+      "Understanding of responsive design principles",
+      "Experience with testing frameworks"
+    ]
   },
   {
     id: 2,
@@ -25,10 +45,30 @@ export const jobPositions = [
     type: "Internship",
     location: "Remote",
     experience: "Entry Level",
-    salary: "",
+    salary: "Competitive internship stipend",
     description: "Learn backend development with Node.js, databases, and API design while contributing to real automation solutions and business tools.",
     postedDate: "2025-01-15",
-    applicationDeadline: "2025-10-30"
+    applicationDeadline: "2025-10-30",
+    requirements: [
+      "Basic programming knowledge in JavaScript or Python",
+      "Understanding of database concepts",
+      "Familiarity with REST APIs",
+      "Strong analytical and problem-solving skills",
+      "Willingness to learn new technologies"
+    ],
+    responsibilities: [
+      "Develop server-side applications using Node.js",
+      "Design and implement REST APIs",
+      "Work with databases and data modeling",
+      "Collaborate with frontend developers",
+      "Write unit tests and documentation"
+    ],
+    niceToHave: [
+      "Experience with Express.js or similar frameworks",
+      "Knowledge of SQL and NoSQL databases",
+      "Understanding of authentication and security",
+      "Experience with cloud services (AWS, GCP)"
+    ]
   },
   {
     id: 3,

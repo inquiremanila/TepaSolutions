@@ -1,18 +1,19 @@
 import { motion } from 'framer-motion';
 import { MapPin, Clock, DollarSign, Calendar, ArrowLeft, Send, Users, CheckCircle } from 'lucide-react';
+import { useParams } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { jobPositions } from './CareersPage';
+import { jobPositions } from '../data/careers-data';
 
 interface JobPageProps {
   navigate?: (path: string) => void;
   currentPath?: string;
-  jobSlug?: string;
 }
 
-export function JobPage({ navigate, jobSlug }: JobPageProps) {
-  const job = jobPositions.find(j => j.slug === jobSlug);
+export function JobPage({ navigate }: JobPageProps) {
+  const { slug } = useParams<{ slug: string }>();
+  const job = jobPositions.find(j => j.slug === slug);
 
   if (!job) {
     return (
