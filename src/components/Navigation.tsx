@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, ChevronDown } from 'lucide-react';
 import { Button } from './ui/button';
-import { Logo } from './Logo';
+import { Logo } from './OtherComponent/Logo';
 import { navItems } from './data/navigation-data';
-import { MobileNavigationSheet } from './MobileNavigationSheet';
+import { MobileNavigationSheet } from './OtherComponent/MobileNavigationSheet';
 import { NavigationDropdown } from './NavigationDropdown';
 
 interface NavigationProps {

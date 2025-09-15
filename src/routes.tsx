@@ -16,26 +16,27 @@ import { HRAutomationPage } from './pages/HRAutomationPage'
 import { FinanceAutomationPage } from './pages/FinanceAutomationPage'
 import { InventoryAutomationPage } from './pages/InventoryAutomationPage'
 import { AboutPage } from './pages/AboutPage'
-import { CareersPage } from './pages/CareersPage'
-import { EventsPage } from './pages/EventsPage'
-import { ArticlesPage } from './pages/ArticlesPage'
+import { CareersPage } from './DynamicData/CareersPage'
+import { EventsPage } from './DynamicData/EventsPage'
+import { ArticlesPage } from './DynamicData/ArticlesPage'
 import { InvestorsPage } from './pages/InvestorsPage'
 import { WhoWeServePage } from './pages/WhoWeServePage'
 import { VolunteerPage } from './pages/VolunteerPage'
-import { ContactSalesPage } from './pages/ContactSalesPage'
-import { ContactSupportPage } from './pages/ContactSupportPage'
-import { ContactEventHostPage } from './pages/ContactEventHostPage'
-import { ContactInvestorPage } from './pages/ContactInvestorPage'
-import { ContactCareersPage } from './pages/ContactCareersPage'
+import { ContactSalesPage } from './components/Forms/ContactSalesPage'
+import { ContactSupportPage } from './components/Forms/ContactSupportPage'
+import { ContactEventHostPage } from './components/Forms/ContactEventHostPage'
+import { ContactInvestorPage } from './components/Forms/ContactInvestorPage'
+import { ContactCareersPage } from './components/Forms/ContactCareersPage'
 import { ArticlePage } from './pages/ArticlePage'
 import { EventPage } from './pages/EventPage'
 import { JobPage } from './pages/JobPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 
 // Import article/event/job data for static path generation
-import { articles } from './data/articles-data'
-import { events } from './data/events-data'
-import { jobPositions } from './data/careers-data'
+import { articles } from './DynamicData/ArticlesPage'
+import { events } from './DynamicData/EventsPage'
+import { jobPositions } from './DynamicData/CareersPage';
+
 
 // Navigation adapter for components that require navigate/currentPath props
 const withNav = (Comp: any) => () => {

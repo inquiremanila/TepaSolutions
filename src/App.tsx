@@ -1,6 +1,6 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { Navigation } from './components/Navigation'
-import { Footer } from './components/Footer'
+import { Footer } from './components/OtherComponent/Footer'
 import { Toaster } from './components/ui/sonner'
 
 export default function App() {

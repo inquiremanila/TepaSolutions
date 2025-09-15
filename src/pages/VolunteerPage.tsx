@@ -11,7 +11,7 @@ import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { toast } from "sonner";
 import { useState } from 'react';
-import { submitVolunteerApplication } from '../utils/api';
+import { submitVolunteerApplication } from '../supabase/api';
 
 interface VolunteerPageProps {
   navigate?: (path: string) => void;

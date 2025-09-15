@@ -1,4 +1,4 @@
-import { ServicePage } from '../components/ServicePages';
+import { ServicePage } from '../components/OtherComponent/ServicePages';
 
 interface FinanceAutomationPageProps {
   navigate: (path: string) => void;

@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
-import { articles } from '../data/articles-data';
+import { articles } from '../DynamicData/ArticlesPage';
 
 interface ArticlePageProps {
   navigate?: (path: string) => void;

@@ -1,4 +1,4 @@
-import { AutomationPage } from '../components/AutomationPage';
+import { AutomationPage } from '../components/OtherComponent/AutomationPage';
 
 interface BusinessAutomationPageProps {
   navigate: (path: string) => void;

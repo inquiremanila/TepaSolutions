@@ -1,6 +1,6 @@
 {
-  "_client-C7EXOJCy.js": {
-    "file": "assets/client-C7EXOJCy.js",
+  "_client-DrU9Bt4s.js": {
+    "file": "assets/client-DrU9Bt4s.js",
     "name": "client",
     "isDynamicEntry": true,
     "imports": [
@@ -8,7 +8,7 @@
     ]
   },
   "index.html": {
-    "file": "assets/app-DVnjbdQ-.js",
+    "file": "assets/app-jQm0Sllg.js",
     "name": "app",
     "src": "index.html",
     "isEntry": true,

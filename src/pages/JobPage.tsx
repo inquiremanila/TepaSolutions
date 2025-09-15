@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { jobPositions } from '../data/careers-data';
+import { jobPositions } from '../DynamicData/CareersPage';
 
 interface JobPageProps {
   navigate?: (path: string) => void;

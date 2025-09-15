@@ -7,7 +7,7 @@ import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { submitContactForm } from '../utils/api';
+import { submitContactForm } from '../supabase/api';
 import { toast } from "sonner@2.0.3";
 
 interface Message {
