@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Send, Upload, X, FileText, CheckCircle, AlertCircle } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -17,6 +18,7 @@ interface ContactCareersPageProps {
 }
 
 export function ContactCareersPage({ navigate }: ContactCareersPageProps) {
+  const [searchParams] = useSearchParams();
   const [formData, setFormData] = useState({
     position: '',
     firstName: '',
@@ -35,17 +37,16 @@ export function ContactCareersPage({ navigate }: ContactCareersPageProps) {
   const [coverLetterType, setCoverLetterType] = useState<'text' | 'file'>('text');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Get position from URL parameters if available
-  const urlParams = new URLSearchParams(window.location.search);
-  const positionFromUrl = urlParams.get('position');
-  
-  // Set the position if it came from URL and form is empty
-  if (positionFromUrl && !formData.position) {
-    const position = jobPositions.find(job => job.slug === positionFromUrl);
-    if (position) {
-      setFormData(prev => ({ ...prev, position: position.title }));
+  // Get position from URL parameters if available (SSR-safe)
+  useEffect(() => {
+    const positionFromUrl = searchParams.get('position');
+    if (positionFromUrl && !formData.position) {
+      const position = jobPositions.find(job => job.slug === positionFromUrl);
+      if (position) {
+        setFormData(prev => ({ ...prev, position: position.title }));
+      }
     }
-  }
+  }, [searchParams, formData.position]);
 
   const updateFormData = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));

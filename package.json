@@ -48,12 +48,14 @@
         "react-dom": "^18.3.1",
         "react-hook-form": "^7.55.0",
         "react-resizable-panels": "^2.1.7",
+        "react-router-dom": "^6.30.1",
         "recharts": "^2.15.2",
         "serve": "^14.2.5",
         "sonner": "^2.0.3",
         "tailwind-merge": "^2.5.2",
         "tsx": "^4.20.5",
         "vaul": "^1.1.2",
+        "vite-react-ssg": "^0.8.9",
         "xmldom": "^0.6.0"
     },
     "devDependencies": {
@@ -62,15 +64,11 @@
         "@vitejs/plugin-react-swc": "^3.10.2",
         "vite": "6.3.5"
     },
-
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build && mv build/index.html build/home.html && npm run seo:generate && npm run seo:homepage && npm run sitemap:dynamic",
-    "preview": "vite preview --host 0.0.0.0 --port 5000",
-    "start": "node server.js",
-    "sitemap:dynamic": "tsx scripts/seo5-build-sitemap-dynamic.ts",
-    "seo:generate": "tsx scripts/seo-html-generator.ts",
-    "seo:homepage": "tsx scripts/create-homepage-seo.ts"
-  }
-
+    "scripts": {
+        "dev": "vite-react-ssg dev",
+        "build": "vite-react-ssg build",
+        "preview": "vite preview --host 0.0.0.0 --port 5000",
+        "start": "serve -s dist -l 5000",
+    "serve": "vite preview"
+    }
 }
