@@ -58,7 +58,7 @@ Allow: /*.woff2$
 Crawl-delay: 1
 
 # Sitemap location (point to bot-specific sitemap)
-Sitemap: https://tepasolutions.asia/bot/sitemap.xml
+Sitemap: https://tepasolutions.asia/sitemap.xml
 
 # Special bot instructions
 User-agent: Googlebot
