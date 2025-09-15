@@ -130,7 +130,7 @@ export function JobPage({ navigate }: JobPageProps) {
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-3">
-                      {job.requirements.map((requirement, index) => (
+                      {job.requirements?.map((requirement, index) => (
                         <li key={index} className="flex items-start gap-3">
                           <CheckCircle className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
                           <span className="text-muted-foreground">{requirement}</span>
@@ -156,7 +156,7 @@ export function JobPage({ navigate }: JobPageProps) {
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-3">
-                      {job.responsibilities.map((responsibility, index) => (
+                      {job.responsibilities?.map((responsibility, index) => (
                         <li key={index} className="flex items-start gap-3">
                           <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
                           <span className="text-muted-foreground">{responsibility}</span>

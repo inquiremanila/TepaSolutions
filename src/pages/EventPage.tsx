@@ -142,7 +142,6 @@ export function EventPage({ navigate }: EventPageProps) {
                         <div>
                           <p className="font-medium">Location</p>
                           <p className="text-muted-foreground">{event.location}</p>
-                          <p className="text-muted-foreground text-sm">{event.locationDetails}</p>
                         </div>
                       </div>
                       
@@ -159,74 +158,75 @@ export function EventPage({ navigate }: EventPageProps) {
               </motion.div>
 
               {/* About the Event */}
-              {event.fullDescription && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <Card>
+                  <CardHeader>
+                    <CardTitle>About This Event</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-ul:text-muted-foreground prose-li:text-muted-foreground">
+                      <p>{event.description}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              {/* Topics Covered - Only show if topics exist */}
+              {(event as any).topics && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
+                  transition={{ delay: 0.3 }}
                 >
                   <Card>
                     <CardHeader>
-                      <CardTitle>About This Event</CardTitle>
+                      <CardTitle className="flex items-center gap-2">
+                        <CheckCircle className="w-5 h-5 text-primary" />
+                        What You'll Learn
+                      </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div 
-                        className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-ul:text-muted-foreground prose-li:text-muted-foreground"
-                        dangerouslySetInnerHTML={{ __html: event.fullDescription || event.description }}
-                      />
+                      <ul className="grid md:grid-cols-2 gap-3">
+                        {(event as any).topics?.map((topic: string, index: number) => (
+                          <li key={index} className="flex items-start gap-3">
+                            <CheckCircle className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
+                            <span className="text-muted-foreground">{topic}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </CardContent>
                   </Card>
                 </motion.div>
               )}
 
-              {/* Topics Covered */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <CheckCircle className="w-5 h-5 text-primary" />
-                      What You'll Learn
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="grid md:grid-cols-2 gap-3">
-                      {event.topics?.map((topic, index) => (
-                        <li key={index} className="flex items-start gap-3">
-                          <CheckCircle className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
-                          <span className="text-muted-foreground">{topic}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              {/* Requirements */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Requirements</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-3">
-                      {event.requirements?.map((requirement, index) => (
-                        <li key={index} className="flex items-start gap-3">
-                          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                          <span className="text-muted-foreground">{requirement}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              </motion.div>
+              {/* Requirements - Only show if requirements exist */}
+              {(event as any).requirements && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Requirements</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-3">
+                        {(event as any).requirements?.map((requirement: string, index: number) => (
+                          <li key={index} className="flex items-start gap-3">
+                            <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
+                            <span className="text-muted-foreground">{requirement}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
             </div>
 
             {/* Sidebar */}
@@ -308,8 +308,8 @@ export function EventPage({ navigate }: EventPageProps) {
                   </Card>
                 </motion.div>
 
-                {/* Certificate Info */}
-                {event.certificate && (
+                {/* Certificate Info - Only show if certificate exists */}
+                {(event as any).certificate && (
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -324,7 +324,7 @@ export function EventPage({ navigate }: EventPageProps) {
                       </CardHeader>
                       <CardContent>
                         <p className="text-sm text-muted-foreground">
-                          Participants will receive a <strong>{event.certificate}</strong> upon successful completion of the event.
+                          Participants will receive a <strong>{(event as any).certificate}</strong> upon successful completion of the event.
                         </p>
                       </CardContent>
                     </Card>

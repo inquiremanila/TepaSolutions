@@ -158,21 +158,21 @@ export const routes: RouteRecord[] = [
       // Dynamic Routes with SSG
       {
         path: 'articles/:slug',
-        Component: ArticlePage,
+        Component: withNav(ArticlePage),
         getStaticPaths: () => {
           return articles.map(article => `articles/${article.slug}`)
         },
       },
       {
         path: 'events/:slug',
-        Component: EventPage,
+        Component: withNav(EventPage),
         getStaticPaths: () => {
           return events.map(event => `events/${event.slug}`)
         },
       },
       {
         path: 'careers/:slug',
-        Component: JobPage,
+        Component: withNav(JobPage),
         getStaticPaths: () => {
           return jobPositions.map((job: any) => `careers/${job.slug}`)
         },
