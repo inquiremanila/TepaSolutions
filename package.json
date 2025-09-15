@@ -60,15 +60,15 @@
     },
     "devDependencies": {
         "@cloudflare/workers-types": "^4.20250913.0",
-        "@types/node": "^20.10.0",
+        "@types/node": "^20.19.14",
         "@vitejs/plugin-react-swc": "^3.10.2",
         "vite": "6.3.5"
     },
     "scripts": {
-        "dev": "vite-react-ssg dev",
-        "build": "vite-react-ssg build",
+        "build": "npm run build:pages && vite-react-ssg build",
+        "build:pages": "tsx src/build-pages.ts",
         "preview": "vite preview --host 0.0.0.0 --port 5000",
         "start": "serve -s dist -l 5000",
-        "serve": "vite preview"
+        "deploy": "wrangler pages deploy ./dist"
     }
 }

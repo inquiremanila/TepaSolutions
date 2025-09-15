@@ -1,45 +1,47 @@
 // Multi-page build script for static site generation
-import { writeFileSync, mkdirSync, existsSync, copyFileSync } from 'fs';
-import { join, dirname } from 'path';
+import { writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { join, dirname, basename } from "node:path";
+import { fileURLToPath } from "node:url";
+
 
 // Define all routes that need individual HTML files
 const routes = [
   { path: '/', file: 'index.html' },
-  { path: '/business-automation', file: 'business-automation/index.html' },
-  { path: '/mobile-app-development', file: 'mobile-app-development/index.html' },
-  { path: '/web-application-development', file: 'web-application-development/index.html' },
-  { path: '/website-development', file: 'website-development/index.html' },
-  { path: '/seo-services', file: 'seo-services/index.html' },
+  { path: '/business-automation', file: 'business-automation.html' },
+  { path: '/mobile-app-development', file: 'mobile-app-development.html' },
+  { path: '/web-application-development', file: 'web-application-development.html' },
+  { path: '/website-development', file: 'website-development.html' },
+  { path: '/seo-services', file: 'seo-services.html' },
   
   // Automation sub-pages
-  { path: '/business-automation/sales-process-automation', file: 'business-automation/sales-process-automation/index.html' },
-  { path: '/business-automation/marketing-automation', file: 'business-automation/marketing-automation/index.html' },
-  { path: '/business-automation/customer-support-automation', file: 'business-automation/customer-support-automation/index.html' },
-  { path: '/business-automation/hr-automation', file: 'business-automation/hr-automation/index.html' },
-  { path: '/business-automation/finance-automation', file: 'business-automation/finance-automation/index.html' },
-  { path: '/business-automation/inventory-management-automation', file: 'business-automation/inventory-management-automation/index.html' },
+  { path: '/business-automation/sales-process-automation', file: 'business-automation/sales-process-automation.html' },
+  { path: '/business-automation/marketing-automation', file: 'business-automation/marketing-automation.html' },
+  { path: '/business-automation/customer-support-automation', file: 'business-automation/customer-support-automation.html' },
+  { path: '/business-automation/hr-automation', file: 'business-automation/hr-automation.html' },
+  { path: '/business-automation/finance-automation', file: 'business-automation/finance-automation.html' },
+  { path: '/business-automation/inventory-management-automation', file: 'business-automation/inventory-management-automation.html' },
   
   // Company pages
-  { path: '/learn-about-tepa', file: 'learn-about-tepa/index.html' },
-  { path: '/careers', file: 'careers/index.html' },
-  { path: '/events', file: 'events/index.html' },
-  { path: '/articles', file: 'articles/index.html' },
-  { path: '/investors', file: 'investors/index.html' },
-  { path: '/who-we-serve', file: 'who-we-serve/index.html' },
+  { path: '/learn-about-tepa', file: 'learn-about-tepa.html' },
+  { path: '/careers', file: 'careers.html' },
+  { path: '/events', file: 'events.html' },
+  { path: '/articles', file: 'articles.html' },
+  { path: '/investors', file: 'investors.html' },
+  { path: '/who-we-serve', file: 'who-we-serve.html' },
   
   // Contact pages
-  { path: '/contact-us/sales', file: 'contact-us/sales/index.html' },
-  { path: '/contact-us/support', file: 'contact-us/support/index.html' },
-  { path: '/contact-us/volunteer', file: 'contact-us/volunteer/index.html' },
-  { path: '/contact-us/event-hosting', file: 'contact-us/event-hosting/index.html' },
-  { path: '/contact-us/investors', file: 'contact-us/investors/index.html' },
+  { path: '/contact-us/sales', file: 'contact-us/sales.html' },
+  { path: '/contact-us/support', file: 'contact-us/support.html' },
+  { path: '/contact-us/volunteer', file: 'contact-us/volunteer.html' },
+  { path: '/contact-us/event-hosting', file: 'contact-us/event-hosting.html' },
+  { path: '/contact-us/investors', file: 'contact-us/investors.html' },
   
   // Sample article and event pages
-  { path: '/articles/how-ai-is-transforming-workforce-in-2025', file: 'articles/how-ai-is-transforming-workforce-in-2025/index.html' },
-  { path: '/events/introduction-to-how-to-make-a-roblox-game', file: 'events/introduction-to-how-to-make-a-roblox-game/index.html' },
+  { path: '/articles/how-ai-is-transforming-workforce-in-2025', file: 'articles/how-ai-is-transforming-workforce-in-2025.html' },
+  { path: '/events/introduction-to-how-to-make-a-roblox-game', file: 'events/introduction-to-how-to-make-a-roblox-game.html' },
   
   // Sample career page
-  { path: '/careers/frontend-developer-1', file: 'careers/frontend-developer-1/index.html' }
+  { path: '/careers/frontend-developer-1', file: 'careers/frontend-developer-1.html' }
 ];
 
 // Base HTML template that loads the React app with proper routing
@@ -227,7 +229,7 @@ function getPriority(path: string): string {
 }
 
 // Run the build
-if (require.main === module) {
+if (process.argv[1] && basename(fileURLToPath(import.meta.url)) === basename(process.argv[1])) {
   buildPages();
 }
 

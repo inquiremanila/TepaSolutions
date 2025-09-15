@@ -24,8 +24,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+
+    /* 👇 Add this */
+    "types": ["node"]
   },
-  "include": ["src"],
+  "include": ["src", "scripts"], // 👈 also include your build script folder if you move it
   "references": [{ "path": "./tsconfig.node.json" }]
 }
