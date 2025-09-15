@@ -65,10 +65,11 @@
         "vite": "6.3.5"
     },
     "scripts": {
+        "dev": "vite --host 0.0.0.0 --port 5000",
         "build": "npm run build:pages && vite-react-ssg build",
         "build:pages": "tsx src/build-pages.ts",
         "preview": "vite preview --host 0.0.0.0 --port 5000",
         "start": "serve -s dist -l 5000",
-        "deploy": "wrangler pages deploy ./dist"
+        "deploy": "wrangler pages deploy ./dist --project-name=tepasolutions"
     }
 }

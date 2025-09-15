@@ -183,17 +183,22 @@ function generateHTMLTemplate(route: { path: string; file: string }): string {
 </html>`;
 }
 
-// Create all HTML files in the root directory (not dist)
+// Create all HTML files in the dist directory (for SEO)
 function buildPages() {
   console.log('🚀 Building multi-page static site structure...');
   
+  // Ensure dist directory exists
+  if (!existsSync('dist')) {
+    mkdirSync('dist', { recursive: true });
+  }
+  
   routes.forEach(route => {
     const htmlContent = generateHTMLTemplate(route);
-    const filePath = route.file;
+    const filePath = join('dist', route.file);
     const fileDir = dirname(filePath);
     
     // Create directory if it doesn't exist
-    if (fileDir !== '.' && !existsSync(fileDir)) {
+    if (fileDir !== 'dist' && !existsSync(fileDir)) {
       mkdirSync(fileDir, { recursive: true });
     }
     

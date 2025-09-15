@@ -1,6 +1,6 @@
 {
-  "_client-n6P-UPds.js": {
-    "file": "assets/client-n6P-UPds.js",
+  "_client-DKB5fcN-.js": {
+    "file": "assets/client-DKB5fcN-.js",
     "name": "client",
     "isDynamicEntry": true,
     "imports": [
@@ -8,7 +8,7 @@
     ]
   },
   "index.html": {
-    "file": "assets/app-C2LYPgty.js",
+    "file": "assets/app-BXWwxLUP.js",
     "name": "app",
     "src": "index.html",
     "isEntry": true,
