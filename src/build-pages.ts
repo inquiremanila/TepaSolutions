@@ -91,7 +91,7 @@ function generateHTMLTemplate(route: { path: string; file: string; slug?: string
   
   <!-- PWA manifest -->
   <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#030213">
+  <meta name="theme-color" content="#ffffff">
   
   <!-- Apple PWA meta tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -99,7 +99,7 @@ function generateHTMLTemplate(route: { path: string; file: string; slug?: string
   <meta name="apple-mobile-web-app-title" content="Tepa Solutions">
   
   <!-- Microsoft PWA meta tags -->
-  <meta name="msapplication-TileColor" content="#030213">
+  <meta name="msapplication-TileColor" content="#ffffff>
   <meta name="msapplication-config" content="/browserconfig.xml">
   
   <!-- Additional SEO meta tags -->

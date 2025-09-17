@@ -1,108 +1,16 @@
 User-agent: *
 Allow: /
 
-# Main pages
-Allow: /bot/
-Allow: /services/
-Allow: /about/
-Allow: /contact/
-Allow: /careers/
-Allow: /events/
+# Important pages for crawling
+Allow: /business-automation
+Allow: /mobile-app-development  
+Allow: /web-application-development
 Allow: /articles/
-Allow: /investors/
-Allow: /automation/
-Allow: /volunteer-with-us/
+Allow: /events/
+Allow: /careers/
 
-# Service pages
-Allow: /mobile-app-development/
-Allow: /web-application-development/
-Allow: /website-development/
-Allow: /seo-services/
-Allow: /business-automation/
+# Sitemap location
+Sitemap: http://localhost:5173/sitemap.xml
 
-# Contact forms
-Allow: /contact-us/
-Allow: /volunteer-with-us/
-
-# Block admin and temporary files
-Disallow: /admin/
-Disallow: /temp/
-Disallow: *.tmp$
-Disallow: /private/
-Disallow: /api/
-Disallow: /temp_*
-
-# Block duplicate content
-Disallow: /*?*
-Disallow: /*&*
-Disallow: /search?*
-
-# Allow important resources
-Allow: /css/
-Allow: /js/
-Allow: /images/
-Allow: /assets/
-Allow: /*.css$
-Allow: /*.js$
-Allow: /*.png$
-Allow: /*.jpg$
-Allow: /*.jpeg$
-Allow: /*.gif$
-Allow: /*.svg$
-Allow: /*.webp$
-Allow: /*.ico$
-Allow: /*.woff$
-Allow: /*.woff2$
-
-# Crawl-delay for respectful crawling
+# Crawl-delay for polite crawling
 Crawl-delay: 1
-
-# Sitemap location (point to bot-specific sitemap)
-Sitemap: https://tepasolutions.asia/sitemap.xml
-
-# Special bot instructions
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 1
-Disallow: /bot/  # Don't crawl bot-specific paths
-
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 1
-Disallow: /bot/  # Don't crawl bot-specific paths
-
-User-agent: Slurp
-Allow: /
-Crawl-delay: 2
-Disallow: /bot/  # Don't crawl bot-specific paths
-
-# Social media crawlers
-User-agent: facebookexternalhit
-Allow: /
-Disallow: /bot/  # Don't crawl bot-specific paths
-
-User-agent: Twitterbot
-Allow: /
-Disallow: /bot/  # Don't crawl bot-specific paths
-
-User-agent: LinkedInBot
-Allow: /
-Disallow: /bot/  # Don't crawl bot-specific paths
-
-# Block problematic bots
-User-agent: CCBot
-Disallow: /
-
-User-agent: GPTBot
-Disallow: /
-
-User-agent: ChatGPT-User
-Disallow: /
-
-User-agent: AhrefsBot
-Crawl-delay: 10
-Disallow: /bot/  # Don't crawl bot-specific paths
-
-User-agent: SemrushBot
-Crawl-delay: 10
-Disallow: /bot/  # Don't crawl bot-specific paths

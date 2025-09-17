@@ -78,14 +78,6 @@ This is a React + TypeScript application for Tepa Solutions website, built with 
 - **Maintenance**: Run `npm run build:ssg` (using `vite-plugin-ssg`) to regenerate static SEO files in proper `dist/` structure.  
 - **Production Ready**: Deployed on CDN/edge hosting, optimized for fast bot crawling and smooth SPA navigation for users.  
 
-## Documentation Guides
-- **SEO Management**: Complete guide for updating content, regenerating SEO files, and deployment  
-- **Forms Configuration**: Comprehensive guide for modifying forms, validation, and backend integration  
-- **Located at**: `src/guides/` directory with detailed instructions for future maintenance  
 
 ## Notes
-- The project uses a custom router implementation instead of React Router  
-- Multiple page components for different service offerings  
-- Extensive use of Radix UI components for accessibility  
-- Configured for production deployment on static hosting/CDN  
-- Development server runs on Replit, production uses Cloudflare for global performance  
+- implemented modular builder , the site works in localhost but when pushed to production the site stuck on load network and source retuned 200 ok. Im using cloudflare for production.
