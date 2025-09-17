@@ -14,7 +14,6 @@ export const serviceRoutes: RouteConfig[] = [
       'business automation',
       'IT solutions Philippines'
       
-
     ],
     changeFreq: 'weekly',
     priority: '1.0',
@@ -47,7 +46,7 @@ export const serviceRoutes: RouteConfig[] = [
       'business automation Philippines',
       'workflow automation',
       'process automation Manila',
-
+      'automation services',
       'business efficiency'
     ],
     changeFreq: 'monthly',
