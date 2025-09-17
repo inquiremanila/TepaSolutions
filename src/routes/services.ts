@@ -23,7 +23,7 @@ export const serviceRoutes: RouteConfig[] = [
       "@type": "Organization",
       "name": "Tepa Solutions",
       "url": "https://tepasolutions.asia",
-      "logo": "https://tepasolutions.asia/logo.png",
+      "logo": "https://tepasolutions.asia/tepa.png",
       "description": "Web, mobile, and automation solutions provider in the Philippines.",
       "address": {
         "@type": "PostalAddress",

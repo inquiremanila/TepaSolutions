@@ -36,7 +36,7 @@ export const articleSeoData: Record<string, Omit<SEOData, 'canonical' | 'ogImage
         name: 'Tepa Solutions',
         logo: {
           "@type": 'ImageObject',
-          url: 'https://tepasolutions.asia/logo.png'
+          url: 'https://tepasolutions.asia/tepa.png'
         }
       },
       datePublished: '2025-01-20',
@@ -78,7 +78,7 @@ export const articleSeoData: Record<string, Omit<SEOData, 'canonical' | 'ogImage
         name: 'Tepa Solutions',
         logo: {
           "@type": 'ImageObject',
-          url: 'https://tepasolutions.asia/logo.png'
+          url: 'https://tepasolutions.asia/tepa.png'
         }
       },
       datePublished: '2025-01-18',
@@ -121,7 +121,7 @@ export const articleSeoData: Record<string, Omit<SEOData, 'canonical' | 'ogImage
         name: 'Tepa Solutions',
         logo: {
           "@type": 'ImageObject',
-          url: 'https://tepasolutions.asia/logo.png'
+          url: 'https://tepasolutions.asia/tepa.png'
         }
       },
       datePublished: '2025-01-16',
@@ -163,7 +163,7 @@ export const articleSeoData: Record<string, Omit<SEOData, 'canonical' | 'ogImage
         name: 'Tepa Solutions',
         logo: {
           "@type": 'ImageObject',
-          url: 'https://tepasolutions.asia/logo.png'
+          url: 'https://tepasolutions.asia/tepa.png'
         }
       },
       datePublished: '2025-01-14',
@@ -721,7 +721,7 @@ export function generateArticleSEO(slug: string, title: string, excerpt: string,
         'name': 'Tepa Solutions',
         'logo': {
           '@type': 'ImageObject',
-          'url': 'https://tepasolutions.asia/logo.png'
+          'url': 'https://tepasolutions.asia/tepa.png'
         }
       },
       'datePublished': publishDate,

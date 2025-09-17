@@ -17,7 +17,7 @@ export const companySeoData: Record<string, Omit<SEOData, 'canonical' | 'ogImage
       '@type': 'Organization',
       'name': 'Tepa Solutions',
       'url': 'https://tepasolutions.asia',
-      'logo': 'https://tepasolutions.asia/logo.png',
+      'logo': 'https://tepasolutions.asia/tepa.png',
       'description': 'Leading digital Provider in the Philippines',
       'address': {
         '@type': 'PostalAddress',
