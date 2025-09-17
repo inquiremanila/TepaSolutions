@@ -1,291 +1,252 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <url>
     <loc>http://localhost:5173/</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/og-home.jpg</image:loc>
-      <image:title>Web, Mobile App & Automation Provider in the Philippines</image:title>
-      <image:caption>Web, mobile, and automation solutions in the Philippines. Trusted by businesses to build apps, websites, and digital growth tools.</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>http://localhost:5173/business-automation</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/services/business-automation-og.jpg</image:loc>
-      <image:title>Business Automation Services | Process Optimization | Tepa Solutions</image:title>
-      <image:caption>Streamline operations with intelligent business automation. Sales, marketing, HR, finance automation solutions for companies worldwide. Get free consultation.</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>http://localhost:5173/mobile-app-development</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/services/mobile-app-og.jpg</image:loc>
-      <image:title>Mobile App Development Services | iOS & Android Apps | Tepa Solutions</image:title>
-      <image:caption>Custom mobile app development for iOS and Android. Native and cross-platform solutions for startups and enterprises across US, UK, AU, PH and globally.</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>http://localhost:5173/web-application-development</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/services/web-app-og.jpg</image:loc>
-      <image:title>Web Application Development | Custom Web Apps | Tepa Solutions</image:title>
-      <image:caption>Build powerful web applications with modern frameworks. React, Node.js, Python, and cloud solutions for businesses worldwide.</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>http://localhost:5173/website-development</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/services/website-dev-og.jpg</image:loc>
-      <image:title>Professional Website Development | Modern Web Design | Tepa Solutions</image:title>
-      <image:caption>Create stunning, responsive websites that convert. E-commerce, corporate, and portfolio websites with SEO optimization and modern design.</image:caption>
-    </image:image>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>http://localhost:5173/seo-services</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/services/seo-services-og.jpg</image:loc>
-      <image:title>Professional SEO Services | Search Engine Optimization | Tepa Solutions</image:title>
-      <image:caption>Boost your online visibility with expert SEO services. Keyword research, on-page optimization, link building, and local SEO for global reach.</image:caption>
-    </image:image>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>http://localhost:5173/business-automation/sales-process-automation</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/services/business-automation-og.jpg</image:loc>
-      <image:title>Business Automation Services | Process Optimization | Tepa Solutions</image:title>
-      <image:caption>Streamline operations with intelligent business automation. Sales, marketing, HR, finance automation solutions for companies worldwide. Get free consultation.</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>http://localhost:5173/business-automation/marketing-automation</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/services/business-automation-og.jpg</image:loc>
-      <image:title>Business Automation Services | Process Optimization | Tepa Solutions</image:title>
-      <image:caption>Streamline operations with intelligent business automation. Sales, marketing, HR, finance automation solutions for companies worldwide. Get free consultation.</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>http://localhost:5173/business-automation/customer-support-automation</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/services/business-automation-og.jpg</image:loc>
-      <image:title>Business Automation Services | Process Optimization | Tepa Solutions</image:title>
-      <image:caption>Streamline operations with intelligent business automation. Sales, marketing, HR, finance automation solutions for companies worldwide. Get free consultation.</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>http://localhost:5173/business-automation/hr-automation</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/services/business-automation-og.jpg</image:loc>
-      <image:title>Business Automation Services | Process Optimization | Tepa Solutions</image:title>
-      <image:caption>Streamline operations with intelligent business automation. Sales, marketing, HR, finance automation solutions for companies worldwide. Get free consultation.</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>http://localhost:5173/business-automation/finance-automation</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/services/business-automation-og.jpg</image:loc>
-      <image:title>Business Automation Services | Process Optimization | Tepa Solutions</image:title>
-      <image:caption>Streamline operations with intelligent business automation. Sales, marketing, HR, finance automation solutions for companies worldwide. Get free consultation.</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>http://localhost:5173/business-automation/inventory-management-automation</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/services/business-automation-og.jpg</image:loc>
-      <image:title>Business Automation Services | Process Optimization | Tepa Solutions</image:title>
-      <image:caption>Streamline operations with intelligent business automation. Sales, marketing, HR, finance automation solutions for companies worldwide. Get free consultation.</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>http://localhost:5173/learn-about-tepa</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/company/about-og.jpg</image:loc>
-      <image:title>About Tepa Solutions | Digital Transformation Experts | Our Story</image:title>
-      <image:caption>Learn about Tepa Solutions - your trusted partner in digital transformation. Discover our mission, values, and commitment to innovation across global markets.</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>http://localhost:5173/careers</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/company/careers-og.jpg</image:loc>
-      <image:title>Careers at Tepa Solutions | Join Our Remote-First Team</image:title>
-      <image:caption>Join Tepa Solutions and shape the future of digital transformation. Remote opportunities worldwide in development, automation, and digital marketing.</image:caption>
-    </image:image>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>http://localhost:5173/events</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/og-home.jpg</image:loc>
-      <image:title>Web, Mobile App & Automation Provider in the Philippines</image:title>
-      <image:caption>Web, mobile, and automation solutions in the Philippines. Trusted by businesses to build apps, websites, and digital growth tools.</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>http://localhost:5173/articles</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/og-home.jpg</image:loc>
-      <image:title>Web, Mobile App & Automation Provider in the Philippines</image:title>
-      <image:caption>Web, mobile, and automation solutions in the Philippines. Trusted by businesses to build apps, websites, and digital growth tools.</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>http://localhost:5173/investors</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/og-home.jpg</image:loc>
-      <image:title>Web, Mobile App & Automation Provider in the Philippines</image:title>
-      <image:caption>Web, mobile, and automation solutions in the Philippines. Trusted by businesses to build apps, websites, and digital growth tools.</image:caption>
-    </image:image>
   </url>
   <url>
     <loc>http://localhost:5173/who-we-serve</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/company/clients-og.jpg</image:loc>
-      <image:title>Industries We Serve | Tepa Solutions Client Portfolio</image:title>
-      <image:caption>Tepa Solutions serves startups, SMBs, and enterprises across various industries with tailored digital transformation and automation solutions.</image:caption>
-    </image:image>
   </url>
   <url>
-    <loc>http://localhost:5173/contact-us/sales</loc>
-    <lastmod>2025-09-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/contact/sales-og.jpg</image:loc>
-      <image:title>Contact Sales | Get Quote | Tepa Solutions</image:title>
-      <image:caption>Ready to transform your business? Contact our sales team for a free consultation and custom quote. Available worldwide with 24/7 support.</image:caption>
-    </image:image>
-  </url>
-  <url>
-    <loc>http://localhost:5173/contact-us/support</loc>
+    <loc>http://localhost:5173/volunteer-with-us</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/contact/support-og.jpg</image:loc>
-      <image:title>Technical Support | Help Center | Tepa Solutions</image:title>
-      <image:caption>Get expert technical support for your projects. Our global support team is ready to help with any technical issues or questions.</image:caption>
-    </image:image>
   </url>
   <url>
-    <loc>http://localhost:5173/contact-us/volunteer</loc>
+    <loc>http://localhost:5173/contact/sales</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/contact/volunteer-og.jpg</image:loc>
-      <image:title>Volunteer Opportunities | Community Impact | Tepa Solutions</image:title>
-      <image:caption>Join our community initiatives and make a difference. Volunteer opportunities in tech education, digital literacy, and community development.</image:caption>
-    </image:image>
   </url>
   <url>
-    <loc>http://localhost:5173/contact-us/event-hosting</loc>
+    <loc>http://localhost:5173/contact/support</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/og-home.jpg</image:loc>
-      <image:title>Web, Mobile App & Automation Provider in the Philippines</image:title>
-      <image:caption>Web, mobile, and automation solutions in the Philippines. Trusted by businesses to build apps, websites, and digital growth tools.</image:caption>
-    </image:image>
   </url>
   <url>
-    <loc>http://localhost:5173/contact-us/investors</loc>
+    <loc>http://localhost:5173/contact/event-hosting</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/og-home.jpg</image:loc>
-      <image:title>Web, Mobile App & Automation Provider in the Philippines</image:title>
-      <image:caption>Web, mobile, and automation solutions in the Philippines. Trusted by businesses to build apps, websites, and digital growth tools.</image:caption>
-    </image:image>
   </url>
   <url>
-    <loc>http://localhost:5173/articles/how-ai-is-transforming-workforce-in-2025</loc>
+    <loc>http://localhost:5173/contact/investors</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>http://localhost:5173/articles/iphone-17-review-philippines-pricing-release</loc>
+    <lastmod>2025-09-17</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/blog/default-article-og.jpg</image:loc>
-      <image:title>Articles & Insights | Tepa Solutions</image:title>
-      <image:caption>Read the latest insights on digital transformation, business automation, and technology trends from Tepa Solutions experts.</image:caption>
-    </image:image>
   </url>
   <url>
-    <loc>http://localhost:5173/events/introduction-to-how-to-make-a-roblox-game</loc>
+    <loc>http://localhost:5173/articles/quantum-chip-technology-breakthrough-2025</loc>
     <lastmod>2025-09-17</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/events/default-event-og.jpg</image:loc>
-      <image:title>Events & Workshops | Tepa Solutions</image:title>
-      <image:caption>Join Tepa Solutions events, workshops, and training sessions on digital transformation and technology innovation.</image:caption>
-    </image:image>
   </url>
   <url>
-    <loc>http://localhost:5173/careers/frontend-developer-1</loc>
+    <loc>http://localhost:5173/articles/big-tech-news-2025-major-developments</loc>
+    <lastmod>2025-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost:5173/articles/top-10-ai-video-generation-tools-comparison-2025</loc>
+    <lastmod>2025-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost:5173/events/free-introduction-roblox-game-development</loc>
+    <lastmod>2025-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost:5173/events/introduction-to-html-and-css</loc>
+    <lastmod>2025-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost:5173/events/introduction-to-website-funnel</loc>
+    <lastmod>2025-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost:5173/careers/intern-frontend-developer</loc>
     <lastmod>2025-09-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-    <image:image>
-      <image:loc>http://localhost:5173/careers/default-career-og.jpg</image:loc>
-      <image:title>Career Opportunities | Tepa Solutions</image:title>
-      <image:caption>Explore career opportunities at Tepa Solutions. Join our global team working on cutting-edge digital transformation projects.</image:caption>
-    </image:image>
+  </url>
+  <url>
+    <loc>http://localhost:5173/careers/intern-backend-developer</loc>
+    <lastmod>2025-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:5173/careers/intern-article-writer</loc>
+    <lastmod>2025-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:5173/careers/intern-seo-specialist</loc>
+    <lastmod>2025-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:5173/careers/intern-admin-assistant</loc>
+    <lastmod>2025-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:5173/careers/intern-business-development</loc>
+    <lastmod>2025-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:5173/careers/contract-fullstack-developer</loc>
+    <lastmod>2025-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:5173/careers/contract-mobile-app-developer</loc>
+    <lastmod>2025-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:5173/careers/contract-android-developer</loc>
+    <lastmod>2025-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:5173/careers/contract-ios-developer</loc>
+    <lastmod>2025-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:5173/careers/contract-backend-developer</loc>
+    <lastmod>2025-09-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

@@ -1,8 +1,8 @@
-// Enhanced multi-page build script with SEO optimization
+// Enhanced multi-page build script with comprehensive SEO
 import { writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
-import { getSEOConfig, generateStructuredData, COMPANY_INFO, type SEOConfig } from './build-page.ts';
+import { generateSEOData, generateMetaTags, getSitemapData } from './seo-generator';
 
 // Define all routes that need individual HTML files
 const routes = [
@@ -28,138 +28,95 @@ const routes = [
   { path: '/articles', file: 'articles.html' },
   { path: '/investors', file: 'investors.html' },
   { path: '/who-we-serve', file: 'who-we-serve.html' },
+  { path: '/volunteer-with-us', file: 'volunteer-with-us.html' },
   
   // Contact pages
-  { path: '/contact-us/sales', file: 'contact-us/sales.html' },
-  { path: '/contact-us/support', file: 'contact-us/support.html' },
-  { path: '/contact-us/volunteer', file: 'contact-us/volunteer.html' },
-  { path: '/contact-us/event-hosting', file: 'contact-us/event-hosting.html' },
-  { path: '/contact-us/investors', file: 'contact-us/investors.html' },
+  { path: '/contact/sales', file: 'contact/sales.html' },
+  { path: '/contact/support', file: 'contact/support.html' },
+  { path: '/contact/event-hosting', file: 'contact/event-hosting.html' },
+  { path: '/contact/investors', file: 'contact/investors.html' },
   
-  // Sample dynamic pages (these would be generated dynamically in real app)
-  { path: '/articles/how-ai-is-transforming-workforce-in-2025', file: 'articles/how-ai-is-transforming-workforce-in-2025.html' },
-  { path: '/events/introduction-to-how-to-make-a-roblox-game', file: 'events/introduction-to-how-to-make-a-roblox-game.html' },
-  { path: '/careers/frontend-developer-1', file: 'careers/frontend-developer-1.html' }
+  // dynamic pages
+  { path: '/articles/iphone-17-review-philippines-pricing-release', file: 'articles/iphone-17-review-philippines-pricing-release.html', slug: 'iphone-17-review-philippines-pricing-release' },
+  { path: '/articles/quantum-chip-technology-breakthrough-2025', file: 'articles/quantum-chip-technology-breakthrough-2025.html', slug: 'quantum-chip-technology-breakthrough-2025' },
+  { path: '/articles/big-tech-news-2025-major-developments', file: 'articles/big-tech-news-2025-major-developments.html', slug: 'big-tech-news-2025-major-developments' },
+  { path: '/articles/top-10-ai-video-generation-tools-comparison-2025', file: 'articles/top-10-ai-video-generation-tools-comparison-2025.html', slug: 'top-10-ai-video-generation-tools-comparison-2025' },
+  { path: '/events/free-introduction-roblox-game-development', file: 'events/free-introduction-roblox-game-development.html', slug: 'free-introduction-roblox-game-development' },
+  { path: '/events/introduction-to-html-and-css', file: 'events/introduction-to-html-and-css.html', slug: 'introduction-to-html-and-css' },
+  { path: '/events/introduction-to-website-funnel', file: 'events/introduction-to-website-funnel.html', slug: 'introduction-to-website-funnel' },
+  { path: '/careers/intern-frontend-developer', file: 'careers/intern-frontend-developer.html', slug: 'intern-frontend-developer' },
+  { path: '/careers/intern-backend-developer', file: 'careers/intern-backend-developer.html', slug: 'intern-backend-developer' },
+  { path: '/careers/intern-article-writer', file: 'careers/intern-article-writer.html', slug: 'intern-article-writer' },
+  { path: '/careers/intern-seo-specialist', file: 'careers/intern-seo-specialist.html', slug: 'intern-seo-specialist' },
+  { path: '/careers/intern-admin-assistant', file: 'careers/intern-admin-assistant.html', slug: 'intern-admin-assistant' },
+  { path: '/careers/intern-business-development', file: 'careers/intern-business-development.html', slug: 'intern-business-development' },
+  { path: '/careers/contract-fullstack-developer', file: 'careers/contract-fullstack-developer.html', slug: 'contract-fullstack-developer' },
+  { path: '/careers/contract-mobile-app-developer', file: 'careers/contract-mobile-app-developer.html', slug: 'contract-mobile-app-developer' },
+  { path: '/careers/contract-android-developer', file: 'careers/contract-android-developer.html', slug: 'contract-android-developer' },
+  { path: '/careers/contract-ios-developer', file: 'careers/contract-ios-developer.html', slug: 'contract-ios-developer' },
+  { path: '/careers/contract-backend-developer', file: 'careers/contract-backend-developer.html', slug: 'contract-backend-developer' }
 ];
 
 // Enhanced HTML template with comprehensive SEO
-function generateHTMLTemplate(route: { path: string; file: string }): string {
+function generateHTMLTemplate(route: { path: string; file: string; slug?: string }): string {
   const isProduction = process.env.NODE_ENV === 'production';
-  const baseUrl = isProduction ? COMPANY_INFO.url : 'http://localhost:5173';
+  const baseUrl = isProduction ? 'https://tepasolutions.asia' : 'http://localhost:5173';
   
-  // Get SEO configuration for this route
-  const seoConfig = getSEOConfig(route.path);
-  
-  // Generate structured data
-  const structuredData = generateStructuredData(seoConfig, route.path);
-  
-  // Create meta keywords string
-  const keywords = seoConfig.keywords.join(', ');
-  const areaServing = seoConfig.areaServing.join(', ');
-  
-  // Generate Open Graph image URL
-  const ogImage = seoConfig.image ? `${baseUrl}${seoConfig.image}` : `${baseUrl}/og-default.jpg`;
+  // Generate SEO data for this route
+  const seoData = generateSEOData(route.path, route.slug);
+  const metaTags = generateMetaTags(seoData);
   
   return `<!DOCTYPE html>
 <html lang="en" prefix="og: https://ogp.me/ns#">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
   
-  <!-- Favicon and App Icons -->
-  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
-  <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
+  ${metaTags}
   
-  <!-- Primary SEO Meta Tags -->
-  <title>${seoConfig.title}</title>
-  <meta name="title" content="${seoConfig.title}" />
-  <meta name="description" content="${seoConfig.description}" />
-  <meta name="keywords" content="${keywords}" />
-  <meta name="author" content="${seoConfig.author || COMPANY_INFO.name}" />
+  <!-- Preconnect to external domains for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
-  <!-- Geographic and Service Area Meta Tags -->
-  <meta name="geo.region" content="PH" />
-  <meta name="geo.country" content="Philippines" />
-  <meta name="geo.placename" content="Philippines" />
-  <meta name="service-area" content="${areaServing}" />
+  <!-- PWA manifest -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#030213">
   
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="${seoConfig.type === 'article' ? 'article' : 'website'}" />
-  <meta property="og:site_name" content="${COMPANY_INFO.name}" />
-  <meta property="og:title" content="${seoConfig.title}" />
-  <meta property="og:description" content="${seoConfig.description}" />
-  <meta property="og:image" content="${ogImage}" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="${seoConfig.title}" />
-  <meta property="og:url" content="${baseUrl}${route.path}" />
-  <meta property="og:locale" content="en_US" />
-  ${seoConfig.publishDate ? `<meta property="article:published_time" content="${seoConfig.publishDate}" />` : ''}
-  ${seoConfig.modifiedDate ? `<meta property="article:modified_time" content="${seoConfig.modifiedDate}" />` : ''}
-  ${seoConfig.author ? `<meta property="article:author" content="${seoConfig.author}" />` : ''}
+  <!-- Apple PWA meta tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Tepa Solutions">
   
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content="@tepasolutions" />
-  <meta name="twitter:creator" content="@tepasolutions" />
-  <meta name="twitter:title" content="${seoConfig.title}" />
-  <meta name="twitter:description" content="${seoConfig.description}" />
-  <meta name="twitter:image" content="${ogImage}" />
-  <meta name="twitter:image:alt" content="${seoConfig.title}" />
+  <!-- Microsoft PWA meta tags -->
+  <meta name="msapplication-TileColor" content="#030213">
+  <meta name="msapplication-config" content="/browserconfig.xml">
   
-  <!-- Additional Meta Tags -->
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-  <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1" />
-  <meta name="format-detection" content="telephone=no" />
-  <meta name="theme-color" content="#030213" />
-  <meta http-equiv="content-language" content="en" />
-  <meta name="language" content="English" />
-  <meta name="revisit-after" content="7 days" />
-  <meta name="distribution" content="global" />
-  <meta name="rating" content="general" />
-  ${seoConfig.category ? `<meta name="category" content="${seoConfig.category}" />` : ''}
-  ${seoConfig.noPrice ? `<meta name="price" content="false" />` : ''}
-  ${seoConfig.noSalary ? `<meta name="salary" content="false" />` : ''}
+  <!-- Additional SEO meta tags -->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1">
   
-  <!-- Canonical URL -->
-  <link rel="canonical" href="${baseUrl}${route.path}" />
+  <!-- Geographic meta tags -->
+  <meta name="geo.region" content="PH">
+  <meta name="geo.country" content="Philippines">
+  <meta name="geo.placename" content="Philippines">
   
-  <!-- Alternate Language Versions (if available) -->
-  <link rel="alternate" hreflang="en" href="${baseUrl}${route.path}" />
-  <link rel="alternate" hreflang="x-default" href="${baseUrl}${route.path}" />
+  <!-- Language and locale -->
+  <meta http-equiv="content-language" content="en">
+  <meta name="language" content="English">
   
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="/manifest.json" />
+  <!-- DNS prefetch for performance -->
+  <link rel="dns-prefetch" href="//tepasolutions.asia">
+  <link rel="dns-prefetch" href="//www.google-analytics.com">
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
   
-  <!-- Apple PWA Meta Tags -->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="${COMPANY_INFO.name}" />
-  
-  <!-- Microsoft PWA Meta Tags -->
-  <meta name="msapplication-TileColor" content="#030213" />
-  <meta name="msapplication-config" content="/browserconfig.xml" />
-  
-  <!-- Preconnect for Performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="dns-prefetch" href="//tepasolutions.asia" />
-  <link rel="dns-prefetch" href="//www.google-analytics.com" />
-  <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-  
-  <!-- Structured Data (JSON-LD) -->
-  <script type="application/ld+json">
-${JSON.stringify(structuredData, null, 2)}
-  </script>
+  <!-- Preload critical resources -->
+  <link rel="preload" href="/src/main.tsx" as="script">
   
   <!-- Initial page route for React router -->
   <script>
     window.__INITIAL_ROUTE__ = '${route.path}';
-    window.__SEO_CONFIG__ = ${JSON.stringify(seoConfig)};
+    window.__SEO_DATA__ = ${JSON.stringify(seoData)};
   </script>
   
   <!-- Critical CSS -->
@@ -171,13 +128,6 @@ ${JSON.stringify(structuredData, null, 2)}
       line-height: 1.6;
       background-color: #ffffff;
       color: #1a1a1a;
-      font-size: 16px;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-    
-    * {
-      box-sizing: border-box;
     }
     
     /* Loading state */
@@ -203,12 +153,6 @@ ${JSON.stringify(structuredData, null, 2)}
       animation: spin 1s linear infinite;
     }
     
-    .loading-text {
-      margin-top: 1rem;
-      color: #666;
-      font-size: 14px;
-    }
-    
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -219,43 +163,11 @@ ${JSON.stringify(structuredData, null, 2)}
       display: none;
     }
     
-    /* Basic responsive grid */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1rem;
-    }
-    
-    @media (max-width: 768px) {
-      .container {
-        padding: 0 0.75rem;
-      }
-    }
-    
-    /* Accessibility improvements */
-    .sr-only {
+    /* SEO-friendly content preview */
+    .seo-content {
       position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-    
-    /* Focus styles for accessibility */
-    :focus {
-      outline: 2px solid #030213;
-      outline-offset: 2px;
-    }
-    
-    /* Print styles */
-    @media print {
-      .loading-container {
-        display: none !important;
-      }
+      left: -9999px;
+      top: -9999px;
     }
   </style>
 </head>
@@ -263,26 +175,14 @@ ${JSON.stringify(structuredData, null, 2)}
   <div id="root">
     <!-- Loading state shown while React app loads -->
     <div class="loading-container">
-      <div>
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Loading ${COMPANY_INFO.name}...</div>
-      </div>
+      <div class="loading-spinner"></div>
     </div>
     
-    <!-- SEO-friendly fallback content for crawlers -->
-    <noscript>
-      <div class="container">
-        <header>
-          <h1>${seoConfig.title}</h1>
-          <p>${seoConfig.description}</p>
-        </header>
-        <main>
-          <p>Welcome to ${COMPANY_INFO.name}. We provide digital transformation and business automation solutions worldwide.</p>
-          <p>Service Areas: ${seoConfig.areaServing.slice(0, 10).join(', ')}${seoConfig.areaServing.length > 10 ? ', and more...' : ''}</p>
-          <p>Contact us at ${COMPANY_INFO.email} or visit our website with JavaScript enabled for the full experience.</p>
-        </main>
-      </div>
-    </noscript>
+    <!-- SEO-friendly content preview for crawlers -->
+    <div class="seo-content">
+      <h1>${seoData.title}</h1>
+      <p>${seoData.description}</p>
+    </div>
   </div>
   
   <!-- React app entry point -->
@@ -303,125 +203,65 @@ ${JSON.stringify(structuredData, null, 2)}
     }
   </script>
   
-  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- Analytics placeholder -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'GA_MEASUREMENT_ID', {
-      page_title: '${seoConfig.title}',
-      page_location: '${baseUrl}${route.path}',
-      content_group1: '${seoConfig.type || 'website'}',
-      content_group2: '${seoConfig.category || 'General'}'
-    });
-  </script>
-  
-  <!-- Schema.org breadcrumbs for better navigation -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": ${JSON.stringify(generateBreadcrumbs(route.path))}
-  }
+    gtag('config', 'GA_MEASUREMENT_ID');
   </script>
 </body>
 </html>`;
 }
 
-// Generate breadcrumbs for structured data
-function generateBreadcrumbs(path: string): Array<object> {
-  const breadcrumbs = [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": COMPANY_INFO.url
-    }
-  ];
-
-  const pathParts = path.split('/').filter(Boolean);
-  let currentPath = '';
-  
-  pathParts.forEach((part, index) => {
-    currentPath += '/' + part;
-    const name = part.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-    
-    breadcrumbs.push({
-      "@type": "ListItem",
-      "position": index + 2,
-      "name": name,
-      "item": `${COMPANY_INFO.url}${currentPath}`
-    });
-  });
-
-  return breadcrumbs;
-}
-
-// Generate sitemap.xml
+// Generate XML sitemap
 function generateSitemap(): string {
-  const isProduction = process.env.NODE_ENV === 'production';
-  const baseUrl = isProduction ? COMPANY_INFO.url : 'http://localhost:5173';
+  const baseUrl = process.env.NODE_ENV === 'production' ? 'https://tepasolutions.asia' : 'http://localhost:5173';
+  const currentDate = new Date().toISOString().split('T')[0];
   
   const urls = routes.map(route => {
-    const seoConfig = getSEOConfig(route.path);
-    const priority = getPriority(route.path);
-    const changeFreq = getChangeFreq(route.path);
-    const lastMod = new Date().toISOString().split('T')[0];
-    
+    const { priority, changefreq } = getSitemapData(route.path);
     return `  <url>
     <loc>${baseUrl}${route.path}</loc>
-    <lastmod>${lastMod}</lastmod>
-    <changefreq>${changeFreq}</changefreq>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
-    <image:image>
-      <image:loc>${baseUrl}${seoConfig.image || '/og-default.jpg'}</image:loc>
-      <image:title>${seoConfig.title}</image:title>
-      <image:caption>${seoConfig.description}</image:caption>
-    </image:image>
   </url>`;
   }).join('\n');
-
+  
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 ${urls}
 </urlset>`;
 }
 
 // Generate robots.txt
 function generateRobotsTxt(): string {
-  const isProduction = process.env.NODE_ENV === 'production';
-  const baseUrl = isProduction ? COMPANY_INFO.url : 'http://localhost:5173';
+  const baseUrl = process.env.NODE_ENV === 'production' ? 'https://tepasolutions.asia' : 'http://localhost:5173';
   
   return `User-agent: *
 Allow: /
 
-# Sitemaps
-Sitemap: ${baseUrl}/sitemap.xml
-
-# Crawl-delay
-Crawl-delay: 1
-
-# Disallow admin paths (if any)
-Disallow: /admin/
-Disallow: /private/
-Disallow: /_next/
-Disallow: /api/
-
-# Allow important paths
+# Important pages for crawling
+Allow: /business-automation
+Allow: /mobile-app-development
+Allow: /web-application-development
 Allow: /articles/
 Allow: /events/
 Allow: /careers/
-Allow: /services/
-Allow: /business-automation/
 
-# Host
-Host: ${baseUrl}`;
+# Sitemap location
+Sitemap: ${baseUrl}/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1`;
 }
 
-// Create all HTML files and SEO files
+// Main build function
 function buildPages() {
   console.log('🚀 Building enhanced multi-page static site with SEO...');
   
@@ -458,46 +298,21 @@ function buildPages() {
   
   console.log('🎉 Enhanced multi-page build with SEO complete!');
   console.log(`📄 Generated ${routes.length} HTML pages with comprehensive SEO`);
-  console.log('🔍 Each page includes:');
-  console.log('   • Meta tags (title, description, keywords)');
-  console.log('   • Open Graph & Twitter Card tags');
-  console.log('   • Structured data (JSON-LD)');
-  console.log('   • Service area coverage (US, UK, AU, PH + worldwide)');
-  console.log('   • Proper favicon and app icons');
-  console.log('   • Sitemap and robots.txt');
-  console.log('   • Dynamic content support (no hardcoded data)');
+  console.log('🔍 Each page is fully optimized for search engines');
+  console.log('🗺️  XML sitemap generated for better crawling');
+  console.log('🤖 Robots.txt configured for optimal indexing');
   console.log('');
-  console.log('SEO Features:');
-  console.log('🌍 Global service areas included');
-  console.log('🏷️  Dynamic keywords and descriptions');
-  console.log('🚫 Price/salary exclusion for appropriate pages');
-  console.log('📱 Mobile and PWA optimization');
-  console.log('♿ Accessibility enhancements');
+  console.log('SEO Features Included:');
+  console.log('• Comprehensive meta tags (title, description, keywords)');
+  console.log('• Open Graph tags for social media sharing');
+  console.log('• Twitter Card optimization');
+  console.log('• JSON-LD structured data');
+  console.log('• Canonical URLs and proper robots directives');
+  console.log('• XML sitemap with priorities and change frequencies');
   console.log('');
   console.log('Next steps:');
-  console.log('1. Add the required icon files to /public/');
-  console.log('2. Update GA_MEASUREMENT_ID in the template');
-  console.log('3. Run "npm run build" to build the React app');
-  console.log('4. Run "npm run deploy" to deploy to Cloudflare Pages');
-}
-
-function getChangeFreq(path: string): string {
-  if (path === '/') return 'weekly';
-  if (path.includes('/articles/') || path.includes('/events/')) return 'monthly';
-  if (path.includes('/careers/')) return 'weekly';
-  if (path.includes('/contact-us/')) return 'monthly';
-  if (path.includes('/business-automation') || path.includes('/seo-services')) return 'monthly';
-  return 'monthly';
-}
-
-function getPriority(path: string): string {
-  if (path === '/') return '1.0';
-  if (path.includes('/business-automation') || path.includes('/mobile-app') || path.includes('/web-application')) return '0.9';
-  if (path.includes('/contact-us/sales')) return '0.8';
-  if (path.includes('/learn-about-tepa') || path.includes('/careers')) return '0.8';
-  if (path.includes('/seo-services') || path.includes('/website-development')) return '0.8';
-  if (path.includes('/articles/') || path.includes('/events/')) return '0.7';
-  return '0.6';
+  console.log('1. Run "npm run build" to build the React app');
+  console.log('2. Run "npm run deploy" to deploy to Cloudflare Pages');
 }
 
 // Run the build
@@ -505,4 +320,4 @@ if (process.argv[1] && basename(fileURLToPath(import.meta.url)) === basename(pro
   buildPages();
 }
 
-export { buildPages, routes, generateHTMLTemplate, getSEOConfig };
+export { buildPages, routes };
