@@ -5,13 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
   
-  <!-- SEO DEBUG INFO
-    Route: /contact/sales
-    File: contact/sales.html
-    Slug: none
-    Generated at: 2025-09-17T13:31:56.959Z
-  -->
-  
   <!-- Primary Meta Tags -->
   <title>Tepa Solutions - Digital Innovation & Business Automation</title>
   <meta name="title" content="Tepa Solutions - Digital Innovation & Business Automation">
@@ -50,7 +43,7 @@
   
   <!-- PWA manifest -->
   <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#030213">
   
   <!-- Apple PWA meta tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -58,7 +51,7 @@
   <meta name="apple-mobile-web-app-title" content="Tepa Solutions">
   
   <!-- Microsoft PWA meta tags -->
-  <meta name="msapplication-TileColor" content="#ffffff>
+  <meta name="msapplication-TileColor" content="#030213">
   <meta name="msapplication-config" content="/browserconfig.xml">
   
   <!-- Additional SEO meta tags -->
@@ -80,31 +73,16 @@
   <link rel="dns-prefetch" href="//fonts.googleapis.com">
   
   <!-- Preload critical resources -->
-  <link rel="preload" href="/src/main.tsx" as="script">
+  <link rel="stylesheet" href="/assets/main-D6COm7wM.css">
+  <link rel="preload" href="/assets/main-C7ZFTbOx.js" as="script" crossorigin>
   
   <!-- Initial page route for React router -->
   <script>
     window.__INITIAL_ROUTE__ = '/contact/sales';
-    window.__SEO_DATA__ = {
-  "title": "Tepa Solutions - Digital Innovation & Business Automation",
-  "description": "Transform your business with cutting-edge digital solutions. Expert web development, mobile apps, and automation services in the Philippines.",
-  "keywords": [
-    "digital solutions",
-    "business automation",
-    "web development",
-    "mobile apps",
-    "Philippines",
-    "technology"
-  ],
-  "canonical": "http://localhost:5173/contact/sales",
-  "ogImage": "http://localhost:5173/og-tepa-default.jpg",
-  "twitterImage": "http://localhost:5173/twitter-tepa-default.jpg",
-  "robots": "index, follow"
-};
-    window.__DEBUG_SEO__ = true;
+    window.__SEO_DATA__ = {"title":"Tepa Solutions - Digital Innovation & Business Automation","description":"Transform your business with cutting-edge digital solutions. Expert web development, mobile apps, and automation services in the Philippines.","keywords":["digital solutions","business automation","web development","mobile apps","Philippines","technology"],"canonical":"http://localhost:5173/contact/sales","ogImage":"http://localhost:5173/og-tepa-default.jpg","twitterImage":"http://localhost:5173/twitter-tepa-default.jpg","robots":"index, follow"};
   </script>
   
-  <!-- Critical CSS with loading states -->
+  <!-- Critical CSS -->
   <style>
     /* Critical above-the-fold styles */
     body {
@@ -127,7 +105,6 @@
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      flex-direction: column;
     }
     
     .loading-spinner {
@@ -137,12 +114,6 @@
       border-top: 3px solid #030213;
       border-radius: 50%;
       animation: spin 1s linear infinite;
-      margin-bottom: 16px;
-    }
-    
-    .loading-text {
-      color: #6b7280;
-      font-size: 14px;
     }
     
     @keyframes spin {
@@ -155,25 +126,11 @@
       display: none;
     }
     
-    /* SEO-friendly content preview for crawlers */
+    /* SEO-friendly content preview */
     .seo-content {
       position: absolute;
       left: -9999px;
       top: -9999px;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-    }
-    
-    /* Ensure content is readable for screen readers */
-    .seo-content h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
-    
-    .seo-content p {
-      margin: 0.5rem 0;
     }
   </style>
 </head>
@@ -182,19 +139,17 @@
     <!-- Loading state shown while React app loads -->
     <div class="loading-container">
       <div class="loading-spinner"></div>
-      <div class="loading-text">Loading Tepa Solutions...</div>
     </div>
     
     <!-- SEO-friendly content preview for crawlers -->
     <div class="seo-content">
       <h1>Tepa Solutions - Digital Innovation & Business Automation</h1>
       <p>Transform your business with cutting-edge digital solutions. Expert web development, mobile apps, and automation services in the Philippines.</p>
-      <div>Keywords: digital solutions, business automation, web development, mobile apps, Philippines, technology</div>
     </div>
   </div>
   
   <!-- React app entry point -->
-  <script type="module" src="/src/main.tsx"></script>
+  <script type="module" crossorigin src="/assets/main-C7ZFTbOx.js"></script>
   
   <!-- Service Worker registration -->
   <script>
@@ -209,15 +164,6 @@
           });
       });
     }
-    
-    // Debug logging in development
-    
-    console.log('SEO Debug Info:', {
-      route: '/contact/sales',
-      file: 'contact/sales.html',
-      seoData: window.__SEO_DATA__
-    });
-    
   </script>
   
   <!-- Analytics placeholder -->

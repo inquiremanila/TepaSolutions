@@ -3,7 +3,7 @@ Allow: /
 
 # Important pages for crawling
 Allow: /business-automation
-Allow: /mobile-app-development  
+Allow: /mobile-app-development
 Allow: /web-application-development
 Allow: /articles/
 Allow: /events/

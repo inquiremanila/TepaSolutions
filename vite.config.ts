@@ -5,6 +5,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  base: '/', // Use absolute paths for domain-root deployment
   resolve: {
     alias: [
       { find: /(@radix-ui\/.+)@\d+\.\d+\.\d+$/, replacement: '$1' },
