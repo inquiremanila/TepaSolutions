@@ -2,7 +2,7 @@
 import { writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
-import { getSEOConfig, generateStructuredData, COMPANY_INFO, type SEOConfig } from './build-page';
+import { getSEOConfig, generateStructuredData, COMPANY_INFO, type SEOConfig } from './build-page.ts';
 
 // Define all routes that need individual HTML files
 const routes = [
