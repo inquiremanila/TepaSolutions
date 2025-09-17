@@ -7,35 +7,28 @@ interface LogoProps {
   className?: string;
 }
 
+const sizePx = {
+  sm: 24,
+  md: 32,
+  lg: 40
+};
+
 export function Logo({ size = 'md', showText = true, onClick, className = '' }: LogoProps) {
-  const sizeClasses = {
-    sm: 'w-6 h-6',
-    md: 'w-8 h-8', 
-    lg: 'w-10 h-10'
-  };
-
-  const dotSizes = {
-    sm: 'w-1 h-1',
-    md: 'w-1.5 h-1.5',
-    lg: 'w-2 h-2'
-  };
-
-  const textSizes = {
-    sm: 'text-sm',
-    md: 'text-lg',
-    lg: 'text-xl'
-  };
-
-  const logoContent = (
+  const logoImg = (
     <div className={`flex items-center gap-2 ${onClick ? 'cursor-pointer' : ''} ${className}`}>
-      <div className={`${sizeClasses[size]} bg-primary rounded-lg flex items-center justify-center`}>
-        <div className="flex gap-1">
-          <div className={`${dotSizes[size]} bg-primary-foreground rounded-full`}></div>
-          <div className={`${dotSizes[size]} bg-primary-foreground rounded-full`}></div>
-          <div className={`${dotSizes[size]} bg-primary-foreground rounded-full`}></div>
-        </div>
-      </div>
-      {showText && <span className={`font-semibold ${textSizes[size]}`}>Tepa Solutions</span>}
+      <img
+        src="/tepa.png"
+        alt="Tepa Solutions Logo"
+        width={sizePx[size]}
+        height={sizePx[size]}
+        className="rounded-lg"
+        style={{ objectFit: 'contain' }}
+      />
+      {showText && (
+        <span className={`font-semibold ${size === 'sm' ? 'text-sm' : size === 'lg' ? 'text-xl' : 'text-lg'}`}>
+          Tepa Solutions
+        </span>
+      )}
     </div>
   );
 
@@ -46,10 +39,10 @@ export function Logo({ size = 'md', showText = true, onClick, className = '' }: 
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
-        {logoContent}
+        {logoImg}
       </motion.div>
     );
   }
 
-  return logoContent;
+  return logoImg;
 }

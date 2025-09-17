@@ -10,7 +10,7 @@ Allow: /events/
 Allow: /careers/
 
 # Sitemap location
-Sitemap: http://localhost:5173/sitemap.xml
+Sitemap: https://tepasolutions.asia/sitemap.xml
 
 # Crawl-delay for polite crawling
 Crawl-delay: 1

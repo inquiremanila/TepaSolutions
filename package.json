@@ -67,8 +67,8 @@
     },
     "scripts": {
         "dev": "vite --host 0.0.0.0 --port 5000",
-        "build": "vite-react-ssg build && npm run build:pages ",
-        "build:pages": "tsx src/build-pages.ts",
+"build": "NODE_ENV=production npx vite-react-ssg build && NODE_ENV=production npm run build:pages",      
+  "build:pages": "tsx src/build-pages.ts",
         "preview": "vite preview --host 0.0.0.0 --port 5000",
         "start": "serve -s dist -l 5000",
         "deploy": "wrangler pages deploy ./dist --project-name=tepasolutions"
