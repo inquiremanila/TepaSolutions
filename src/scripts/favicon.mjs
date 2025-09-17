@@ -1,49 +1,74 @@
-// scripts/generate-favicons.ts
+// scripts/favicon.mjs
 import { promises as fs } from "fs";
 import path from "path";
 import favicons from "favicons";
 
-const source = "tepa.png"; // put your 512x512+ PNG or SVG in project root or assets
+const source = "public/tepa.png"; // Path to your source image
+const outputDir = path.resolve("public");
 
 const configuration = {
-  path: "/", // Path for overriding default icons path
+  path: "/",
   appName: "Tepa Solutions",
   appShortName: "Tepa",
-  appDescription: "Tepa Solutions Blog",
+  appDescription: "Tepa Solutions - Digital Transformation Services",
   developerName: "Tepa Solutions",
-  theme_color: "#2d2d2d",
-  background: "#2d2d2d",
+  theme_color: "#030213",
+  background: "#ffffff",
   display: "standalone",
   orientation: "any",
   scope: "/",
   start_url: "/",
   version: "1.0",
-  logging: true,
+  logging: false,
+  icons: {
+    android: true,
+    appleIcon: true,
+    appleStartup: true,
+    coast: false,
+    favicons: true,
+    windows: true,
+    yandex: false
+  }
 };
-
-const outputDir = path.resolve("public");
 
 async function run() {
   try {
+    // Check if source image exists
+    try {
+      await fs.access(source);
+      console.log(`✅ Found source image: ${source}`);
+    } catch {
+      console.error(`❌ Source image not found at: ${source}`);
+      console.log(`📝 Please place a 512x512 PNG image at ${source}`);
+      return;
+    }
+
     const response = await favicons(source, configuration);
+
+    // Ensure output directory exists
+    await fs.mkdir(outputDir, { recursive: true });
 
     // Save images
     for (const image of response.images) {
-      await fs.writeFile(path.join(outputDir, image.name), image.contents);
+      const filePath = path.join(outputDir, image.name);
+      await fs.writeFile(filePath, image.contents);
+      console.log(`✅ Generated: ${image.name}`);
     }
 
-    // Save additional files (manifest, browserconfig, etc.)
+    // Save files
     for (const file of response.files) {
-      await fs.writeFile(path.join(outputDir, file.name), file.contents);
+      const filePath = path.join(outputDir, file.name);
+      await fs.writeFile(filePath, file.contents);
+      console.log(`✅ Generated: ${file.name}`);
     }
 
-    // Save HTML link tags
-    await fs.writeFile(path.join(outputDir, "favicons.html"), response.html.join("\n"));
-
-    console.log("✅ Favicons generated in /public");
+    console.log("🎉 Favicon generation completed successfully!");
+    console.log("📁 All files saved to /public directory");
+    
   } catch (err) {
-    console.error("❌ Favicon generation failed:", err);
+    console.error("❌ Favicon generation failed:", err.message);
   }
 }
 
+// Run the script
 run();
