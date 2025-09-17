@@ -1,52 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" prefix="og: https://ogp.me/ns#">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-  
-  <!-- Primary Meta Tags -->
-  <title>Business Process Automation Services Philippines | Tepa Solutions</title>
-  <meta name="title" content="Business Process Automation Services Philippines | Tepa Solutions">
-  <meta name="description" content="Streamline your operations with expert business process automation. Sales, marketing, HR, finance automation solutions that boost efficiency and reduce costs.">
-  <meta name="keywords" content="business process automation Philippines, workflow automation, sales automation, marketing automation, HR automation, finance automation">
-  
-  <!-- Canonical URL -->
-  <link rel="canonical" href="http://localhost:5173/business-automation">
-  
-  <!-- Robots -->
-  <meta name="robots" content="index, follow">
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="http://localhost:5173/business-automation">
-  <meta property="og:title" content="Business Automation Services - Tepa Solutions">
-  <meta property="og:description" content="Transform your business operations with intelligent automation solutions.">
-  <meta property="og:image" content="http://localhost:5173/og-tepa-services.jpg">
-  <meta property="og:site_name" content="Tepa Solutions">
-  <meta property="og:locale" content="en_PH">
-  
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="http://localhost:5173/business-automation">
-  <meta property="twitter:title" content="Business Process Automation Philippines">
-  <meta property="twitter:description" content="Expert automation services to streamline your business operations.">
-  <meta property="twitter:image" content="http://localhost:5173/twitter-tepa-services.jpg">
-  <meta property="twitter:site" content="@tepasolutions">
-  <meta property="twitter:creator" content="@tepasolutions">
-  
-  <!-- JSON-LD Structured Data -->
-  <script type="application/ld+json">{
-  "@context": "https://schema.org",
-  "@type": "Service",
-  "name": "Business Process Automation",
-  "provider": {
-    "@type": "Organization",
-    "name": "Tepa Solutions"
-  },
-  "description": "Comprehensive business process automation services",
-  "areaServed": "Philippines"
-}</script>
   
   <!-- Preconnect to external domains for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -65,7 +22,7 @@
   <meta name="msapplication-TileColor" content="#030213">
   <meta name="msapplication-config" content="/browserconfig.xml">
   
-  <!-- Additional SEO meta tags -->
+  <!-- Robots meta tag for crawling -->
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1">
   
@@ -78,21 +35,20 @@
   <meta http-equiv="content-language" content="en">
   <meta name="language" content="English">
   
+  <!-- Canonical URL - will be updated by React -->
+  <link rel="canonical" href="http://localhost:5173/business-automation">
+  
   <!-- DNS prefetch for performance -->
   <link rel="dns-prefetch" href="//tepasolutions.asia">
   <link rel="dns-prefetch" href="//www.google-analytics.com">
   <link rel="dns-prefetch" href="//fonts.googleapis.com">
   
-  <!-- Preload critical resources -->
-  <link rel="preload" href="/src/main.tsx" as="script">
-  
   <!-- Initial page route for React router -->
   <script>
     window.__INITIAL_ROUTE__ = '/business-automation';
-    window.__SEO_DATA__ = {"title":"Business Process Automation Services Philippines | Tepa Solutions","description":"Streamline your operations with expert business process automation. Sales, marketing, HR, finance automation solutions that boost efficiency and reduce costs.","keywords":["business process automation Philippines","workflow automation","sales automation","marketing automation","HR automation","finance automation"],"ogTitle":"Business Automation Services - Tepa Solutions","ogDescription":"Transform your business operations with intelligent automation solutions.","twitterTitle":"Business Process Automation Philippines","twitterDescription":"Expert automation services to streamline your business operations.","robots":"index, follow","jsonLd":{"@context":"https://schema.org","@type":"Service","name":"Business Process Automation","provider":{"@type":"Organization","name":"Tepa Solutions"},"description":"Comprehensive business process automation services","areaServed":"Philippines"},"canonical":"http://localhost:5173/business-automation","ogImage":"http://localhost:5173/og-tepa-services.jpg","twitterImage":"http://localhost:5173/twitter-tepa-services.jpg"};
   </script>
   
-  <!-- Critical CSS -->
+  <!-- Critical CSS will be injected here by Vite -->
   <style>
     /* Critical above-the-fold styles */
     body {
@@ -135,13 +91,6 @@
     .app-loaded .loading-container {
       display: none;
     }
-    
-    /* SEO-friendly content preview */
-    .seo-content {
-      position: absolute;
-      left: -9999px;
-      top: -9999px;
-    }
   </style>
 </head>
 <body>
@@ -149,12 +98,6 @@
     <!-- Loading state shown while React app loads -->
     <div class="loading-container">
       <div class="loading-spinner"></div>
-    </div>
-    
-    <!-- SEO-friendly content preview for crawlers -->
-    <div class="seo-content">
-      <h1>Business Process Automation Services Philippines | Tepa Solutions</h1>
-      <p>Streamline your operations with expert business process automation. Sales, marketing, HR, finance automation solutions that boost efficiency and reduce costs.</p>
     </div>
   </div>
   
@@ -177,6 +120,7 @@
   </script>
   
   <!-- Analytics placeholder -->
+  <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
   <script>
     window.dataLayer = window.dataLayer || [];

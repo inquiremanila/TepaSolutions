@@ -1,10 +1,10 @@
-// Enhanced multi-page build script with comprehensive SEO
-import { writeFileSync, mkdirSync, existsSync } from "node:fs";
+// Enhanced multi-page build script with SEO verification and debugging
+import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { generateSEOData, generateMetaTags, getSitemapData } from './seo-generator';
 
-// Define all routes that need individual HTML files
+// Define all routes - matches middleware expectations exactly
 const routes = [
   { path: '/', file: 'index.html' },
   { path: '/business-automation', file: 'business-automation.html' },
@@ -30,13 +30,13 @@ const routes = [
   { path: '/who-we-serve', file: 'who-we-serve.html' },
   { path: '/volunteer-with-us', file: 'volunteer-with-us.html' },
   
-  // Contact pages
+  // Contact pages - Fixed paths to match middleware
   { path: '/contact/sales', file: 'contact/sales.html' },
   { path: '/contact/support', file: 'contact/support.html' },
   { path: '/contact/event-hosting', file: 'contact/event-hosting.html' },
   { path: '/contact/investors', file: 'contact/investors.html' },
   
-  // dynamic pages
+  // Dynamic pages
   { path: '/articles/iphone-17-review-philippines-pricing-release', file: 'articles/iphone-17-review-philippines-pricing-release.html', slug: 'iphone-17-review-philippines-pricing-release' },
   { path: '/articles/quantum-chip-technology-breakthrough-2025', file: 'articles/quantum-chip-technology-breakthrough-2025.html', slug: 'quantum-chip-technology-breakthrough-2025' },
   { path: '/articles/big-tech-news-2025-major-developments', file: 'articles/big-tech-news-2025-major-developments.html', slug: 'big-tech-news-2025-major-developments' },
@@ -57,7 +57,7 @@ const routes = [
   { path: '/careers/contract-backend-developer', file: 'careers/contract-backend-developer.html', slug: 'contract-backend-developer' }
 ];
 
-// Enhanced HTML template with comprehensive SEO
+// Enhanced HTML template with comprehensive SEO and debug info
 function generateHTMLTemplate(route: { path: string; file: string; slug?: string }): string {
   const isProduction = process.env.NODE_ENV === 'production';
   const baseUrl = isProduction ? 'https://tepasolutions.asia' : 'http://localhost:5173';
@@ -66,12 +66,22 @@ function generateHTMLTemplate(route: { path: string; file: string; slug?: string
   const seoData = generateSEOData(route.path, route.slug);
   const metaTags = generateMetaTags(seoData);
   
+  // Add debug comment in development
+  const debugComment = !isProduction ? `
+  <!-- SEO DEBUG INFO
+    Route: ${route.path}
+    File: ${route.file}
+    Slug: ${route.slug || 'none'}
+    Generated at: ${new Date().toISOString()}
+  -->` : '';
+  
   return `<!DOCTYPE html>
 <html lang="en" prefix="og: https://ogp.me/ns#">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+  ${debugComment}
   
   ${metaTags}
   
@@ -93,7 +103,7 @@ function generateHTMLTemplate(route: { path: string; file: string; slug?: string
   <meta name="msapplication-config" content="/browserconfig.xml">
   
   <!-- Additional SEO meta tags -->
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="robots" content="${seoData.robots || 'index, follow'}, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1">
   
   <!-- Geographic meta tags -->
@@ -116,10 +126,11 @@ function generateHTMLTemplate(route: { path: string; file: string; slug?: string
   <!-- Initial page route for React router -->
   <script>
     window.__INITIAL_ROUTE__ = '${route.path}';
-    window.__SEO_DATA__ = ${JSON.stringify(seoData)};
+    window.__SEO_DATA__ = ${JSON.stringify(seoData, null, 2)};
+    ${!isProduction ? `window.__DEBUG_SEO__ = true;` : ''}
   </script>
   
-  <!-- Critical CSS -->
+  <!-- Critical CSS with loading states -->
   <style>
     /* Critical above-the-fold styles */
     body {
@@ -142,6 +153,7 @@ function generateHTMLTemplate(route: { path: string; file: string; slug?: string
       align-items: center;
       justify-content: center;
       z-index: 9999;
+      flex-direction: column;
     }
     
     .loading-spinner {
@@ -151,6 +163,12 @@ function generateHTMLTemplate(route: { path: string; file: string; slug?: string
       border-top: 3px solid #030213;
       border-radius: 50%;
       animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+    
+    .loading-text {
+      color: #6b7280;
+      font-size: 14px;
     }
     
     @keyframes spin {
@@ -163,11 +181,25 @@ function generateHTMLTemplate(route: { path: string; file: string; slug?: string
       display: none;
     }
     
-    /* SEO-friendly content preview */
+    /* SEO-friendly content preview for crawlers */
     .seo-content {
       position: absolute;
       left: -9999px;
       top: -9999px;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+    
+    /* Ensure content is readable for screen readers */
+    .seo-content h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .seo-content p {
+      margin: 0.5rem 0;
     }
   </style>
 </head>
@@ -176,12 +208,14 @@ function generateHTMLTemplate(route: { path: string; file: string; slug?: string
     <!-- Loading state shown while React app loads -->
     <div class="loading-container">
       <div class="loading-spinner"></div>
+      <div class="loading-text">Loading Tepa Solutions...</div>
     </div>
     
     <!-- SEO-friendly content preview for crawlers -->
     <div class="seo-content">
-      <h1>${seoData.title}</h1>
+      <h1>${seoData.title.split(' | ')[0] || seoData.title}</h1>
       <p>${seoData.description}</p>
+      <div>Keywords: ${seoData.keywords.join(', ')}</div>
     </div>
   </div>
   
@@ -201,6 +235,15 @@ function generateHTMLTemplate(route: { path: string; file: string; slug?: string
           });
       });
     }
+    
+    // Debug logging in development
+    ${!isProduction ? `
+    console.log('SEO Debug Info:', {
+      route: '${route.path}',
+      file: '${route.file}',
+      seoData: window.__SEO_DATA__
+    });
+    ` : ''}
   </script>
   
   <!-- Analytics placeholder -->
@@ -248,7 +291,7 @@ Allow: /
 
 # Important pages for crawling
 Allow: /business-automation
-Allow: /mobile-app-development
+Allow: /mobile-app-development  
 Allow: /web-application-development
 Allow: /articles/
 Allow: /events/
@@ -261,46 +304,97 @@ Sitemap: ${baseUrl}/sitemap.xml
 Crawl-delay: 1`;
 }
 
-// Main build function
+// Verify SEO content in generated HTML
+function verifySEOContent(htmlContent: string, route: any): boolean {
+  const checks = {
+    hasTitle: htmlContent.includes('<title>') && !htmlContent.includes('<title></title>'),
+    hasDescription: htmlContent.includes('name="description"'),
+    hasOpenGraph: htmlContent.includes('property="og:'),
+    hasTwitter: htmlContent.includes('property="twitter:'),
+    hasCanonical: htmlContent.includes('rel="canonical"'),
+    hasJsonLD: htmlContent.includes('application/ld+json'),
+    hasKeywords: htmlContent.includes('name="keywords"')
+  };
+  
+  const passedChecks = Object.values(checks).filter(Boolean).length;
+  const totalChecks = Object.keys(checks).length;
+  
+  console.log(`  SEO Verification for ${route.file}:`);
+  console.log(`  - Title: ${checks.hasTitle ? '✅' : '❌'}`);
+  console.log(`  - Description: ${checks.hasDescription ? '✅' : '❌'}`);
+  console.log(`  - Open Graph: ${checks.hasOpenGraph ? '✅' : '❌'}`);
+  console.log(`  - Twitter Cards: ${checks.hasTwitter ? '✅' : '❌'}`);
+  console.log(`  - Canonical URL: ${checks.hasCanonical ? '✅' : '❌'}`);
+  console.log(`  - JSON-LD: ${checks.hasJsonLD ? '✅' : '❌'}`);
+  console.log(`  - Keywords: ${checks.hasKeywords ? '✅' : '❌'}`);
+  console.log(`  - Score: ${passedChecks}/${totalChecks}\n`);
+  
+  return passedChecks >= 5; // Require at least 5/7 checks to pass
+}
+
+// Main build function with verification
 function buildPages() {
-  console.log('🚀 Building enhanced multi-page static site with SEO...');
+  console.log('🚀 Building enhanced multi-page static site with SEO verification...');
+  console.log('');
   
   // Ensure dist directory exists
   if (!existsSync('dist')) {
     mkdirSync('dist', { recursive: true });
   }
   
+  let successCount = 0;
+  let seoPassCount = 0;
+  
   // Generate HTML pages
   routes.forEach(route => {
-    const htmlContent = generateHTMLTemplate(route);
-    const filePath = join('dist', route.file);
-    const fileDir = dirname(filePath);
-    
-    // Create directory if it doesn't exist
-    if (fileDir !== 'dist' && !existsSync(fileDir)) {
-      mkdirSync(fileDir, { recursive: true });
+    try {
+      const htmlContent = generateHTMLTemplate(route);
+      const filePath = join('dist', route.file);
+      const fileDir = dirname(filePath);
+      
+      // Create directory if it doesn't exist
+      if (fileDir !== 'dist' && !existsSync(fileDir)) {
+        mkdirSync(fileDir, { recursive: true });
+      }
+      
+      // Write HTML file
+      writeFileSync(filePath, htmlContent, 'utf8');
+      console.log(`✅ Generated: ${route.file} for ${route.path}`);
+      
+      // Verify SEO content
+      const seoValid = verifySEOContent(htmlContent, route);
+      if (seoValid) {
+        seoPassCount++;
+      }
+      
+      successCount++;
+    } catch (error) {
+      console.error(`❌ Failed to generate ${route.file}:`, error);
     }
-    
-    // Write HTML file
-    writeFileSync(filePath, htmlContent, 'utf8');
-    console.log(`✅ Generated: ${route.file} for ${route.path}`);
   });
   
   // Generate sitemap.xml
-  const sitemapContent = generateSitemap();
-  writeFileSync(join('dist', 'sitemap.xml'), sitemapContent, 'utf8');
-  console.log('✅ Generated: sitemap.xml');
+  try {
+    const sitemapContent = generateSitemap();
+    writeFileSync(join('dist', 'sitemap.xml'), sitemapContent, 'utf8');
+    console.log('✅ Generated: sitemap.xml');
+  } catch (error) {
+    console.error('❌ Failed to generate sitemap.xml:', error);
+  }
   
   // Generate robots.txt
-  const robotsContent = generateRobotsTxt();
-  writeFileSync(join('dist', 'robots.txt'), robotsContent, 'utf8');
-  console.log('✅ Generated: robots.txt');
+  try {
+    const robotsContent = generateRobotsTxt();
+    writeFileSync(join('dist', 'robots.txt'), robotsContent, 'utf8');
+    console.log('✅ Generated: robots.txt');
+  } catch (error) {
+    console.error('❌ Failed to generate robots.txt:', error);
+  }
   
+  console.log('');
   console.log('🎉 Enhanced multi-page build with SEO complete!');
-  console.log(`📄 Generated ${routes.length} HTML pages with comprehensive SEO`);
-  console.log('🔍 Each page is fully optimized for search engines');
-  console.log('🗺️  XML sitemap generated for better crawling');
-  console.log('🤖 Robots.txt configured for optimal indexing');
+  console.log(`📄 Generated ${successCount}/${routes.length} HTML pages`);
+  console.log(`🔍 SEO optimized pages: ${seoPassCount}/${routes.length}`);
   console.log('');
   console.log('SEO Features Included:');
   console.log('• Comprehensive meta tags (title, description, keywords)');
@@ -310,9 +404,15 @@ function buildPages() {
   console.log('• Canonical URLs and proper robots directives');
   console.log('• XML sitemap with priorities and change frequencies');
   console.log('');
+  
+  if (seoPassCount < routes.length) {
+    console.log('⚠️  Some pages failed SEO verification. Check the logs above.');
+  }
+  
   console.log('Next steps:');
   console.log('1. Run "npm run build" to build the React app');
   console.log('2. Run "npm run deploy" to deploy to Cloudflare Pages');
+  console.log('3. Test with ?_bot=1 query parameter to verify middleware');
 }
 
 // Run the build
