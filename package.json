@@ -67,7 +67,11 @@
     },
     "scripts": {
         "dev": "vite --host 0.0.0.0 --port 5000",
+<<<<<<< HEAD
         "build": "vite-react-ssg build && npm run build:pages ",
+=======
+        "build": "npm run build:pages && vite-react-ssg build",
+>>>>>>> parent of 94aad0fa (updated SEO)
         "build:pages": "tsx src/build-pages.ts",
         "preview": "vite preview --host 0.0.0.0 --port 5000",
         "start": "serve -s dist -l 5000",
