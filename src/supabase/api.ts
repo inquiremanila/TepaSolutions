@@ -80,6 +80,7 @@ export async function submitCareerApplication(data: {
   email: string;
   phone?: string;
   resume: string;
+  resumeFileUrl?: string;
   coverLetter?: string;
   coverLetterFileUrl?: string;
   portfolio?: string;
@@ -96,6 +97,7 @@ export async function submitCareerApplication(data: {
         email: data.email,
         phone: data.phone,
         resume_text: data.resume,
+        resume_file_url: data.resumeFileUrl,
         cover_letter: data.coverLetter,
         cover_letter_file_url: data.coverLetterFileUrl,
         portfolio_url: data.portfolio,

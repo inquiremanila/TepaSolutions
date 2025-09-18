@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Clock, Users, Heart, Code, Palette, GraduationCap, Laptop, Send, CheckCircle, AlertCircle, ArrowRight, Calendar, DollarSign } from 'lucide-react';
+import { MapPin, Clock, Users, Heart, GraduationCap, ArrowRight, Calendar, DollarSign } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 
 interface CareersPageProps {
   navigate?: (path: string) => void;

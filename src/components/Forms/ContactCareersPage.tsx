@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Send, Upload, X, FileText, CheckCircle, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Send, Upload, CheckCircle, AlertCircle } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -28,11 +28,11 @@ export function ContactCareersPage({ navigate }: ContactCareersPageProps) {
     experience: '',
     location: '',
     availability: '',
-    resume: '',
     coverLetter: '',
     portfolio: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [coverLetterFile, setCoverLetterFile] = useState<File | null>(null);
   const [coverLetterType, setCoverLetterType] = useState<'text' | 'file'>('text');
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -52,7 +52,35 @@ export function ContactCareersPage({ navigate }: ContactCareersPageProps) {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleResumeFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      // Validate file size (5MB limit)
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      if (file.size > maxSize) {
+        toast.error('File too large', {
+          description: 'Please upload a file smaller than 5MB.',
+        });
+        return;
+      }
+      
+      // Validate file type (PDF, DOC, DOCX)
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+      if (allowedTypes.includes(file.type)) {
+        setResumeFile(file);
+      } else {
+        toast.error('Invalid file type', {
+          description: 'Please upload a PDF, DOC, or DOCX file for your resume.',
+        });
+      }
+    }
+  };
+
+  const removeResumeFile = () => {
+    setResumeFile(null);
+  };
+
+  const handleCoverLetterFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       // Validate file type (PDF, DOC, DOCX, TXT)
@@ -78,8 +106,32 @@ export function ContactCareersPage({ navigate }: ContactCareersPageProps) {
     setIsSubmitting(true);
 
     try {
+      // Check if resume file is provided (required)
+      if (!resumeFile) {
+        toast.error('Resume is required', {
+          description: 'Please upload your resume file.',
+          icon: <AlertCircle className="w-4 h-4" />,
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      let resumeFileUrl = '';
       let coverLetterFileUrl;
       let coverLetterContent = '';
+      
+      // Upload resume file (required)
+      try {
+        resumeFileUrl = await uploadFile(resumeFile, 'resumes');
+      } catch (uploadError) {
+        console.error('Resume upload failed:', uploadError);
+        toast.error('Failed to upload resume file', {
+          description: 'Please try again.',
+          icon: <AlertCircle className="w-4 h-4" />,
+        });
+        setIsSubmitting(false);
+        return;
+      }
       
       // Upload cover letter file if provided
       if (coverLetterType === 'file' && coverLetterFile) {
@@ -104,7 +156,8 @@ export function ContactCareersPage({ navigate }: ContactCareersPageProps) {
         name: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
         phone: formData.phone,
-        resume: formData.resume,
+        resume: `Resume file uploaded: ${resumeFile.name}`,
+        resumeFileUrl: resumeFileUrl,
         coverLetter: coverLetterContent,
         coverLetterFileUrl: coverLetterFileUrl,
         portfolio: formData.portfolio,
@@ -126,10 +179,10 @@ export function ContactCareersPage({ navigate }: ContactCareersPageProps) {
         experience: '',
         location: '',
         availability: '',
-        resume: '',
         coverLetter: '',
         portfolio: ''
       });
+      setResumeFile(null);
       setCoverLetterFile(null);
       setCoverLetterType('text');
 
@@ -350,18 +403,45 @@ export function ContactCareersPage({ navigate }: ContactCareersPageProps) {
                 {/* Resume */}
                 <div>
                   <Label htmlFor="resume" className="text-base font-medium">Resume / CV *</Label>
-                  <Textarea
-                    id="resume"
-                    value={formData.resume}
-                    onChange={(e) => updateFormData('resume', e.target.value)}
-                    className="mt-2"
-                    rows={8}
-                    placeholder="Please paste your resume content here, or provide a brief summary of your work experience, education, and key skills..."
-                    required
-                  />
-                  <p className="text-sm text-muted-foreground mt-2">
-                    You can paste your full resume content or provide a summary of your experience and qualifications.
-                  </p>
+                  <div className="mt-2 space-y-3">
+                    {!resumeFile ? (
+                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                        <input
+                          type="file"
+                          id="resumeFile"
+                          accept=".pdf,.doc,.docx"
+                          onChange={handleResumeFileUpload}
+                          className="hidden"
+                          required
+                        />
+                        <label htmlFor="resumeFile" className="cursor-pointer">
+                          <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                          <p className="text-sm text-gray-600">Click to upload your resume</p>
+                          <p className="text-xs text-gray-500 mt-1">Supports: PDF, DOC, DOCX (Max 5MB)</p>
+                        </label>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                          <span className="text-sm font-medium text-green-800">{resumeFile.name}</span>
+                          <span className="text-xs text-green-600">({(resumeFile.size / 1024 / 1024).toFixed(2)} MB)</span>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={removeResumeFile}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    )}
+                    <p className="text-sm text-muted-foreground">
+                      Please upload your complete resume as a PDF, DOC, or DOCX file.
+                    </p>
+                  </div>
                 </div>
 
                 {/* Cover Letter */}
@@ -411,7 +491,7 @@ export function ContactCareersPage({ navigate }: ContactCareersPageProps) {
                               type="file"
                               id="coverLetterFile"
                               accept=".pdf,.doc,.docx,.txt"
-                              onChange={handleFileUpload}
+                              onChange={handleCoverLetterFileUpload}
                               className="hidden"
                             />
                             <label htmlFor="coverLetterFile" className="cursor-pointer">
