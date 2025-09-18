@@ -44,6 +44,7 @@
         "input-otp": "^1.4.2",
         "lucide-react": "^0.487.0",
         "next-themes": "^0.4.6",
+        "openai": "^5.21.0",
         "react": "^18.3.1",
         "react-day-picker": "^8.10.1",
         "react-dom": "^18.3.1",
@@ -55,6 +56,7 @@
         "sonner": "^2.0.3",
         "tailwind-merge": "^2.5.2",
         "tsx": "^4.20.5",
+        "uuid": "^13.0.0",
         "vaul": "^1.1.2",
         "vite-react-ssg": "^0.8.9",
         "xmldom": "^0.6.0"
@@ -67,8 +69,8 @@
     },
     "scripts": {
         "dev": "vite --host 0.0.0.0 --port 5000",
-"build": "NODE_ENV=production npx vite-react-ssg build && NODE_ENV=production npm run build:pages",      
-  "build:pages": "tsx src/build-pages.ts",
+        "build": "NODE_ENV=production npx vite-react-ssg build && NODE_ENV=production npm run build:pages",
+        "build:pages": "tsx src/build-pages.ts",
         "preview": "vite preview --host 0.0.0.0 --port 5000",
         "start": "serve -s dist -l 5000",
         "deploy": "wrangler pages deploy ./dist --project-name=tepasolutions"
