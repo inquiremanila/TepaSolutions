@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2, Upload, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2, Upload, ThumbsUp, ThumbsDown, Zap } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { submitContactForm } from '../supabase/api';
 import { toast } from "sonner";
+import { openRouterService, shouldEscalateToSupport } from '../services/openrouter';
+import { createChatSession, storeChatMessage, updateChatSessionStatus, triggerEscalation, ChatSession } from '../supabase/chat-api';
 
 interface Message {
   id: string;
@@ -17,6 +19,8 @@ interface Message {
   timestamp: Date;
   hasActions?: boolean;
   awaitingFeedback?: boolean;
+  isStreaming?: boolean;
+  error?: boolean;
 }
 
 interface TicketForm {
@@ -28,39 +32,21 @@ interface TicketForm {
 
 const initialBotMessage: Message = {
   id: '1',
-  text: 'Hi! I\'m Tepabot, your digital assistant from Tepa Solutions. I\'m here to help answer questions about our services.\n\nHow can I help you today?',
+  text: 'Hi! I\'m Tepabot, your advanced AI assistant from Tepa Solutions. I\'m powered by cutting-edge AI to provide you with detailed, personalized help about our digital transformation services.\n\nHow can I help you today?',
   isBot: true,
   timestamp: new Date()
 };
 
 const suggestedInquiries = [
-  "What services do you offer?",
-  "Can you help me with pricing?",
-  "I need technical support",
-  "Tell me about your automation solutions"
+  "What services does Tepa Solutions offer?",
+  "Can you help me with pricing for my project?",
+  "I need help with business automation",
+  "Tell me about your web development process",
+  "How can I schedule a consultation?",
+  "What technologies do you use?"
 ];
 
-const botResponses: Record<string, string> = {
-  'services': 'We offer App Development, Web Development, SEO Solutions, and Business Automation. Our team specializes in creating modern, scalable solutions for businesses of all sizes. Which service interests you most?',
-  'pricing': 'Our pricing varies based on project scope and requirements. We offer competitive rates with transparent pricing. Would you like to speak with our sales team for a detailed quote?',
-  'support': 'I can connect you with our live support team right away. Please provide your contact details and I\'ll create a support ticket for you.',
-  'contact': 'You can reach us at inquire@tepasolutions.asia or call +63 2 8 558 1237. You can also fill out our contact form. Would you like me to help you get in touch?',
-  'about': 'Tepa Solutions is a growing startup founded in 2024 by Jerrie Mataya. We\'re dedicated to making technology simpler and more useful for businesses across the Philippines. We specialize in digital transformation and business automation.',
-  'portfolio': 'We\'ve worked on various projects including food delivery apps, dental clinic websites, admin dashboards, and automation platforms. Our portfolio showcases solutions for restaurants, healthcare, e-commerce, and more. Would you like to see our portfolio?',
-  'automation': 'Our business automation solutions cover sales, marketing, HR, finance, inventory, and support processes. We help businesses save time and reduce manual work. Which area interests you most?',
-  'web': 'We create modern, responsive websites and web applications using the latest technologies like React, Node.js, and cloud platforms. What type of web solution are you looking for?',
-  'app': 'We develop both mobile and web applications tailored to your business needs. Our apps are built with scalability and user experience in mind. Do you have a specific app idea?',
-  'seo': 'Our SEO services help improve your website\'s visibility and search rankings through keyword optimization, content strategy, and technical SEO. Are you looking to increase your online presence?',
-  'team': 'Our team consists of experienced developers, designers, and digital strategists led by founder Jerrie Mataya. We\'re a passionate group focused on delivering quality solutions.',
-  'location': 'We\'re based in the Philippines and serve clients both locally and internationally. We work remotely and on-site depending on project needs.',
-  'timeline': 'Project timelines vary based on complexity. Simple websites typically take 2-4 weeks, while complex applications can take 2-6 months. We always provide detailed timelines during our consultation.',
-  'process': 'Our process includes consultation, planning, design, development, testing, and deployment. We keep clients involved throughout with regular updates and feedback sessions.',
-  'technology': 'We use modern technologies including React, Node.js, Python, cloud platforms (AWS, Azure), and various automation tools. We choose the best tech stack for each project.',
-  'consultation': 'We offer free initial consultations to understand your needs and provide recommendations. Would you like to schedule a consultation with our team?',
-  'maintenance': 'We provide ongoing maintenance and support for all our solutions, including updates, security patches, and feature enhancements. This ensures your systems stay current and secure.',
-  'live_support': 'I\'d be happy to connect you with our live support team. Please provide your name, contact number, email, and describe your inquiry so I can create a support ticket.',
-  'default': 'I\'m here to help! You can ask me about our services, pricing, portfolio, team, or request to speak with live support. What would you like to know?'
-};
+// AI-powered responses will replace this static approach
 
 export function Tepabot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -70,6 +56,8 @@ export function Tepabot() {
   const [showTicketForm, setShowTicketForm] = useState(false);
   const [isSubmittingTicket, setIsSubmittingTicket] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const [isAIResponding, setIsAIResponding] = useState(false);
+  const [chatSession, setChatSession] = useState<ChatSession | null>(null);
   const [ticketForm, setTicketForm] = useState<TicketForm>({
     name: '',
     contactNumber: '',
@@ -95,6 +83,38 @@ export function Tepabot() {
     }
   }, [isOpen, isMinimized]);
 
+  // Initialize chat session when component mounts and chat opens
+  useEffect(() => {
+    if (isOpen && !chatSession) {
+      const initializeSession = async () => {
+        try {
+          const session = await createChatSession({
+            pageUrl: window.location.href,
+            referrer: document.referrer,
+            userAgent: navigator.userAgent
+          });
+          setChatSession(session);
+          
+          // Store initial bot message
+          if (session.id) {
+            await storeChatMessage(
+              session.id,
+              initialBotMessage.text,
+              true,
+              'system',
+              { message_type: 'welcome' }
+            );
+          }
+        } catch (error) {
+          console.error('Failed to initialize chat session:', error);
+          // Continue without session storage if it fails
+        }
+      };
+      
+      initializeSession();
+    }
+  }, [isOpen, chatSession]);
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
@@ -115,43 +135,150 @@ export function Tepabot() {
     setAttachedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  const generateResponse = (input: string): Message => {
-    const lowerInput = input.toLowerCase();
+  // AI-powered response generation with streaming
+  const generateAIResponse = async (input: string) => {
+    if (!input.trim()) return;
+
+    setIsAIResponding(true);
     
-    if (lowerInput.includes('live support') || lowerInput.includes('human') || lowerInput.includes('agent') || lowerInput.includes('speak')) {
-      setShowTicketForm(true);
-      return {
-        id: (Date.now() + 1).toString(),
-        text: botResponses.live_support,
-        isBot: true,
-        timestamp: new Date()
-      };
-    }
-    
-    for (const [key, response] of Object.entries(botResponses)) {
-      if (lowerInput.includes(key)) {
-        return {
-          id: (Date.now() + 1).toString(),
-          text: response,
-          isBot: true,
-          timestamp: new Date(),
-          awaitingFeedback: true
-        };
-      }
-    }
-    
-    return {
-      id: (Date.now() + 1).toString(),
-      text: botResponses.default,
+    // Create placeholder message for streaming
+    const responseId = (Date.now() + 1).toString();
+    const streamingMessage: Message = {
+      id: responseId,
+      text: '',
       isBot: true,
       timestamp: new Date(),
-      awaitingFeedback: true
+      isStreaming: true
     };
+    
+    setMessages(prev => [...prev, streamingMessage]);
+
+    try {
+      // Add context about user's location in the website
+      const currentPath = window.location.pathname;
+      if (currentPath !== '/') {
+        openRouterService.addContext(`User is currently viewing: ${currentPath}`);
+      }
+
+      let fullResponse = '';
+      
+      // Use streaming for better UX
+      for await (const chunk of openRouterService.getChatResponseStream(input)) {
+        fullResponse += chunk;
+        
+        // Update the streaming message with new content
+        setMessages(prev => 
+          prev.map(msg => 
+            msg.id === responseId 
+              ? { ...msg, text: fullResponse }
+              : msg
+          )
+        );
+        
+        // Small delay to make streaming visible
+        await new Promise(resolve => setTimeout(resolve, 20));
+      }
+      
+      // Finalize the message
+      setMessages(prev => 
+        prev.map(msg => 
+          msg.id === responseId 
+            ? { 
+                ...msg, 
+                text: fullResponse,
+                isStreaming: false,
+                awaitingFeedback: true
+              }
+            : msg
+        )
+      );
+
+      // Store AI response in Supabase
+      if (chatSession?.id) {
+        try {
+          await storeChatMessage(chatSession.id, fullResponse, true, 'text', {
+            model_used: 'meta-llama/llama-3.2-3b-instruct:free',
+            response_time: Date.now() - (new Date()).getTime() // Approximate
+          });
+        } catch (error) {
+          console.error('Failed to store AI message:', error);
+        }
+      }
+
+      // Check if we should escalate to live support
+      if (shouldEscalateToSupport(input, fullResponse)) {
+        setTimeout(async () => {
+          const escalationMessage: Message = {
+            id: (Date.now() + 2).toString(),
+            text: 'It seems like you might need more personalized assistance. Would you like me to connect you with our live support team?',
+            isBot: true,
+            timestamp: new Date(),
+            hasActions: true
+          };
+          setMessages(prev => [...prev, escalationMessage]);
+          
+          // Trigger escalation in Supabase
+          if (chatSession?.id) {
+            try {
+              await triggerEscalation(chatSession.id, 'AI suggested escalation', input, fullResponse);
+            } catch (error) {
+              console.error('Failed to trigger escalation:', error);
+            }
+          }
+        }, 1000);
+      } else {
+        // Ask follow-up question
+        setTimeout(async () => {
+          const followUpMessage: Message = {
+            id: (Date.now() + 3).toString(),
+            text: 'Is there anything else I can help you with regarding our services?',
+            isBot: true,
+            timestamp: new Date(),
+            hasActions: true
+          };
+          setMessages(prev => [...prev, followUpMessage]);
+          
+          // Store follow-up message
+          if (chatSession?.id) {
+            try {
+              await storeChatMessage(chatSession.id, followUpMessage.text, true, 'system');
+            } catch (error) {
+              console.error('Failed to store follow-up message:', error);
+            }
+          }
+        }, 1500);
+      }
+      
+    } catch (error) {
+      console.error('AI response error:', error);
+      
+      // Update with error message
+      setMessages(prev => 
+        prev.map(msg => 
+          msg.id === responseId 
+            ? { 
+                ...msg, 
+                text: 'I\'m experiencing technical difficulties right now. Let me connect you with our live support team who can assist you immediately.',
+                isStreaming: false,
+                error: true,
+                hasActions: true
+              }
+            : msg
+        )
+      );
+      
+      // Auto-suggest live support on error
+      setTimeout(() => {
+        setShowTicketForm(true);
+      }, 1000);
+    } finally {
+      setIsAIResponding(false);
+    }
   };
 
-  const handleSendMessage = (messageText?: string) => {
+  const handleSendMessage = async (messageText?: string) => {
     const text = messageText || inputValue;
-    if (!text.trim()) return;
+    if (!text.trim() || isAIResponding) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -163,25 +290,48 @@ export function Tepabot() {
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
 
-    // Simulate bot typing delay
-    setTimeout(() => {
-      const botResponse = generateResponse(text);
-      setMessages(prev => [...prev, botResponse]);
-      
-      // After definitive answer, ask if there's anything else
-      if (botResponse.awaitingFeedback) {
-        setTimeout(() => {
-          const followUpMessage: Message = {
-            id: (Date.now() + 2).toString(),
-            text: 'Is there anything else I can help you with?',
-            isBot: true,
-            timestamp: new Date(),
-            hasActions: true
-          };
-          setMessages(prev => [...prev, followUpMessage]);
-        }, 1500);
+    // Store user message in Supabase if session exists
+    if (chatSession?.id) {
+      try {
+        await storeChatMessage(chatSession.id, text, false, 'text');
+      } catch (error) {
+        console.error('Failed to store user message:', error);
       }
-    }, 1000);
+    }
+
+    // Check for live support requests
+    const lowerInput = text.toLowerCase();
+    if (lowerInput.includes('live support') || lowerInput.includes('human') || lowerInput.includes('agent') || lowerInput.includes('speak to someone')) {
+      setTimeout(async () => {
+        setShowTicketForm(true);
+        const supportMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          text: 'I\'d be happy to connect you with our live support team. Please fill out the form below with your details and inquiry.',
+          isBot: true,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, supportMessage]);
+        
+        // Update session status and store escalation
+        if (chatSession?.id) {
+          try {
+            await updateChatSessionStatus(chatSession.id, 'escalated');
+            await storeChatMessage(chatSession.id, supportMessage.text, true, 'escalation', {
+              escalation_reason: 'User requested human support',
+              user_request: text
+            });
+          } catch (error) {
+            console.error('Failed to handle escalation:', error);
+          }
+        }
+      }, 500);
+      return;
+    }
+
+    // Generate AI response with small delay for natural feel
+    setTimeout(() => {
+      generateAIResponse(text);
+    }, 300);
   };
 
   const handleFeedback = (messageId: string, isPositive: boolean) => {
@@ -258,11 +408,49 @@ export function Tepabot() {
     }
   };
 
-  const resetChat = () => {
+  const resetChat = async () => {
     setMessages([initialBotMessage]);
     setShowTicketForm(false);
     setTicketForm({ name: '', contactNumber: '', email: '', message: '' });
     setAttachedFiles([]);
+    setIsAIResponding(false);
+    
+    // Complete current session if exists
+    if (chatSession?.id) {
+      try {
+        await updateChatSessionStatus(chatSession.id, 'completed');
+      } catch (error) {
+        console.error('Failed to complete chat session:', error);
+      }
+    }
+    
+    // Reset AI conversation history
+    openRouterService.resetConversation();
+    
+    // Create new session
+    try {
+      const newSession = await createChatSession({
+        pageUrl: window.location.href,
+        referrer: document.referrer,
+        userAgent: navigator.userAgent
+      });
+      setChatSession(newSession);
+      
+      // Store initial message in new session
+      if (newSession.id) {
+        await storeChatMessage(
+          newSession.id,
+          initialBotMessage.text,
+          true,
+          'system',
+          { message_type: 'welcome' }
+        );
+      }
+    } catch (error) {
+      console.error('Failed to create new chat session:', error);
+      // Continue without session if it fails
+      setChatSession(null);
+    }
   };
 
   if (!isOpen) {
@@ -303,13 +491,24 @@ export function Tepabot() {
         <CardHeader className="p-4 bg-primary text-primary-foreground rounded-t-lg flex flex-row items-center justify-between space-y-0">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-primary-foreground/20 rounded-full flex items-center justify-center">
-              <Bot className="w-4 h-4" />
+              {isAIResponding ? (
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                >
+                  <Zap className="w-4 h-4" />
+                </motion.div>
+              ) : (
+                <Bot className="w-4 h-4" />
+              )}
             </div>
             <div>
-              <CardTitle className="text-sm">Tepabot</CardTitle>
+              <CardTitle className="text-sm">Tepabot AI</CardTitle>
               <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-xs opacity-90">Online</span>
+                <div className={`w-2 h-2 rounded-full ${isAIResponding ? 'bg-yellow-400' : 'bg-green-400'}`}></div>
+                <span className="text-xs opacity-90">
+                  {isAIResponding ? 'Thinking...' : 'Online'}
+                </span>
               </div>
             </div>
           </div>
@@ -372,10 +571,42 @@ export function Tepabot() {
                   >
                     <div className={`flex items-start space-x-2 max-w-[80%] ${message.isBot ? '' : 'flex-row-reverse space-x-reverse'}`}>
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center ${message.isBot ? 'bg-primary/10' : 'bg-primary'}`}>
-                        {message.isBot ? <Bot className="w-3 h-3 text-primary" /> : <User className="w-3 h-3 text-primary-foreground" />}
+                        {message.isBot ? (
+                          message.isStreaming ? (
+                            <motion.div
+                              animate={{ opacity: [0.4, 1, 0.4] }}
+                              transition={{ duration: 1.5, repeat: Infinity }}
+                            >
+                              <Zap className="w-3 h-3 text-primary" />
+                            </motion.div>
+                          ) : message.error ? (
+                            <X className="w-3 h-3 text-red-500" />
+                          ) : (
+                            <Bot className="w-3 h-3 text-primary" />
+                          )
+                        ) : (
+                          <User className="w-3 h-3 text-primary-foreground" />
+                        )}
                       </div>
-                      <div className={`px-3 py-2 rounded-lg ${message.isBot ? 'bg-muted' : 'bg-primary text-primary-foreground'}`}>
-                        <p className="text-sm whitespace-pre-line">{message.text}</p>
+                      <div className={`px-3 py-2 rounded-lg ${
+                        message.isBot 
+                          ? message.error 
+                            ? 'bg-red-50 border border-red-200' 
+                            : 'bg-muted'
+                          : 'bg-primary text-primary-foreground'
+                      }`}>
+                        <p className="text-sm whitespace-pre-line">
+                          {message.text}
+                          {message.isStreaming && (
+                            <motion.span
+                              animate={{ opacity: [0, 1, 0] }}
+                              transition={{ duration: 1, repeat: Infinity }}
+                              className="ml-1"
+                            >
+                              ▍
+                            </motion.span>
+                          )}
+                        </p>
                         <p className="text-xs opacity-70 mt-1">
                           {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </p>
@@ -534,8 +765,9 @@ export function Tepabot() {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder="Type your message..."
+                    placeholder={isAIResponding ? "AI is responding..." : "Type your message..."}
                     className="flex-1"
+                    disabled={isAIResponding}
                   />
                   <Button
                     type="button"
@@ -543,11 +775,21 @@ export function Tepabot() {
                     size="icon"
                     onClick={() => fileInputRef.current?.click()}
                     className="shrink-0"
+                    disabled={isAIResponding}
                   >
                     <Upload className="w-4 h-4" />
                   </Button>
-                  <Button onClick={handleSendMessage} size="icon" disabled={!inputValue.trim()}>
-                    <Send className="w-4 h-4" />
+                  <Button onClick={() => handleSendMessage()} size="icon" disabled={!inputValue.trim() || isAIResponding}>
+                    {isAIResponding ? (
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      >
+                        <Zap className="w-4 h-4" />
+                      </motion.div>
+                    ) : (
+                      <Send className="w-4 h-4" />
+                    )}
                   </Button>
                 </div>
                 <input
@@ -559,9 +801,16 @@ export function Tepabot() {
                   accept="image/*,.pdf,.doc,.docx,.txt"
                 />
                 <div className="flex justify-between items-center mt-2">
-                  <p className="text-xs text-muted-foreground">Powered by Tepa Solutions</p>
-                  <Button variant="ghost" size="sm" onClick={resetChat} className="text-xs h-6">
-                    Reset Chat
+                  <div className="flex items-center space-x-2">
+                    <p className="text-xs text-muted-foreground">Powered by Tepa Solutions</p>
+                    {messages.length > 2 && (
+                      <Badge variant="secondary" className="text-xs">
+                        AI Powered
+                      </Badge>
+                    )}
+                  </div>
+                  <Button variant="ghost" size="sm" onClick={resetChat} className="text-xs h-6" disabled={isAIResponding}>
+                    New Chat
                   </Button>
                 </div>
               </div>
