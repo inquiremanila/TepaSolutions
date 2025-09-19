@@ -101,4 +101,4 @@ TepaSolutions\src\supabase\functions\ai-chat\index.ts
 TepaSolutions\src\services\openrouter.ts
 TepaSolutions\src\components\Tepabot.tsx
 TepaSolutions\deno.json
-TepaSolutions\.env
+TepaSolutions\.env susan_mataya@yahoo.com
