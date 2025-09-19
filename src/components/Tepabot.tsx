@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { submitContactForm } from '../supabase/api';
 import { toast } from "sonner";
-import { openRouterService, shouldEscalateToSupport } from '../services/openrouter';
+import { openRouterService } from '../services/openrouter';
 import { createChatSession, storeChatMessage, updateChatSessionStatus, triggerEscalation, ChatSession } from '../supabase/chat-api';
 
 interface Message {
@@ -38,70 +38,7 @@ const initialBotMessage: Message = {
   timestamp: new Date()
 };
 
-// Smart suggestion predictor based on conversation context
-const generateSmartSuggestions = (lastMessage: string, conversationHistory: Message[]): string[] => {
-  const lowerMessage = lastMessage.toLowerCase();
-  const hasDiscussedServices = conversationHistory.some(msg => 
-    msg.text.toLowerCase().includes('service') || msg.text.toLowerCase().includes('development')
-  );
-  
-  // Context-aware suggestions
-  if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('budget')) {
-    return [
-      "What factors affect the pricing?",
-      "Can I get a detailed quote?",
-      "Do you offer payment plans?"
-    ];
-  }
-  
-  if (lowerMessage.includes('web') || lowerMessage.includes('website')) {
-    return [
-      "What's your web development process?",
-      "How long does a website take?",
-      "Can you show me examples of your work?"
-    ];
-  }
-  
-  if (lowerMessage.includes('app') || lowerMessage.includes('mobile')) {
-    return [
-      "What platforms do you develop for?",
-      "How much does app development cost?",
-      "Can you help with app store deployment?"
-    ];
-  }
-  
-  if (lowerMessage.includes('seo') || lowerMessage.includes('marketing')) {
-    return [
-      "What SEO services do you offer?",
-      "How do you measure SEO success?",
-      "Can you help improve my current website's SEO?"
-    ];
-  }
-  
-  if (lowerMessage.includes('automation') || lowerMessage.includes('business')) {
-    return [
-      "What processes can you automate?",
-      "How much time does automation save?",
-      "Can you integrate with existing systems?"
-    ];
-  }
-  
-  // General suggestions if no specific context
-  if (!hasDiscussedServices && conversationHistory.length <= 3) {
-    return [
-      "Tell me about your services",
-      "How do I get started?",
-      "Can I schedule a consultation?"
-    ];
-  }
-  
-  // Follow-up suggestions
-  return [
-    "Can you provide more details?",
-    "How do I get started?",
-    "I'd like to speak with your team"
-  ];
-};
+
 
 export function Tepabot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -236,158 +173,312 @@ export function Tepabot() {
   };
 
   // Enhanced AI response with better conversation flow
-  const generateAIResponse = async (input: string) => {
-    if (!input.trim()) return;
+// Updated generateAIResponse function for Tepabot.tsx
+// Replace your existing generateAIResponse function with this enhanced version
 
-    setIsAIResponding(true);
-    setShowSuggestions(false);
-    
-    // Create placeholder message for streaming
-    const responseId = (Date.now() + 1).toString();
-    const streamingMessage: Message = {
-      id: responseId,
-      text: '',
-      isBot: true,
-      timestamp: new Date(),
-      isStreaming: true
+const generateAIResponse = async (input: string) => {
+  if (!input.trim()) return;
+
+  setIsAIResponding(true);
+  setShowSuggestions(false);
+  
+  // Create placeholder message for streaming
+  const responseId = (Date.now() + 1).toString();
+  const streamingMessage: Message = {
+    id: responseId,
+    text: '',
+    isBot: true,
+    timestamp: new Date(),
+    isStreaming: true
+  };
+  
+  setMessages(prev => [...prev, streamingMessage]);
+
+  try {
+    // Enhanced context building for better conversation flow
+    const currentPath = window.location.pathname;
+    if (currentPath !== '/') {
+      openRouterService.addContext(`User is currently viewing: ${currentPath}`);
+    }
+
+    // Build conversation state for suggestions and context
+    const conversationState = {
+      stage: determineCurrentStage(messages, input),
+      topicsDiscussed: conversationContext,
+      uncertaintyLevel: detectUncertaintyLevel(input),
+      businessType: extractBusinessType(messages),
+      painPoints: extractPainPoints(messages),
+      responseCount: messages.filter(m => m.isBot).length
     };
+
+    let fullResponse = '';
     
-    setMessages(prev => [...prev, streamingMessage]);
-
-    try {
-      // Add context about user's location and conversation history
-      const currentPath = window.location.pathname;
-      if (currentPath !== '/') {
-        openRouterService.addContext(`User is currently viewing: ${currentPath}`);
-      }
-
-      // Add conversation context for better responses
-      if (conversationContext.length > 0) {
-        openRouterService.addContext(`Previous topics discussed: ${conversationContext.join(', ')}`);
-      }
-
-      let fullResponse = '';
+    // Use streaming with enhanced conversation tracking
+    for await (const chunk of openRouterService.getChatResponseStream(input)) {
+      fullResponse += chunk;
       
-      // Use streaming for better UX
-      for await (const chunk of openRouterService.getChatResponseStream(input)) {
-        fullResponse += chunk;
-        
-        // Update the streaming message with new content
-        setMessages(prev => 
-          prev.map(msg => 
-            msg.id === responseId 
-              ? { ...msg, text: fullResponse }
-              : msg
-          )
-        );
-        
-        // Small delay to make streaming visible
-        await new Promise(resolve => setTimeout(resolve, 15));
-      }
-      
-      // Generate smart suggestions based on the AI response
-      const suggestions = generateSmartSuggestions(fullResponse, messages);
-      
-      // Finalize the message with suggestions
+      // Update the streaming message with new content
       setMessages(prev => 
         prev.map(msg => 
           msg.id === responseId 
-            ? { 
-                ...msg, 
-                text: fullResponse,
-                isStreaming: false,
-                awaitingFeedback: true,
-                suggestions: suggestions
-              }
+            ? { ...msg, text: fullResponse }
             : msg
         )
       );
+      
+      // Small delay to make streaming visible
+      await new Promise(resolve => setTimeout(resolve, 15));
+    }
+    
+    // Generate smart suggestions based on conversation stage and content
+    const suggestions = generateContextualSuggestions(fullResponse, conversationState);
+    
+    // Finalize the message with stage-appropriate suggestions
+    setMessages(prev => 
+      prev.map(msg => 
+        msg.id === responseId 
+          ? { 
+              ...msg, 
+              text: fullResponse,
+              isStreaming: false,
+              awaitingFeedback: shouldRequestFeedback(conversationState.stage),
+              suggestions: suggestions
+            }
+          : msg
+      )
+    );
 
-      // Show suggestions after a brief delay
+    // Show suggestions after a brief delay, but only if appropriate for the conversation stage
+    if (suggestions.length > 0 && conversationState.stage !== 'conversion') {
       setTimeout(() => {
         setCurrentSuggestions(suggestions);
         setShowSuggestions(true);
       }, 1000);
-
-      // Update conversation context
-      const topics = extractTopics(input + ' ' + fullResponse);
-      setConversationContext(prev => [...new Set([...prev, ...topics])].slice(-5)); // Keep last 5 topics
-
-      // Store AI response in Supabase
-      if (chatSession?.id) {
-        try {
-          await storeChatMessage(chatSession.id, fullResponse, true, 'text', {
-            model_used: 'deepseek/deepseek-chat-v3.1:free',
-            response_time: Date.now() - (new Date()).getTime(),
-            suggestions_provided: suggestions
-          });
-        } catch (error) {
-          console.error('Failed to store AI message:', error);
-        }
-      }
-
-      // Check if we should escalate to live support (less aggressive)
-      if (shouldEscalateToSupport(input, fullResponse) && Math.random() < 0.3) { // Only 30% chance
-        setTimeout(async () => {
-          const escalationMessage: Message = {
-            id: (Date.now() + 2).toString(),
-            text: 'Would you like to connect with our live support team for more personalized assistance?',
-            isBot: true,
-            timestamp: new Date(),
-            hasActions: true
-          };
-          setMessages(prev => [...prev, escalationMessage]);
-          
-          // Trigger escalation in Supabase
-          if (chatSession?.id) {
-            try {
-              await triggerEscalation(chatSession.id, 'AI suggested escalation', input, fullResponse);
-            } catch (error) {
-              console.error('Failed to trigger escalation:', error);
-            }
-          }
-        }, 3000);
-      }
-      
-    } catch (error) {
-      console.error('AI response error:', error);
-      
-      // Update with error message
-      setMessages(prev => 
-        prev.map(msg => 
-          msg.id === responseId 
-            ? { 
-                ...msg, 
-                text: 'I\'m experiencing technical difficulties right now. Let me connect you with our live support team who can assist you immediately.',
-                isStreaming: false,
-                error: true,
-                hasActions: true
-              }
-            : msg
-        )
-      );
-      
-      // Auto-suggest live support on error
-      setTimeout(() => {
-        setShowTicketForm(true);
-      }, 1000);
-    } finally {
-      setIsAIResponding(false);
-      setLastActivityTime(new Date());
     }
-  };
 
-  // Extract topics from conversation for context
-  const extractTopics = (text: string): string[] => {
-    const keywords = [
-      'web development', 'app development', 'seo', 'automation', 'business',
-      'pricing', 'consultation', 'project', 'timeline', 'technology', 'service'
-    ];
+    // Update conversation context with extracted topics
+    const newTopics = extractTopicsFromResponse(input + ' ' + fullResponse);
+    setConversationContext(prev => [...new Set([...prev, ...newTopics])].slice(-8)); // Keep last 8 topics
+
+    // Store AI response in Supabase with enhanced metadata
+    if (chatSession?.id) {
+      try {
+        await storeChatMessage(chatSession.id, fullResponse, true, 'text', {
+          model_used: 'deepseek/deepseek-chat-v3.1:free',
+          response_time: Date.now() - (new Date()).getTime(),
+          suggestions_provided: suggestions,
+          conversation_stage: conversationState.stage,
+          uncertainty_level: conversationState.uncertaintyLevel,
+          topics_discussed: newTopics
+        });
+      } catch (error) {
+        console.error('Failed to store AI message:', error);
+      }
+    }
+
+    // Smart escalation logic based on conversation flow
+    const shouldEscalate = shouldEscalateBasedOnStage(conversationState, fullResponse, input);
+    if (shouldEscalate && Math.random() < 0.25) { // 25% chance for less aggressive escalation
+      setTimeout(async () => {
+        const escalationMessage: Message = {
+          id: (Date.now() + 2).toString(),
+          text: getContextualEscalationMessage(conversationState.stage),
+          isBot: true,
+          timestamp: new Date(),
+          hasActions: true
+        };
+        setMessages(prev => [...prev, escalationMessage]);
+        
+        // Trigger escalation in Supabase
+        if (chatSession?.id) {
+          try {
+            await triggerEscalation(chatSession.id, `Stage-based escalation: ${conversationState.stage}`, input, fullResponse);
+          } catch (error) {
+            console.error('Failed to trigger escalation:', error);
+          }
+        }
+      }, 4000); // Longer delay for more natural flow
+    }
     
-    return keywords.filter(keyword => 
-      text.toLowerCase().includes(keyword)
+  } catch (error) {
+    console.error('AI response error:', error);
+    
+    // Update with error message
+    setMessages(prev => 
+      prev.map(msg => 
+        msg.id === responseId 
+          ? { 
+              ...msg, 
+              text: 'I\'m experiencing technical difficulties right now. Let me connect you with our live support team who can assist you immediately.',
+              isStreaming: false,
+              error: true,
+              hasActions: true
+            }
+          : msg
+      )
     );
-  };
+    
+    // Auto-suggest live support on error
+    setTimeout(() => {
+      setShowTicketForm(true);
+    }, 1000);
+  } finally {
+    setIsAIResponding(false);
+    setLastActivityTime(new Date());
+  }
+};
+
+// Helper functions for enhanced conversation flow
+
+const determineCurrentStage = (messages: Message[], currentInput: string): string => {
+  const conversationLength = messages.length;
+  const lowerInput = currentInput.toLowerCase();
+  
+  if (conversationLength <= 2) return 'initial';
+  if (lowerInput.includes("don't know") || lowerInput.includes("not sure") || lowerInput.includes("uncertain")) return 'discovery';
+  
+  // Check for pain points or challenges mentioned
+  const painPointKeywords = ['problem', 'issue', 'challenge', 'difficult', 'frustrating', 'slow', 'manual', 'time-consuming'];
+  if (painPointKeywords.some(keyword => lowerInput.includes(keyword))) return 'problem_exploration';
+  
+  // Check if they're discussing specific solutions
+  const solutionKeywords = ['website', 'app', 'seo', 'automation', 'system', 'platform'];
+  if (solutionKeywords.some(keyword => lowerInput.includes(keyword))) return 'solution_discussion';
+  
+  // Check for conversion intent
+  const conversionKeywords = ['price', 'cost', 'quote', 'consultation', 'get started', 'how much'];
+  if (conversionKeywords.some(keyword => lowerInput.includes(keyword))) return 'conversion';
+  
+  return 'ongoing_discovery';
+};
+
+const detectUncertaintyLevel = (input: string): string => {
+  const uncertaintyPhrases = ["don't know", "not sure", "maybe", "i think", "probably", "perhaps", "uncertain"];
+  const lowerInput = input.toLowerCase();
+  
+  const uncertaintyCount = uncertaintyPhrases.filter(phrase => lowerInput.includes(phrase)).length;
+  
+  if (uncertaintyCount >= 2) return 'high';
+  if (uncertaintyCount === 1) return 'medium';
+  return 'low';
+};
+
+const extractBusinessType = (messages: Message[]): string => {
+  const businessTypes = ['restaurant', 'retail', 'ecommerce', 'service', 'consulting', 'healthcare', 'education', 'manufacturing'];
+  const allText = messages.map(m => m.text.toLowerCase()).join(' ');
+  
+  for (const type of businessTypes) {
+    if (allText.includes(type)) return type;
+  }
+  return 'unknown';
+};
+
+const extractPainPoints = (messages: Message[]): string[] => {
+  const painPointKeywords = [
+    'slow', 'manual', 'time-consuming', 'frustrating', 'difficult', 'complicated',
+    'expensive', 'inefficient', 'outdated', 'broken', 'confusing', 'overwhelming'
+  ];
+  
+  const allText = messages.map(m => m.text.toLowerCase()).join(' ');
+  return painPointKeywords.filter(keyword => allText.includes(keyword));
+};
+
+const generateContextualSuggestions = (response: string, conversationState: any): string[] => {
+  const stage = conversationState.stage;
+  const lowerResponse = response.toLowerCase();
+  
+  switch (stage) {
+    case 'initial':
+    case 'discovery':
+      return [
+        "Tell me more about your business",
+        "What's your biggest daily challenge?",
+        "How do you currently handle this?"
+      ];
+    
+    case 'problem_exploration':
+      return [
+        "How much time does this take you?",
+        "What would solving this mean for your business?",
+        "Have you tried any solutions before?"
+      ];
+    
+    case 'solution_discussion':
+      return [
+        "What would your ideal solution look like?",
+        "What's your timeline for this?",
+        "Would you like to explore specific options?"
+      ];
+    
+    case 'conversion':
+      return [
+        "Can I schedule a consultation?",
+        "What's your budget range?",
+        "When would you like to get started?"
+      ];
+    
+    default:
+      if (lowerResponse.includes('web') || lowerResponse.includes('website')) {
+        return [
+          "What kind of website do you need?",
+          "Who is your target audience?",
+          "Do you have any examples you like?"
+        ];
+      }
+      return [
+        "Can you tell me more?",
+        "What would success look like?",
+        "How can we help with this?"
+      ];
+  }
+};
+
+const shouldRequestFeedback = (stage: string): boolean => {
+  // Only request feedback during problem exploration and solution discussion stages
+  return ['problem_exploration', 'solution_discussion'].includes(stage);
+};
+
+const shouldEscalateBasedOnStage = (conversationState: any, response: string, input: string): boolean => {
+  const { stage, responseCount } = conversationState;
+  
+  // Don't escalate too early in the conversation
+  if (responseCount < 3) return false;
+  
+  // Escalate if they're in conversion stage
+  if (stage === 'conversion') return true;
+  
+  // Escalate if they mention specific complex requirements
+  const complexKeywords = ['integration', 'custom', 'complex', 'enterprise', 'advanced', 'specific requirements'];
+  const hasComplexNeeds = complexKeywords.some(keyword => 
+    input.toLowerCase().includes(keyword) || response.toLowerCase().includes(keyword)
+  );
+  
+  return hasComplexNeeds;
+};
+
+const getContextualEscalationMessage = (stage: string): string => {
+  switch (stage) {
+    case 'conversion':
+      return 'It sounds like you\'re ready to move forward! Would you like me to connect you with our project specialist who can provide detailed quotes and timelines?';
+    case 'solution_discussion':
+      return 'Based on what you\'ve shared, I think our development team could provide more specific guidance. Would you like to speak with one of our specialists?';
+    default:
+      return 'Would you like to connect with our live support team for more personalized assistance?';
+  }
+};
+
+const extractTopicsFromResponse = (text: string): string[] => {
+  const keywords = [
+    'web development', 'app development', 'mobile app', 'website', 'seo', 'automation', 
+    'business process', 'integration', 'database', 'ecommerce', 'crm', 'inventory',
+    'marketing', 'sales', 'customer service', 'reporting', 'analytics', 'payment processing'
+  ];
+  
+  return keywords.filter(keyword => 
+    text.toLowerCase().includes(keyword.replace(' ', '').toLowerCase()) ||
+    text.toLowerCase().includes(keyword.toLowerCase())
+  );
+};
 
   const handleSendMessage = async (messageText?: string) => {
     const text = messageText || inputValue;

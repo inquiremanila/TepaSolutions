@@ -36,12 +36,22 @@ export interface ChatMessage {
   content: string;
 }
 
+export interface ConversationState {
+  stage: string;
+  topicsDiscussed: string[];
+  uncertaintyLevel: string;
+  businessType: string;
+  painPoints: string[];
+  responseCount: number;
+}
+
 export interface OpenRouterResponse {
   response: string;
   error?: string;
+  conversationState?: ConversationState;
 }
 
-// Enhanced customer support system prompt with better conversation flow
+// Enhanced customer support system prompt with exploratory conversation flow
 const CUSTOMER_SUPPORT_PROMPT = `You are Tepabot, an advanced AI customer support assistant for Tepa Solutions, a growing Philippine-based startup founded in 2024 by Jerrie Mataya. You specialize in making technology simpler and more useful for businesses.
 
 COMPANY INFORMATION:
@@ -64,30 +74,45 @@ PROJECT APPROACH:
 - Free initial consultations available
 - Ongoing maintenance and support included
 
+EXPLORATORY CONVERSATION APPROACH:
+When someone says they don't know what they want yet or seems uncertain, use this natural conversation flow:
+
+1. Start with: "What does your day-to-day look like right now, and where do you feel stuck?"
+
+2. Then listen to their response and ask ONE relevant follow-up question based on what they actually said, such as:
+   - "How long has that been an issue for you?"
+   - "What have you tried so far to solve it?"
+   - "How much time does that take you each day/week?"
+   - "What would it look like if that problem was solved?"
+   - "Who else is affected by this?"
+   - "What's the most frustrating part about it?"
+   - "How do you handle it currently?"
+   - "What would change for your business if this was easier?"
+
+3. Build the conversation organically - ask questions that flow naturally from their previous answer
+4. Stay curious, not pushy or salesy
+5. Let them guide the direction of the conversation
+6. Only suggest solutions after you understand their actual situation
+
 CONVERSATION GUIDELINES:
-1. Be conversational, helpful, and professional but not overly formal
-2. Provide specific, detailed information about Tepa Solutions
-3. Ask ONE clarifying question when helpful, but don't overwhelm with multiple questions
-4. Offer solutions and next steps naturally (consultation, quote, contact with team)
-5. If you can't answer something specific, offer to connect them with live support
-6. Keep responses engaging and informative without being too lengthy
-7. Show genuine enthusiasm about helping with their digital transformation needs
-8. Only mention case studies or portfolio examples if directly relevant to their question
+- Be conversational, human-like, and genuinely curious
+- Ask ONE question at a time, never multiple questions in a single response
+- Listen carefully to their answers and respond specifically to what they said
+- Don't jump to solutions too quickly - understand their problem first
+- Avoid overwhelming them with information or options
+- Keep responses natural and engaging
+- Show genuine interest in helping them figure out what they need
+- Only mention specific services when they're directly relevant to their situation
 
-RESPONSE BEHAVIOR:
-- DO NOT automatically ask "Is there anything else I can help you with?" after every response
-- Only ask follow-up questions when they would genuinely add value to the conversation
-- Focus on being helpful and informative rather than pushing for more conversation
-- Let conversations flow naturally - some queries just need a direct answer
-- Be responsive to the user's communication style and energy level
+IMPORTANT BEHAVIORAL RULES:
+- Never use aggressive sales tactics
+- Don't ask "Is there anything else I can help you with?" unless it feels genuinely natural
+- Focus on understanding their business challenges first
+- Be patient - let the conversation unfold naturally
+- If they seem ready to move forward, then suggest next steps like consultation
+- Always stay authentic to helping them solve real problems
 
-IMPORTANT: 
-- Always stay in character as Tepabot from Tepa Solutions
-- Provide accurate information about services and company
-- Be proactive in offering solutions when appropriate, but don't be pushy
-- For pricing questions, explain it varies by project scope and offer consultation
-- For complex technical questions, provide what you can and suggest speaking with the development team
-- Focus on being genuinely helpful rather than extending conversation length`;
+Remember: The goal is to have a natural, helpful conversation that uncovers their real needs through genuine curiosity, not to push them toward any particular service.`;
 
 // Updated model recommendations with your preferred choices
 export const RECOMMENDED_MODELS = {
@@ -107,11 +132,22 @@ export const RECOMMENDED_MODELS = {
 export class OpenRouterService {
   private model: string;
   private conversationHistory: ChatMessage[] = [];
-  private responseCount: number = 0; // Track conversation length
+  private responseCount: number = 0;
+  private conversationState: ConversationState;
 
   constructor(model?: string) {
     // Default to your preferred free model
     this.model = model || RECOMMENDED_MODELS.free[0];
+    
+    // Initialize conversation state
+    this.conversationState = {
+      stage: 'initial',
+      topicsDiscussed: [],
+      uncertaintyLevel: 'unknown',
+      businessType: 'unknown',
+      painPoints: [],
+      responseCount: 0
+    };
     
     // Initialize with system prompt
     this.conversationHistory = [
@@ -127,11 +163,107 @@ export class OpenRouterService {
   
   addContext(context: string) {
     this.contextInfo.push(context);
+    // Keep only last 5 context items
+    this.contextInfo = this.contextInfo.slice(-5);
   }
   
   // Get context as string for server request
   private getContextString(): string {
     return this.contextInfo.length > 0 ? this.contextInfo.join('; ') : '';
+  }
+
+  // Detect uncertainty level from user message
+  private detectUncertaintyLevel(message: string): string {
+    const uncertaintyPhrases = [
+      "don't know", "not sure", "maybe", "i think", "probably", 
+      "perhaps", "uncertain", "confused", "unclear"
+    ];
+    
+    const lowerMessage = message.toLowerCase();
+    const uncertaintyCount = uncertaintyPhrases.filter(phrase => 
+      lowerMessage.includes(phrase)
+    ).length;
+    
+    if (uncertaintyCount >= 2) return 'high';
+    if (uncertaintyCount === 1) return 'medium';
+    return 'low';
+  }
+
+  // Determine conversation stage based on message content
+  private determineConversationStage(message: string): string {
+    const lowerMessage = message.toLowerCase();
+    
+    // Check for uncertainty indicators
+    if (lowerMessage.includes("don't know") || lowerMessage.includes("not sure") || 
+        lowerMessage.includes("uncertain") || lowerMessage.includes("exploring options")) {
+      return 'discovery';
+    }
+    
+    // Check for pain points or challenges
+    const painPointKeywords = ['problem', 'issue', 'challenge', 'difficult', 'frustrating', 'slow', 'manual', 'time-consuming'];
+    if (painPointKeywords.some(keyword => lowerMessage.includes(keyword))) {
+      return 'problem_exploration';
+    }
+    
+    // Check for specific solutions discussion
+    const solutionKeywords = ['website', 'app', 'seo', 'automation', 'system', 'platform'];
+    if (solutionKeywords.some(keyword => lowerMessage.includes(keyword))) {
+      return 'solution_discussion';
+    }
+    
+    // Check for conversion intent
+    const conversionKeywords = ['price', 'cost', 'quote', 'consultation', 'get started', 'how much'];
+    if (conversionKeywords.some(keyword => lowerMessage.includes(keyword))) {
+      return 'conversion';
+    }
+    
+    return this.responseCount === 0 ? 'initial' : 'ongoing_discovery';
+  }
+
+  // Extract business type from conversation
+  private extractBusinessType(messages: ChatMessage[]): string {
+    const businessTypes = ['restaurant', 'retail', 'ecommerce', 'service', 'consulting', 'healthcare', 'education', 'manufacturing'];
+    const allText = messages.map(m => m.content.toLowerCase()).join(' ');
+    
+    for (const type of businessTypes) {
+      if (allText.includes(type)) return type;
+    }
+    return 'unknown';
+  }
+
+  // Extract pain points from conversation
+  private extractPainPoints(messages: ChatMessage[]): string[] {
+    const painPointKeywords = [
+      'slow', 'manual', 'time-consuming', 'frustrating', 'difficult', 'complicated',
+      'expensive', 'inefficient', 'outdated', 'broken', 'confusing', 'overwhelming'
+    ];
+    
+    const allText = messages.map(m => m.content.toLowerCase()).join(' ');
+    return painPointKeywords.filter(keyword => allText.includes(keyword));
+  }
+
+  // Update conversation state based on new message
+  private updateConversationState(userMessage: string) {
+    this.conversationState.stage = this.determineConversationStage(userMessage);
+    this.conversationState.uncertaintyLevel = this.detectUncertaintyLevel(userMessage);
+    this.conversationState.businessType = this.extractBusinessType(this.conversationHistory);
+    this.conversationState.painPoints = this.extractPainPoints(this.conversationHistory);
+    this.conversationState.responseCount = this.responseCount;
+    
+    // Extract topics from recent conversation
+    const recentMessages = this.conversationHistory.slice(-4).map(m => m.content).join(' ');
+    const topicKeywords = [
+      'web development', 'app development', 'mobile app', 'website', 'seo', 'automation',
+      'business process', 'integration', 'database', 'ecommerce', 'crm', 'inventory'
+    ];
+    
+    const newTopics = topicKeywords.filter(topic => 
+      recentMessages.toLowerCase().includes(topic.toLowerCase())
+    );
+    
+    this.conversationState.topicsDiscussed = [
+      ...new Set([...this.conversationState.topicsDiscussed, ...newTopics])
+    ].slice(-5); // Keep last 5 topics
   }
 
   // Enhanced context management
@@ -149,6 +281,30 @@ export class OpenRouterService {
     return isComplex ? RECOMMENDED_MODELS.free[1] : this.model;
   }
 
+  // Build enhanced context for the server
+  private buildEnhancedContext(): string {
+    let context = this.getContextString();
+    
+    if (this.conversationState) {
+      context += ` | Stage: ${this.conversationState.stage}`;
+      context += ` | Uncertainty: ${this.conversationState.uncertaintyLevel}`;
+      
+      if (this.conversationState.businessType !== 'unknown') {
+        context += ` | Business: ${this.conversationState.businessType}`;
+      }
+      
+      if (this.conversationState.topicsDiscussed.length > 0) {
+        context += ` | Topics: ${this.conversationState.topicsDiscussed.join(', ')}`;
+      }
+      
+      if (this.conversationState.painPoints.length > 0) {
+        context += ` | Pain points: ${this.conversationState.painPoints.join(', ')}`;
+      }
+    }
+    
+    return context;
+  }
+
   // Get AI response (non-streaming) via secure server endpoint
   async getChatResponse(userMessage: string): Promise<OpenRouterResponse> {
     try {
@@ -159,6 +315,7 @@ export class OpenRouterService {
       });
 
       this.responseCount++;
+      this.updateConversationState(userMessage);
 
       // Optimize model selection based on query complexity
       const selectedModel = this.shouldOptimizeModel(userMessage);
@@ -173,10 +330,11 @@ export class OpenRouterService {
         },
         body: JSON.stringify({
           messages: this.conversationHistory.slice(1), // Exclude system prompt (handled server-side)
-          context: this.getContextString(),
+          context: this.buildEnhancedContext(),
           stream: false,
           model: selectedModel,
-          responseCount: this.responseCount // Help server understand conversation length
+          responseCount: this.responseCount,
+          conversationState: this.conversationState
         })
       });
 
@@ -185,7 +343,7 @@ export class OpenRouterService {
       }
 
       const data = await response.json();
-      const aiResponse = data.response || 'I apologize, but I couldn\'t generate a response. Please try again.';
+      const aiResponse = data.response || this.getFallbackResponse(this.conversationState.stage);
 
       // Add assistant response to history
       this.conversationHistory.push({
@@ -201,18 +359,23 @@ export class OpenRouterService {
         ];
       }
 
-      return { response: aiResponse };
+      return { 
+        response: aiResponse,
+        conversationState: this.conversationState
+      };
 
     } catch (error) {
       console.error('AI chat API error:', error);
+      const fallbackResponse = this.getFallbackResponse(this.conversationState.stage);
+      
       return {
-        response: 'I\'m experiencing technical difficulties. Please try again in a moment, or I can connect you with our live support team.',
+        response: fallbackResponse,
         error: error instanceof Error ? error.message : 'Unknown error'
       };
     }
   }
 
-  // Enhanced streaming response with better model selection
+  // Enhanced streaming response with conversation state management
   async *getChatResponseStream(userMessage: string): AsyncGenerator<string, void, unknown> {
     try {
       // Add user message to conversation history
@@ -222,6 +385,7 @@ export class OpenRouterService {
       });
 
       this.responseCount++;
+      this.updateConversationState(userMessage);
 
       // Optimize model selection
       const selectedModel = this.shouldOptimizeModel(userMessage);
@@ -236,10 +400,11 @@ export class OpenRouterService {
         },
         body: JSON.stringify({
           messages: this.conversationHistory.slice(1), // Exclude system prompt (handled server-side)
-          context: this.getContextString(),
+          context: this.buildEnhancedContext(),
           stream: true,
           model: selectedModel,
-          responseCount: this.responseCount
+          responseCount: this.responseCount,
+          conversationState: this.conversationState
         })
       });
 
@@ -305,7 +470,24 @@ export class OpenRouterService {
 
     } catch (error) {
       console.error('AI streaming error:', error);
-      yield 'I\'m experiencing technical difficulties. Please try again in a moment, or I can connect you with our live support team.';
+      const fallbackMessage = this.getFallbackResponse(this.conversationState.stage);
+      yield fallbackMessage;
+    }
+  }
+
+  // Get appropriate fallback response based on conversation stage
+  private getFallbackResponse(stage: string): string {
+    switch (stage) {
+      case 'discovery':
+        return "What does your day-to-day look like right now, and where do you feel stuck?";
+      case 'problem_exploration':
+        return "Tell me more about that challenge. How is it affecting your business?";
+      case 'solution_discussion':
+        return "Based on what you've shared, there are a few ways we could help. What would your ideal solution look like?";
+      case 'conversion':
+        return "I'd love to connect you with our team for a detailed discussion. Would you like me to arrange a consultation?";
+      default:
+        return "I'm here to help you figure out the best digital solution for your business. What's on your mind?";
     }
   }
 
@@ -319,6 +501,14 @@ export class OpenRouterService {
     ];
     this.contextInfo = [];
     this.responseCount = 0;
+    this.conversationState = {
+      stage: 'initial',
+      topicsDiscussed: [],
+      uncertaintyLevel: 'unknown',
+      businessType: 'unknown',
+      painPoints: [],
+      responseCount: 0
+    };
   }
 
   // Change model (e.g., upgrade to premium for complex queries)
@@ -327,12 +517,18 @@ export class OpenRouterService {
   }
 
   // Get conversation stats
-  getConversationStats(): { length: number; responseCount: number; model: string } {
+  getConversationStats(): { length: number; responseCount: number; model: string; state: ConversationState } {
     return {
       length: this.conversationHistory.length,
       responseCount: this.responseCount,
-      model: this.model
+      model: this.model,
+      state: this.conversationState
     };
+  }
+
+  // Get current conversation state
+  getConversationState(): ConversationState {
+    return { ...this.conversationState };
   }
 
   // Export conversation for Supabase storage
@@ -344,11 +540,18 @@ export class OpenRouterService {
   importConversation(messages: ChatMessage[]) {
     this.conversationHistory = messages;
     this.responseCount = Math.floor(messages.length / 2); // Approximate
+    
+    // Rebuild conversation state from messages
+    const userMessages = messages.filter(m => m.role === 'user');
+    if (userMessages.length > 0) {
+      const lastUserMessage = userMessages[userMessages.length - 1];
+      this.updateConversationState(lastUserMessage.content);
+    }
   }
 }
 
-// Enhanced escalation detection with less aggressive triggering
-export function shouldEscalateToSupport(userMessage: string, aiResponse: string): boolean {
+// Enhanced escalation detection with conversation stage awareness
+export function shouldEscalateToSupport(userMessage: string, aiResponse: string, conversationState?: ConversationState): boolean {
   const strongEscalationKeywords = [
     'frustrated', 'angry', 'terrible', 'awful', 'disappointed',
     'not working', 'broken', 'urgent', 'emergency',
@@ -376,7 +579,13 @@ export function shouldEscalateToSupport(userMessage: string, aiResponse: string)
                            aiResponse.includes('I don\'t know') ||
                            aiResponse.includes('I\'m not sure');
 
-  return hasStrongIndicators || (hasModerateIndicators && aiHasDifficulties);
+  // Stage-based escalation logic
+  const shouldEscalateByStage = conversationState && (
+    conversationState.stage === 'conversion' || 
+    (conversationState.responseCount > 5 && conversationState.stage === 'solution_discussion')
+  );
+
+  return hasStrongIndicators || (hasModerateIndicators && aiHasDifficulties) || Boolean(shouldEscalateByStage);
 }
 
 // Export singleton instance for easy usage
