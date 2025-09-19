@@ -1,5 +1,4 @@
--- Supabase Chat System Database Schema
--- Run this script in your Supabase SQL Editor to create the required tables
+-- Supabase Chat System Database Schema (Production-Ready)
 
 -- 1. Create chat_sessions table
 create table if not exists chat_sessions (
@@ -56,26 +55,33 @@ alter table chat_messages enable row level security;
 alter table chat_analytics enable row level security;
 alter table support_escalations enable row level security;
 
--- 7. Create secure RLS policies
--- Production-ready policies that restrict access based on session tokens
+-- 7. Drop existing policies (if they exist) and create production-ready policies
 
--- Policies for chat_sessions
--- Allow anon users to insert new sessions (public chatbot access)
-create policy if not exists "anon_insert_sessions" on chat_sessions 
-  for insert to anon using (true) with check (true);
+-- Drop policies for chat_sessions
+drop policy if exists "anon_read_own_sessions" on chat_sessions;
+drop policy if exists "anon_update_own_sessions" on chat_sessions;
 
--- Allow anon users to read/update only their own sessions based on session_token
--- Note: This requires passing session_token in app context or using custom claims
-create policy if not exists "anon_read_own_sessions" on chat_sessions 
+-- Drop policies for chat_messages
+drop policy if exists "anon_insert_own_messages" on chat_messages;
+drop policy if exists "anon_read_own_messages" on chat_messages;
+
+-- Drop policies for chat_analytics
+drop policy if exists "anon_full_access_analytics" on chat_analytics;
+
+-- Drop policies for support_escalations
+drop policy if exists "anon_full_access_escalations" on support_escalations;
+
+-- Create production-ready policies for chat_sessions
+create policy "anon_read_own_sessions" on chat_sessions 
   for select to anon using (session_token = current_setting('app.session_token', true));
 
-create policy if not exists "anon_update_own_sessions" on chat_sessions 
+create policy "anon_update_own_sessions" on chat_sessions 
   for update to anon using (session_token = current_setting('app.session_token', true));
 
--- Policies for chat_messages  
--- Allow anon users to insert messages only for their own sessions
-create policy if not exists "anon_insert_own_messages" on chat_messages 
-  for insert to anon using (
+-- Create production-ready policies for chat_messages
+create policy "anon_insert_own_messages" on chat_messages
+  for insert to anon
+  with check (
     exists (
       select 1 from chat_sessions 
       where id = session_id 
@@ -83,8 +89,7 @@ create policy if not exists "anon_insert_own_messages" on chat_messages
     )
   );
 
--- Allow anon users to read messages only from their own sessions
-create policy if not exists "anon_read_own_messages" on chat_messages 
+create policy "anon_read_own_messages" on chat_messages 
   for select to anon using (
     exists (
       select 1 from chat_sessions 
@@ -96,7 +101,7 @@ create policy if not exists "anon_read_own_messages" on chat_messages
 -- Policies for chat_analytics (server-side only via Edge Functions)
 -- No anon policies - analytics should be written by service_role only
 
--- Policies for support_escalations (server-side only via Edge Functions)  
+-- Policies for support_escalations (server-side only via Edge Functions)
 -- No anon policies - escalations should be created by service_role only
 
 -- 8. Create updated_at trigger for chat_sessions
@@ -108,7 +113,7 @@ begin
 end;
 $$ language plpgsql;
 
--- Create trigger for automatic timestamp update
+-- Drop existing trigger if any, and create new one for automatic timestamp update
 drop trigger if exists update_chat_sessions_updated_at on chat_sessions;
 create trigger update_chat_sessions_updated_at
   before update on chat_sessions
@@ -116,7 +121,7 @@ create trigger update_chat_sessions_updated_at
   execute function update_updated_at_column();
 
 -- 9. Grant minimal necessary permissions (secure approach)
-grant usage on schema public to anon;
+-- Only grant permissions that are absolutely necessary
 
 -- Grant specific table permissions instead of blanket grants
 grant select, insert on chat_sessions to anon;
@@ -127,7 +132,7 @@ grant select, insert on chat_messages to anon;
 -- Analytics and escalations tables: no anon grants
 -- These should only be accessible via Edge Functions using service_role
 
--- Grant sequence permissions for UUID generation
+-- Grant sequence permissions for UUID generation (if needed)
 grant usage on all sequences in schema public to anon;
 
 -- 10. Verify tables were created successfully
@@ -139,22 +144,18 @@ where table_schema = 'public'
   and table_name in ('chat_sessions', 'chat_messages', 'chat_analytics', 'support_escalations')
 order by table_name;
 
--- Instructions:
--- 1. Copy and paste this entire script into your Supabase SQL Editor
--- 2. Click "Run" to execute all commands
--- 3. Verify that all 4 tables are created successfully
--- 4. Configure session token handling in your app:
---    - Set current_setting('app.session_token', session_token) before DB operations
---    - Or use custom JWT claims for session identification
--- 5. Deploy your Supabase Edge Functions:
---    - Go to Supabase Dashboard → Edge Functions
---    - Deploy the ai-chat function: supabase functions deploy ai-chat
---    - Set the OPENROUTER_API_KEY secret: supabase secrets set OPENROUTER_API_KEY=your_key
--- 6. For production: Remove the development RLS policies if using JWT-based auth
--- 7. Analytics and escalations should be handled server-side via Edge Functions
+-- QUICK START INSTRUCTIONS:
+-- 1. Copy this script to your Supabase SQL Editor and run it
+-- 2. Deploy the ai-chat Edge Function if not already done:
+--    supabase functions deploy ai-chat
+-- 3. Set the OPENROUTER_API_KEY secret:
+--    supabase secrets set OPENROUTER_API_KEY=your_key_here
+-- 4. Test the chat functionality on your website
 
--- SECURITY NOTES:
--- - chat_sessions and chat_messages: Limited anon access with session-based RLS
--- - chat_analytics and support_escalations: Server-side only (service_role)
--- - Session tokens should be generated client-side and stored securely
--- - Consider implementing JWT-based auth for better security in production
+-- IMPORTANT FOR PRODUCTION:
+-- This schema is now configured for production.
+-- Before deploying to production:
+-- 1. Make sure session_token handling is implemented securely on the client-side and server-side
+-- 2. Ensure Edge Functions are deployed to handle chat operations securely
+-- 3. Monitor and maintain RLS policies and security measures
+-- 4. Test thoroughly wi
