@@ -1,8 +1,19 @@
 import { createClient } from '@supabase/supabase-js';
 import { projectId, publicAnonKey } from './info';
 
-const supabaseUrl = `https://${projectId}.supabase.co`;
-const supabase = createClient(supabaseUrl, publicAnonKey);
+// Use environment variables with fallback to info.tsx for compatibility
+const getSupabaseConfig = () => {
+  const envUrl = import.meta.env.VITE_SUPABASE_URL;
+  const envKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  
+  return {
+    url: envUrl || `https://${projectId}.supabase.co`,
+    key: envKey || publicAnonKey
+  };
+};
+
+const { url: supabaseUrl, key: supabaseAnonKey } = getSupabaseConfig();
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 import { ChatMessage } from '../services/openrouter';
 
 export interface ChatSession {

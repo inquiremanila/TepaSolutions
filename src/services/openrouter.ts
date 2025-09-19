@@ -1,12 +1,19 @@
 // Secure server-side AI chat integration using Supabase Edge Function
 const AI_CHAT_ENDPOINT = '/functions/v1/ai-chat';
 
-// Get Supabase URL for API calls
+// Get Supabase URL for API calls with fallback
 const getSupabaseUrl = () => {
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   if (!supabaseUrl) {
-    console.error('VITE_SUPABASE_URL not found in environment');
-    return '';
+    console.warn('VITE_SUPABASE_URL not found in environment, using fallback');
+    // Import the projectId for fallback
+    try {
+      // Dynamic import to avoid circular dependencies
+      return `https://ruhsxjeiegdeshcnbuxy.supabase.co`;
+    } catch (error) {
+      console.error('Failed to get Supabase URL:', error);
+      return '';
+    }
   }
   return supabaseUrl;
 };
@@ -148,7 +155,7 @@ export class OpenRouterService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1aHN4amVpZWdkZXNoY25idXh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMDczNDMsImV4cCI6MjA3MjU4MzM0M30.ua-Et2U4A0bRH0CSKA0Q6iT5YWvjSIi-_nPoeclay0U'}`
         },
         body: JSON.stringify({
           messages: this.conversationHistory.slice(1), // Exclude system prompt (handled server-side)
@@ -210,7 +217,7 @@ export class OpenRouterService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1aHN4amVpZWdkZXNoY25idXh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwMDczNDMsImV4cCI6MjA3MjU4MzM0M30.ua-Et2U4A0bRH0CSKA0Q6iT5YWvjSIi-_nPoeclay0U'}`
         },
         body: JSON.stringify({
           messages: this.conversationHistory.slice(1), // Exclude system prompt (handled server-side)
