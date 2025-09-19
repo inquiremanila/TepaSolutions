@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2, Upload, ThumbsUp, ThumbsDown, Zap } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2, Upload, ThumbsUp, ThumbsDown, Zap, Lightbulb } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -21,6 +21,7 @@ interface Message {
   awaitingFeedback?: boolean;
   isStreaming?: boolean;
   error?: boolean;
+  suggestions?: string[];
 }
 
 interface TicketForm {
@@ -32,21 +33,75 @@ interface TicketForm {
 
 const initialBotMessage: Message = {
   id: '1',
-  text: 'Hi! I\'m Tepabot, your advanced AI assistant from Tepa Solutions. I\'m powered by cutting-edge AI to provide you with detailed, personalized help about our digital transformation services.\n\nHow can I help you today?',
+  text: 'Hi! I\'m Tepabot, your AI assistant from Tepa Solutions. I\'m here to help you with our digital transformation services, answer questions about pricing, development processes, and connect you with our team when needed.\n\nWhat would you like to know?',
   isBot: true,
   timestamp: new Date()
 };
 
-const suggestedInquiries = [
-  "What services does Tepa Solutions offer?",
-  "Can you help me with pricing for my project?",
-  "I need help with business automation",
-  "Tell me about your web development process",
-  "How can I schedule a consultation?",
-  "What technologies do you use?"
-];
-
-// AI-powered responses will replace this static approach
+// Smart suggestion predictor based on conversation context
+const generateSmartSuggestions = (lastMessage: string, conversationHistory: Message[]): string[] => {
+  const lowerMessage = lastMessage.toLowerCase();
+  const hasDiscussedServices = conversationHistory.some(msg => 
+    msg.text.toLowerCase().includes('service') || msg.text.toLowerCase().includes('development')
+  );
+  
+  // Context-aware suggestions
+  if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('budget')) {
+    return [
+      "What factors affect the pricing?",
+      "Can I get a detailed quote?",
+      "Do you offer payment plans?"
+    ];
+  }
+  
+  if (lowerMessage.includes('web') || lowerMessage.includes('website')) {
+    return [
+      "What's your web development process?",
+      "How long does a website take?",
+      "Can you show me examples of your work?"
+    ];
+  }
+  
+  if (lowerMessage.includes('app') || lowerMessage.includes('mobile')) {
+    return [
+      "What platforms do you develop for?",
+      "How much does app development cost?",
+      "Can you help with app store deployment?"
+    ];
+  }
+  
+  if (lowerMessage.includes('seo') || lowerMessage.includes('marketing')) {
+    return [
+      "What SEO services do you offer?",
+      "How do you measure SEO success?",
+      "Can you help improve my current website's SEO?"
+    ];
+  }
+  
+  if (lowerMessage.includes('automation') || lowerMessage.includes('business')) {
+    return [
+      "What processes can you automate?",
+      "How much time does automation save?",
+      "Can you integrate with existing systems?"
+    ];
+  }
+  
+  // General suggestions if no specific context
+  if (!hasDiscussedServices && conversationHistory.length <= 3) {
+    return [
+      "Tell me about your services",
+      "How do I get started?",
+      "Can I schedule a consultation?"
+    ];
+  }
+  
+  // Follow-up suggestions
+  return [
+    "Can you provide more details?",
+    "How do I get started?",
+    "I'd like to speak with your team"
+  ];
+};
 
 export function Tepabot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,6 +113,12 @@ export function Tepabot() {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
   const [isAIResponding, setIsAIResponding] = useState(false);
   const [chatSession, setChatSession] = useState<ChatSession | null>(null);
+  const [lastActivityTime, setLastActivityTime] = useState<Date>(new Date());
+  const [inactivityTimer, setInactivityTimer] = useState<NodeJS.Timeout | null>(null);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [currentSuggestions, setCurrentSuggestions] = useState<string[]>([]);
+  const [conversationContext, setConversationContext] = useState<string[]>([]);
+  
   const [ticketForm, setTicketForm] = useState<TicketForm>({
     name: '',
     contactNumber: '',
@@ -107,7 +168,6 @@ export function Tepabot() {
           }
         } catch (error) {
           console.error('Failed to initialize chat session:', error);
-          // Continue without session storage if it fails
         }
       };
       
@@ -115,12 +175,52 @@ export function Tepabot() {
     }
   }, [isOpen, chatSession]);
 
+  // Inactivity tracking
+  useEffect(() => {
+    const resetInactivityTimer = () => {
+      if (inactivityTimer) {
+        clearTimeout(inactivityTimer);
+      }
+      
+      const timer = setTimeout(() => {
+        if (messages.length > 1 && !isAIResponding) {
+          const checkInMessage: Message = {
+            id: Date.now().toString(),
+            text: 'I\'m still here if you need any help! Is there anything else I can assist you with regarding our services?',
+            isBot: true,
+            timestamp: new Date(),
+            hasActions: true
+          };
+          setMessages(prev => [...prev, checkInMessage]);
+          
+          // Store check-in message
+          if (chatSession?.id) {
+            storeChatMessage(chatSession.id, checkInMessage.text, true, 'system', {
+              message_type: 'inactivity_check'
+            }).catch(console.error);
+          }
+        }
+      }, 120000); // 2 minutes of inactivity
+      
+      setInactivityTimer(timer);
+    };
+
+    if (isOpen && messages.length > 1) {
+      resetInactivityTimer();
+    }
+
+    return () => {
+      if (inactivityTimer) {
+        clearTimeout(inactivityTimer);
+      }
+    };
+  }, [lastActivityTime, isOpen, messages.length, isAIResponding, chatSession]);
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
       setAttachedFiles(prev => [...prev, ...files]);
       
-      // Add message about file upload
       const fileMessage: Message = {
         id: Date.now().toString(),
         text: `📎 Uploaded ${files.length} file(s): ${files.map(f => f.name).join(', ')}`,
@@ -135,11 +235,12 @@ export function Tepabot() {
     setAttachedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  // AI-powered response generation with streaming
+  // Enhanced AI response with better conversation flow
   const generateAIResponse = async (input: string) => {
     if (!input.trim()) return;
 
     setIsAIResponding(true);
+    setShowSuggestions(false);
     
     // Create placeholder message for streaming
     const responseId = (Date.now() + 1).toString();
@@ -154,10 +255,15 @@ export function Tepabot() {
     setMessages(prev => [...prev, streamingMessage]);
 
     try {
-      // Add context about user's location in the website
+      // Add context about user's location and conversation history
       const currentPath = window.location.pathname;
       if (currentPath !== '/') {
         openRouterService.addContext(`User is currently viewing: ${currentPath}`);
+      }
+
+      // Add conversation context for better responses
+      if (conversationContext.length > 0) {
+        openRouterService.addContext(`Previous topics discussed: ${conversationContext.join(', ')}`);
       }
 
       let fullResponse = '';
@@ -176,10 +282,13 @@ export function Tepabot() {
         );
         
         // Small delay to make streaming visible
-        await new Promise(resolve => setTimeout(resolve, 20));
+        await new Promise(resolve => setTimeout(resolve, 15));
       }
       
-      // Finalize the message
+      // Generate smart suggestions based on the AI response
+      const suggestions = generateSmartSuggestions(fullResponse, messages);
+      
+      // Finalize the message with suggestions
       setMessages(prev => 
         prev.map(msg => 
           msg.id === responseId 
@@ -187,30 +296,42 @@ export function Tepabot() {
                 ...msg, 
                 text: fullResponse,
                 isStreaming: false,
-                awaitingFeedback: true
+                awaitingFeedback: true,
+                suggestions: suggestions
               }
             : msg
         )
       );
 
+      // Show suggestions after a brief delay
+      setTimeout(() => {
+        setCurrentSuggestions(suggestions);
+        setShowSuggestions(true);
+      }, 1000);
+
+      // Update conversation context
+      const topics = extractTopics(input + ' ' + fullResponse);
+      setConversationContext(prev => [...new Set([...prev, ...topics])].slice(-5)); // Keep last 5 topics
+
       // Store AI response in Supabase
       if (chatSession?.id) {
         try {
           await storeChatMessage(chatSession.id, fullResponse, true, 'text', {
-            model_used: 'meta-llama/llama-3.2-3b-instruct:free',
-            response_time: Date.now() - (new Date()).getTime() // Approximate
+            model_used: 'deepseek/deepseek-chat-v3.1:free',
+            response_time: Date.now() - (new Date()).getTime(),
+            suggestions_provided: suggestions
           });
         } catch (error) {
           console.error('Failed to store AI message:', error);
         }
       }
 
-      // Check if we should escalate to live support
-      if (shouldEscalateToSupport(input, fullResponse)) {
+      // Check if we should escalate to live support (less aggressive)
+      if (shouldEscalateToSupport(input, fullResponse) && Math.random() < 0.3) { // Only 30% chance
         setTimeout(async () => {
           const escalationMessage: Message = {
             id: (Date.now() + 2).toString(),
-            text: 'It seems like you might need more personalized assistance. Would you like me to connect you with our live support team?',
+            text: 'Would you like to connect with our live support team for more personalized assistance?',
             isBot: true,
             timestamp: new Date(),
             hasActions: true
@@ -225,28 +346,7 @@ export function Tepabot() {
               console.error('Failed to trigger escalation:', error);
             }
           }
-        }, 1000);
-      } else {
-        // Ask follow-up question
-        setTimeout(async () => {
-          const followUpMessage: Message = {
-            id: (Date.now() + 3).toString(),
-            text: 'Is there anything else I can help you with regarding our services?',
-            isBot: true,
-            timestamp: new Date(),
-            hasActions: true
-          };
-          setMessages(prev => [...prev, followUpMessage]);
-          
-          // Store follow-up message
-          if (chatSession?.id) {
-            try {
-              await storeChatMessage(chatSession.id, followUpMessage.text, true, 'system');
-            } catch (error) {
-              console.error('Failed to store follow-up message:', error);
-            }
-          }
-        }, 1500);
+        }, 3000);
       }
       
     } catch (error) {
@@ -273,7 +373,20 @@ export function Tepabot() {
       }, 1000);
     } finally {
       setIsAIResponding(false);
+      setLastActivityTime(new Date());
     }
+  };
+
+  // Extract topics from conversation for context
+  const extractTopics = (text: string): string[] => {
+    const keywords = [
+      'web development', 'app development', 'seo', 'automation', 'business',
+      'pricing', 'consultation', 'project', 'timeline', 'technology', 'service'
+    ];
+    
+    return keywords.filter(keyword => 
+      text.toLowerCase().includes(keyword)
+    );
   };
 
   const handleSendMessage = async (messageText?: string) => {
@@ -289,6 +402,8 @@ export function Tepabot() {
 
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
+    setShowSuggestions(false);
+    setLastActivityTime(new Date());
 
     // Store user message in Supabase if session exists
     if (chatSession?.id) {
@@ -331,7 +446,12 @@ export function Tepabot() {
     // Generate AI response with small delay for natural feel
     setTimeout(() => {
       generateAIResponse(text);
-    }, 300);
+    }, 200);
+  };
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setShowSuggestions(false);
+    handleSendMessage(suggestion);
   };
 
   const handleFeedback = (messageId: string, isPositive: boolean) => {
@@ -341,21 +461,20 @@ export function Tepabot() {
         : msg
     ));
 
-    const feedbackMessage: Message = {
-      id: Date.now().toString(),
-      text: isPositive 
-        ? 'Thank you for the positive feedback! Is there anything else I can help you with?'
-        : 'Thank you for the feedback. Let me connect you with our live support team for better assistance.',
-      isBot: true,
-      timestamp: new Date()
-    };
-
-    setMessages(prev => [...prev, feedbackMessage]);
-
     if (!isPositive) {
+      const feedbackMessage: Message = {
+        id: Date.now().toString(),
+        text: 'Thank you for the feedback. Let me connect you with our live support team for better assistance.',
+        isBot: true,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, feedbackMessage]);
       setTimeout(() => {
         setShowTicketForm(true);
       }, 1000);
+    } else {
+      // Just acknowledge positive feedback, don't ask follow-up immediately
+      toast.success('Thank you for the positive feedback!');
     }
   };
 
@@ -384,7 +503,7 @@ export function Tepabot() {
 
       const successMessage: Message = {
         id: Date.now().toString(),
-        text: 'Perfect! I\'ve created a support ticket for you. Our team will contact you shortly. Is there anything else I can help you with?',
+        text: 'Perfect! I\'ve created a support ticket for you. Our team will contact you shortly. Your ticket reference number will be sent to your email.',
         isBot: true,
         timestamp: new Date()
       };
@@ -411,9 +530,17 @@ export function Tepabot() {
   const resetChat = async () => {
     setMessages([initialBotMessage]);
     setShowTicketForm(false);
+    setShowSuggestions(false);
+    setCurrentSuggestions([]);
+    setConversationContext([]);
     setTicketForm({ name: '', contactNumber: '', email: '', message: '' });
     setAttachedFiles([]);
     setIsAIResponding(false);
+    setLastActivityTime(new Date());
+    
+    if (inactivityTimer) {
+      clearTimeout(inactivityTimer);
+    }
     
     // Complete current session if exists
     if (chatSession?.id) {
@@ -448,7 +575,6 @@ export function Tepabot() {
       }
     } catch (error) {
       console.error('Failed to create new chat session:', error);
-      // Continue without session if it fails
       setChatSession(null);
     }
   };
@@ -473,7 +599,7 @@ export function Tepabot() {
           transition={{ delay: 1 }}
           className="absolute bottom-16 right-0 bg-primary text-primary-foreground px-3 py-2 rounded-lg text-sm whitespace-nowrap shadow-lg"
         >
-          Chat with Tepabot!
+          Chat with Tepabot AI!
           <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-primary"></div>
         </motion.div>
       </motion.div>
@@ -540,26 +666,6 @@ export function Tepabot() {
               exit={{ height: 0 }}
               className="flex flex-col flex-1 overflow-hidden"
             >
-              {/* Suggested Inquiries */}
-              {messages.length === 1 && (
-                <div className="p-4 border-b bg-muted/30">
-                  <p className="text-xs text-muted-foreground mb-2">Quick suggestions:</p>
-                  <div className="grid grid-cols-1 gap-2">
-                    {suggestedInquiries.map((inquiry, index) => (
-                      <Button
-                        key={index}
-                        variant="outline"
-                        size="sm"
-                        className="text-xs h-auto py-2 text-left justify-start"
-                        onClick={() => handleSendMessage(inquiry)}
-                      >
-                        {inquiry}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
               {/* Messages */}
               <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
                 {messages.map((message) => (
@@ -603,7 +709,7 @@ export function Tepabot() {
                               transition={{ duration: 1, repeat: Infinity }}
                               className="ml-1"
                             >
-                              ▍
+                              ▋
                             </motion.span>
                           )}
                         </p>
@@ -636,6 +742,34 @@ export function Tepabot() {
                     </div>
                   </motion.div>
                 ))}
+
+                {/* Smart Suggestions */}
+                <AnimatePresence>
+                  {showSuggestions && currentSuggestions.length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="flex flex-col gap-2"
+                    >
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <Lightbulb className="w-3 h-3" />
+                        <span>Suggestions:</span>
+                      </div>
+                      {currentSuggestions.map((suggestion, index) => (
+                        <Button
+                          key={index}
+                          variant="outline"
+                          size="sm"
+                          className="text-xs h-auto py-2 text-left justify-start"
+                          onClick={() => handleSuggestionClick(suggestion)}
+                        >
+                          {suggestion}
+                        </Button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
                 
                 {/* Ticket Form */}
                 <AnimatePresence>

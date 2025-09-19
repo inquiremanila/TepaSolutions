@@ -21,7 +21,7 @@ export interface OpenRouterResponse {
   error?: string;
 }
 
-// Enhanced customer support system prompt
+// Enhanced customer support system prompt with better conversation flow
 const CUSTOMER_SUPPORT_PROMPT = `You are Tepabot, an advanced AI customer support assistant for Tepa Solutions, a growing Philippine-based startup founded in 2024 by Jerrie Mataya. You specialize in making technology simpler and more useful for businesses.
 
 COMPANY INFORMATION:
@@ -44,44 +44,53 @@ PROJECT APPROACH:
 - Free initial consultations available
 - Ongoing maintenance and support included
 
-RESPONSE GUIDELINES:
-1. Be friendly, professional, and helpful
+CONVERSATION GUIDELINES:
+1. Be conversational, helpful, and professional but not overly formal
 2. Provide specific, detailed information about Tepa Solutions
-3. Ask clarifying questions to better understand customer needs
-4. Offer solutions and next steps (consultation, quote, contact with team)
-5. If you can't answer something, offer to connect them with live support
-6. Keep responses conversational but informative
-7. Show enthusiasm about helping with their digital transformation needs
-8. Mention relevant case studies or portfolio examples when appropriate
+3. Ask ONE clarifying question when helpful, but don't overwhelm with multiple questions
+4. Offer solutions and next steps naturally (consultation, quote, contact with team)
+5. If you can't answer something specific, offer to connect them with live support
+6. Keep responses engaging and informative without being too lengthy
+7. Show genuine enthusiasm about helping with their digital transformation needs
+8. Only mention case studies or portfolio examples if directly relevant to their question
+
+RESPONSE BEHAVIOR:
+- DO NOT automatically ask "Is there anything else I can help you with?" after every response
+- Only ask follow-up questions when they would genuinely add value to the conversation
+- Focus on being helpful and informative rather than pushing for more conversation
+- Let conversations flow naturally - some queries just need a direct answer
+- Be responsive to the user's communication style and energy level
 
 IMPORTANT: 
 - Always stay in character as Tepabot from Tepa Solutions
 - Provide accurate information about services and company
-- Be proactive in offering solutions and consultation opportunities
-- If asked about pricing, mention it varies by project scope and offer consultation
-- For complex technical questions, suggest speaking with the development team`;
+- Be proactive in offering solutions when appropriate, but don't be pushy
+- For pricing questions, explain it varies by project scope and offer consultation
+- For complex technical questions, provide what you can and suggest speaking with the development team
+- Focus on being genuinely helpful rather than extending conversation length`;
 
-// Recommended OpenRouter models for customer support
+// Updated model recommendations with your preferred choices
 export const RECOMMENDED_MODELS = {
-  // Free models for development/testing
+  // Free models for development/testing - using your preferred models
   free: [
-    'meta-llama/llama-3.2-3b-instruct:free',
-    'microsoft/phi-3.5-mini-instruct:free',
+    'deepseek/deepseek-chat-v3.1:free',
+    'openai/gpt-oss-120b:free',
   ],
-  // Premium models for production
+  // Premium models for production (backup options)
   premium: [
     'anthropic/claude-3.5-sonnet',
     'openai/gpt-4o-mini',
-    'meta-llama/llama-3.1-8b-instruct',
+    'deepseek/deepseek-chat',
   ]
 };
 
 export class OpenRouterService {
   private model: string;
   private conversationHistory: ChatMessage[] = [];
+  private responseCount: number = 0; // Track conversation length
 
   constructor(model?: string) {
-    // Default to a free model for development
+    // Default to your preferred free model
     this.model = model || RECOMMENDED_MODELS.free[0];
     
     // Initialize with system prompt
@@ -105,6 +114,21 @@ export class OpenRouterService {
     return this.contextInfo.length > 0 ? this.contextInfo.join('; ') : '';
   }
 
+  // Enhanced context management
+  private shouldOptimizeModel(userMessage: string): string {
+    const complexityIndicators = [
+      'complex', 'detailed', 'technical', 'architecture', 'integration', 
+      'advanced', 'custom', 'enterprise', 'scalable', 'performance'
+    ];
+    
+    const isComplex = complexityIndicators.some(indicator => 
+      userMessage.toLowerCase().includes(indicator)
+    );
+    
+    // Use better model for complex queries
+    return isComplex ? RECOMMENDED_MODELS.free[1] : this.model;
+  }
+
   // Get AI response (non-streaming) via secure server endpoint
   async getChatResponse(userMessage: string): Promise<OpenRouterResponse> {
     try {
@@ -113,6 +137,11 @@ export class OpenRouterService {
         role: 'user',
         content: userMessage
       });
+
+      this.responseCount++;
+
+      // Optimize model selection based on query complexity
+      const selectedModel = this.shouldOptimizeModel(userMessage);
 
       const supabaseUrl = getSupabaseUrl();
       const response = await fetch(`${supabaseUrl}${AI_CHAT_ENDPOINT}`, {
@@ -124,7 +153,9 @@ export class OpenRouterService {
         body: JSON.stringify({
           messages: this.conversationHistory.slice(1), // Exclude system prompt (handled server-side)
           context: this.getContextString(),
-          stream: false
+          stream: false,
+          model: selectedModel,
+          responseCount: this.responseCount // Help server understand conversation length
         })
       });
 
@@ -141,11 +172,11 @@ export class OpenRouterService {
         content: aiResponse
       });
 
-      // Keep conversation history manageable (last 10 exchanges)
-      if (this.conversationHistory.length > 21) { // system + 10 exchanges
+      // Keep conversation history manageable (last 12 exchanges for better context)
+      if (this.conversationHistory.length > 25) { // system + 12 exchanges
         this.conversationHistory = [
           this.conversationHistory[0], // Keep system prompt
-          ...this.conversationHistory.slice(-20) // Keep last 20 messages
+          ...this.conversationHistory.slice(-24) // Keep last 24 messages
         ];
       }
 
@@ -160,7 +191,7 @@ export class OpenRouterService {
     }
   }
 
-  // Streaming response for better UX via secure server endpoint
+  // Enhanced streaming response with better model selection
   async *getChatResponseStream(userMessage: string): AsyncGenerator<string, void, unknown> {
     try {
       // Add user message to conversation history
@@ -168,6 +199,11 @@ export class OpenRouterService {
         role: 'user',
         content: userMessage
       });
+
+      this.responseCount++;
+
+      // Optimize model selection
+      const selectedModel = this.shouldOptimizeModel(userMessage);
 
       const supabaseUrl = getSupabaseUrl();
       const response = await fetch(`${supabaseUrl}${AI_CHAT_ENDPOINT}`, {
@@ -179,7 +215,9 @@ export class OpenRouterService {
         body: JSON.stringify({
           messages: this.conversationHistory.slice(1), // Exclude system prompt (handled server-side)
           context: this.getContextString(),
-          stream: true
+          stream: true,
+          model: selectedModel,
+          responseCount: this.responseCount
         })
       });
 
@@ -216,10 +254,10 @@ export class OpenRouterService {
                 });
 
                 // Keep conversation history manageable
-                if (this.conversationHistory.length > 21) {
+                if (this.conversationHistory.length > 25) {
                   this.conversationHistory = [
                     this.conversationHistory[0],
-                    ...this.conversationHistory.slice(-20)
+                    ...this.conversationHistory.slice(-24)
                   ];
                 }
                 return;
@@ -254,10 +292,11 @@ export class OpenRouterService {
     this.conversationHistory = [
       {
         role: 'system',
-        content: 'System prompt handled server-side'
+        content: CUSTOMER_SUPPORT_PROMPT
       }
     ];
     this.contextInfo = [];
+    this.responseCount = 0;
   }
 
   // Change model (e.g., upgrade to premium for complex queries)
@@ -265,9 +304,13 @@ export class OpenRouterService {
     this.model = model;
   }
 
-  // Get conversation length for context management
-  getConversationLength(): number {
-    return this.conversationHistory.length;
+  // Get conversation stats
+  getConversationStats(): { length: number; responseCount: number; model: string } {
+    return {
+      length: this.conversationHistory.length,
+      responseCount: this.responseCount,
+      model: this.model
+    };
   }
 
   // Export conversation for Supabase storage
@@ -278,22 +321,40 @@ export class OpenRouterService {
   // Import conversation from Supabase
   importConversation(messages: ChatMessage[]) {
     this.conversationHistory = messages;
+    this.responseCount = Math.floor(messages.length / 2); // Approximate
   }
 }
 
-// Utility function to determine if we should escalate to live support
+// Enhanced escalation detection with less aggressive triggering
 export function shouldEscalateToSupport(userMessage: string, aiResponse: string): boolean {
-  const escalationKeywords = [
-    'frustrated', 'angry', 'unhappy', 'disappointed', 'terrible', 'awful',
-    'not working', 'broken', 'bug', 'error', 'problem', 'issue', 'urgent',
-    'cancel', 'refund', 'complaint', 'manager', 'human', 'agent', 'speak to someone'
+  const strongEscalationKeywords = [
+    'frustrated', 'angry', 'terrible', 'awful', 'disappointed',
+    'not working', 'broken', 'urgent', 'emergency',
+    'cancel', 'refund', 'complaint', 'manager'
+  ];
+
+  const moderateEscalationKeywords = [
+    'problem', 'issue', 'bug', 'error', 'help',
+    'human', 'agent', 'speak to someone', 'not satisfied'
   ];
 
   const messageToCheck = (userMessage + ' ' + aiResponse).toLowerCase();
   
-  return escalationKeywords.some(keyword => messageToCheck.includes(keyword)) ||
-         aiResponse.includes('technical difficulties') ||
-         aiResponse.includes('I don\'t know');
+  // Strong indicators always trigger escalation
+  const hasStrongIndicators = strongEscalationKeywords.some(keyword => 
+    messageToCheck.includes(keyword)
+  );
+  
+  // Moderate indicators need multiple occurrences or AI difficulties
+  const hasModerateIndicators = moderateEscalationKeywords.filter(keyword => 
+    messageToCheck.includes(keyword)
+  ).length >= 2;
+  
+  const aiHasDifficulties = aiResponse.includes('technical difficulties') ||
+                           aiResponse.includes('I don\'t know') ||
+                           aiResponse.includes('I\'m not sure');
+
+  return hasStrongIndicators || (hasModerateIndicators && aiHasDifficulties);
 }
 
 // Export singleton instance for easy usage

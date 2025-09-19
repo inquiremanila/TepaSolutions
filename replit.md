@@ -84,9 +84,21 @@ This is a React + TypeScript application for Tepa Solutions website, built with 
 - **Forms Configuration**: Comprehensive guide for modifying forms, validation, and backend integration  
 - **Located at**: `src/guides/` directory with detailed instructions for future maintenance  
 
-## Notes
-- The project uses a custom router implementation instead of React Router  
-- Multiple page components for different service offerings  
-- Extensive use of Radix UI components for accessibility  
-- Configured for production deployment on static hosting/CDN  
-- Development server runs on Replit, production uses Cloudflare for global performance  
+## Tepabot AI CHAT
+- **Uses Open Router**: As the brain of the chat and acts as a 24/7 customer service rep. 
+- **ENV Open Router**: the key is in .ENV Stil deploying to cloudflare for production.
+-**Uses Model** deepseek/deepseek-chat-v3.1:free or openai/gpt-oss-120b:free
+-**ENSURE THAT THIS IS ALWAYS WORKING**
+
+##IMPORTANT
+Do not change layout
+forms are always working to supabase
+and chat always works as intended
+always write with clean code and avoid duplication
+
+Files: TepaSolutions\src\supabase\chat-api.ts
+TepaSolutions\src\supabase\functions\ai-chat\index.ts
+TepaSolutions\src\services\openrouter.ts
+TepaSolutions\src\components\Tepabot.tsx
+TepaSolutions\deno.json
+TepaSolutions\.env
