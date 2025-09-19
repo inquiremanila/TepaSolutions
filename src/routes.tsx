@@ -22,6 +22,7 @@ import { ArticlesPage } from './DynamicData/ArticlesPage'
 import { InvestorsPage } from './pages/InvestorsPage'
 import { WhoWeServePage } from './pages/WhoWeServePage'
 import { VolunteerPage } from './pages/VolunteerPage'
+import { ContactUsPage } from './pages/ContactUsPage'
 import { ContactSalesPage } from './components/Forms/ContactSalesPage'
 import { ContactSupportPage } from './components/Forms/ContactSupportPage'
 import { ContactEventHostPage } from './components/Forms/ContactEventHostPage'
@@ -135,6 +136,10 @@ export const routes: RouteRecord[] = [
       },
       
       // Contact Pages
+      {
+        path: 'contact-us',
+        Component: withNav(ContactUsPage),
+      },
       {
         path: 'contact-us/sales',
         Component: withNav(ContactSalesPage),

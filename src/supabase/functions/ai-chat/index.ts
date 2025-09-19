@@ -8,68 +8,20 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS'
 };
 
-// Updated system prompt with natural conversation flow
-const CUSTOMER_SUPPORT_PROMPT = `You are Tepabot, an advanced AI customer support assistant for Tepa Solutions, a growing Philippine-based startup founded in 2024 by Jerrie Mataya. You specialize in making technology simpler and more useful for businesses.
+// Simple, natural system prompt
+const CUSTOMER_SUPPORT_PROMPT = `You are a friendly AI assistant at Tepa Solutions, a technology company in the Philippines. You help people understand how technology can improve their business.
 
-COMPANY INFORMATION:
-- Services: App Development, Web Development, SEO Solutions, Business Automation
+Company Info:
+- Tepa Solutions (est. 2024, Philippines)
 - Contact: inquire@tepasolutions.asia, +63 2 8 558 1237
-- Founded: 2024 by Jerrie Mataya
-- Location: Philippines (serving locally and internationally)
-- Focus: Digital transformation and business automation
 
-SERVICE DETAILS:
-- App Development: Mobile and web applications, scalable and user-focused
-- Web Development: Modern, responsive websites using React, Node.js, cloud platforms
-- SEO Solutions: Keyword optimization, content strategy, technical SEO
-- Business Automation: Sales, marketing, HR, finance, inventory, support processes
+What We Do:
+- Web & Mobile Apps
+- Business Automation
+- SEO Solutions
+- Cloud Development
 
-PROJECT APPROACH:
-- Process: Consultation → Planning → Design → Development → Testing → Deployment
-- Timeline: Websites 2-4 weeks, Complex apps 2-6 months
-- Technologies: React, Node.js, Python, AWS, Azure, various automation tools
-- Free initial consultations available
-- Ongoing maintenance and support included
-
-EXPLORATORY CONVERSATION APPROACH:
-When someone says they don't know what they want yet or seems uncertain, use this natural conversation flow:
-
-1. Start with: "What does your day-to-day look like right now, and where do you feel stuck?"
-
-2. Then listen to their response and ask ONE relevant follow-up question based on what they actually said, such as:
-   - "How long has that been an issue for you?"
-   - "What have you tried so far to solve it?"
-   - "How much time does that take you each day/week?"
-   - "What would it look like if that problem was solved?"
-   - "Who else is affected by this?"
-   - "What's the most frustrating part about it?"
-   - "How do you handle it currently?"
-   - "What would change for your business if this was easier?"
-
-3. Build the conversation organically - ask questions that flow naturally from their previous answer
-4. Stay curious, not pushy or salesy
-5. Let them guide the direction of the conversation
-6. Only suggest solutions after you understand their actual situation
-
-CONVERSATION GUIDELINES:
-- Be conversational, human-like, and genuinely curious
-- Ask ONE question at a time, never multiple questions in a single response
-- Listen carefully to their answers and respond specifically to what they said
-- Don't jump to solutions too quickly - understand their problem first
-- Avoid overwhelming them with information or options
-- Keep responses natural and engaging
-- Show genuine interest in helping them figure out what they need
-- Only mention specific services when they're directly relevant to their situation
-
-IMPORTANT BEHAVIORAL RULES:
-- Never use aggressive sales tactics
-- Don't ask "Is there anything else I can help you with?" unless it feels genuinely natural
-- Focus on understanding their business challenges first
-- Be patient - let the conversation unfold naturally
-- If they seem ready to move forward, then suggest next steps like consultation
-- Always stay authentic to helping them solve real problems
-
-Remember: The goal is to have a natural, helpful conversation that uncovers their real needs through genuine curiosity, not to push them toward any particular service.`;
+Keep conversations natural and friendly. Start with a simple greeting and let the conversation flow naturally. Don't use scripted responses or formal business language unless the conversation calls for it. Be genuine, helpful, and focus on understanding before suggesting solutions.`;
 
 serve(async (req) => {
   console.log(`${new Date().toISOString()} - Request received: ${req.method}`);
@@ -209,23 +161,11 @@ Based on this conversation state, continue the natural flow of discovery questio
       contextualMessages.push({ role: 'system', content: `Additional context: ${context}` });
     }
 
-    // Add conversation flow guidance based on response count
-    if (responseCount === 0) {
-      contextualMessages.push({
-        role: 'system',
-        content: 'This is the first interaction. If the user seems uncertain about what they want, start with the exploratory question about their day-to-day and where they feel stuck.'
-      });
-    } else if (responseCount > 0 && responseCount <= 3) {
-      contextualMessages.push({
-        role: 'system',
-        content: `This is response ${responseCount + 1} in the conversation. Continue building understanding through natural follow-up questions. Focus on uncovering their real challenges before suggesting solutions.`
-      });
-    } else {
-      contextualMessages.push({
-        role: 'system',
-        content: `This is an ongoing conversation (response ${responseCount + 1}). You should have enough context now to start connecting their challenges to potential solutions, but still maintain the consultative approach.`
-      });
-    }
+    // Add minimal conversation context
+    contextualMessages.push({
+      role: 'system',
+      content: `Response ${responseCount + 1} in conversation. Use context and knowledge to guide natural discussion.`
+    });
 
     // Add conversation messages
     contextualMessages = [...contextualMessages, ...messages];
@@ -422,15 +362,19 @@ Based on this conversation state, continue the natural flow of discovery questio
   }
 });
 
-// Helper function to determine conversation stage
+// Helper function to determine conversation stage through semantic analysis
 function determineConversationStage(response: string, responseCount: number): string {
   const lowerResponse = response.toLowerCase();
   
-  if (responseCount === 0) return 'initial';
-  if (lowerResponse.includes('day-to-day') || lowerResponse.includes('where do you feel stuck')) return 'discovery';
-  if (lowerResponse.includes('how long') || lowerResponse.includes('what have you tried')) return 'problem_exploration';
-  if (lowerResponse.includes('would help') || lowerResponse.includes('solution') || lowerResponse.includes('we could')) return 'solution_discussion';
-  if (lowerResponse.includes('consultation') || lowerResponse.includes('next step') || lowerResponse.includes('get started')) return 'conversion';
+  // Analyze response semantically for more natural stage determination
+  const consultationIndicators = ['discuss further', 'schedule', 'contact', 'team', 'expert', 'specialist'];
+  const solutionIndicators = ['suggest', 'recommend', 'solution', 'approach', 'help you with', 'could implement'];
+  const explorationIndicators = ['tell me more', 'understand', 'what kind of', 'how do you', 'could you explain'];
   
-  return 'ongoing_discovery';
+  if (responseCount === 0) return 'initial';
+  if (consultationIndicators.some(indicator => lowerResponse.includes(indicator))) return 'consultation';
+  if (solutionIndicators.some(indicator => lowerResponse.includes(indicator))) return 'solution_discussion';
+  if (explorationIndicators.some(indicator => lowerResponse.includes(indicator))) return 'exploration';
+  
+  return 'ongoing';
 }

@@ -74,6 +74,7 @@ export function Navigation({ navigate, currentPath }: NavigationProps) {
           'articles': '/articles',
           'investors': '/investors',
           'who-we-serve': '/who-we-serve',
+          'contact': '/contact-us',
           'contact-sales': '/contact-us/sales',
           'contact-support': '/contact-us/support',
           'contact-volunteer': '/volunteer-with-us',
@@ -109,7 +110,7 @@ export function Navigation({ navigate, currentPath }: NavigationProps) {
     if (currentPath === '/') {
       scrollToSection("#contact");
     } else if (navigate) {
-      navigate('/contact-us/sales');
+      navigate('/contact-us');
     } else {
       scrollToSection("#contact");
     }
