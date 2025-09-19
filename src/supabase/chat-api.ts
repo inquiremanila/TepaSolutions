@@ -14,7 +14,7 @@ const getSupabaseConfig = () => {
 
 const { url: supabaseUrl, key: supabaseAnonKey } = getSupabaseConfig();
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
-import { ChatMessage } from '../services/openrouter';
+import type { ChatMessage } from '../services/openrouter';
 
 export interface ChatSession {
   id: string;
