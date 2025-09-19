@@ -306,7 +306,7 @@ export const ChatHistoryUtils = {
       is_bot: msg.role === 'assistant',
       timestamp: new Date(Date.now() + index).toISOString(),
       message_type: 'text' as const,
-      metadata: { role: msg.role }
+      metadata: { model_used: msg.role === 'assistant' ? 'system' : undefined }
     }));
   }
 };

@@ -105,6 +105,20 @@ export function Tepabot() {
           }
         } catch (error) {
           console.error('Failed to initialize chat session:', error);
+          // Create a fallback session for functionality without database
+          const fallbackSession: ChatSession = {
+            id: `fallback_${Date.now()}`,
+            session_token: `fallback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            started_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            status: 'active',
+            context: {
+              page_url: window.location.href,
+              referrer: document.referrer,
+              user_agent: navigator.userAgent
+            }
+          };
+          setChatSession(fallbackSession);
         }
       };
       
@@ -260,8 +274,8 @@ const generateAIResponse = async (input: string) => {
     const newTopics = extractTopicsFromResponse(input + ' ' + fullResponse);
     setConversationContext(prev => [...new Set([...prev, ...newTopics])].slice(-8)); // Keep last 8 topics
 
-    // Store AI response in Supabase with enhanced metadata
-    if (chatSession?.id) {
+    // Store AI response in Supabase with enhanced metadata (if session is not fallback)
+    if (chatSession?.id && !chatSession.id.includes('fallback_')) {
       try {
         await storeChatMessage(chatSession.id, fullResponse, true, 'text', {
           model_used: 'deepseek/deepseek-chat-v3.1:free',
@@ -273,6 +287,7 @@ const generateAIResponse = async (input: string) => {
         });
       } catch (error) {
         console.error('Failed to store AI message:', error);
+        // Continue without storing - functionality should work without database
       }
     }
 
@@ -509,12 +524,13 @@ const extractTopicsFromResponse = (text: string): string[] => {
     setShowSuggestions(false);
     setLastActivityTime(new Date());
 
-    // Store user message in Supabase if session exists
-    if (chatSession?.id) {
+    // Store user message in Supabase if session exists (if session is not fallback)
+    if (chatSession?.id && !chatSession.id.includes('fallback_')) {
       try {
         await storeChatMessage(chatSession.id, text, false, 'text');
       } catch (error) {
         console.error('Failed to store user message:', error);
+        // Continue without storing - functionality should work without database
       }
     }
 
