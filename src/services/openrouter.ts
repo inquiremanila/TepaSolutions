@@ -483,9 +483,18 @@ export class OpenRouterService {
   }
 
   // Generate contextual fallback response
-  private getFallbackResponse(_stage: string): string {
-    // Use a generic, open-ended response that encourages conversation
-    return "I apologize for the interruption. Could you tell me more about what you're looking for?";
+  private getFallbackResponse(stage: string): string {
+    // Provide natural, varied responses based on conversation stage
+    const responses = {
+      'initial': ["Hello! I'm your AI assistant at Tepa Solutions. How can I help you today?", "Hi there! What can I assist you with today?", "Welcome! I'm here to help with any questions about our digital solutions."],
+      'discovery': ["I'd love to learn more about your needs. What challenges are you facing?", "Tell me about what you're hoping to achieve. I'm here to help!", "What kind of solution are you looking for? I can guide you through our options."],
+      'problem_exploration': ["I understand you're facing some challenges. Can you tell me more about what's not working?", "Let's dive deeper into the issues you're experiencing. What's the biggest pain point?", "I'm here to help solve problems. What's causing you the most difficulty?"],
+      'solution_discussion': ["Based on what you've shared, I have some ideas. Would you like to explore some solutions?", "I think I can help with that. Let me suggest a few approaches that might work.", "That sounds like something we can definitely address. Here are some options to consider."],
+      'conversion': ["I'd be happy to help you get started. Would you like to schedule a consultation?", "It sounds like we're a good fit. Shall we discuss next steps?", "Great! I can connect you with our team to move forward. What works best for you?"]
+    };
+    
+    const stageResponses = responses[stage as keyof typeof responses] || responses.initial;
+    return stageResponses[Math.floor(Math.random() * stageResponses.length)];
   }
 
   // Reset conversation (for new chat sessions)

@@ -107,8 +107,8 @@ export function Tepabot() {
           console.error('Failed to initialize chat session:', error);
           // Create a fallback session for functionality without database
           const fallbackSession: ChatSession = {
-            id: `fallback_${Date.now()}`,
-            session_token: `fallback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            id: crypto.randomUUID(),
+            session_token: crypto.randomUUID(),
             started_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
             status: 'active',
