@@ -32,8 +32,8 @@ interface TicketForm {
 }
 
 const initialBotMessage: Message = {
-  id: '1',
-  text: 'Hi! I\'m Tepabot, your AI assistant from Tepa Solutions. I\'m here to help you with our digital transformation services, answer questions about pricing, development processes, and connect you with our team when needed.\n\nWhat would you like to know?',
+  id: "1",
+  text: "Hello! I'm your AI assistant at Tepa Solutions. I have a deep understanding of digital technology and business solutions. How can I help you today?",
   isBot: true,
   timestamp: new Date()
 };
@@ -391,44 +391,57 @@ const generateContextualSuggestions = (response: string, conversationState: any)
     case 'initial':
     case 'discovery':
       return [
-        "Tell me more about your business",
-        "What's your biggest daily challenge?",
-        "How do you currently handle this?"
+        "Could you tell me about your current business operations?",
+        "What specific challenges are you facing right now?",
+        "What made you consider digital solutions at this time?"
       ];
     
     case 'problem_exploration':
       return [
-        "How much time does this take you?",
-        "What would solving this mean for your business?",
-        "Have you tried any solutions before?"
+        "How is this challenge impacting your day-to-day operations?",
+        "What would an ideal solution look like for your team?",
+        "Have you tried addressing this challenge before?"
       ];
     
     case 'solution_discussion':
+      if (lowerResponse.includes('cost') || lowerResponse.includes('price')) {
+        return [
+          "Would you like to see our flexible pricing options?",
+          "Shall we discuss your specific requirements for a detailed quote?",
+          "Would you like to explore our different service packages?"
+        ];
+      }
       return [
-        "What would your ideal solution look like?",
-        "What's your timeline for this?",
-        "Would you like to explore specific options?"
+        "When would you ideally like to implement this solution?",
+        "Who will be the main users of this system?",
+        "What features are most important for your team?"
       ];
     
     case 'conversion':
       return [
-        "Can I schedule a consultation?",
-        "What's your budget range?",
-        "When would you like to get started?"
+        "Would you like to schedule a free consultation with our experts?",
+        "Should we prepare a detailed proposal for your review?",
+        "Would you like to discuss next steps with our team?"
       ];
     
     default:
       if (lowerResponse.includes('web') || lowerResponse.includes('website')) {
         return [
-          "What kind of website do you need?",
-          "Who is your target audience?",
-          "Do you have any examples you like?"
+          "What goals do you have for your new website?",
+          "Are you looking to generate leads, sell products, or showcase your services?",
+          "Would you like to see some of our recent website projects?"
+        ];
+      } else if (lowerResponse.includes('app') || lowerResponse.includes('application')) {
+        return [
+          "What platforms would your users primarily use - iOS, Android, or both?",
+          "Is this app for your customers or internal team use?",
+          "Would you like to explore our app development process?"
         ];
       }
       return [
-        "Can you tell me more?",
-        "What would success look like?",
-        "How can we help with this?"
+        "Could you elaborate on that point?",
+        "What specific outcomes are you hoping to achieve?",
+        "Would you like to explore some examples of similar solutions?"
       ];
   }
 };
@@ -459,11 +472,11 @@ const shouldEscalateBasedOnStage = (conversationState: any, response: string, in
 const getContextualEscalationMessage = (stage: string): string => {
   switch (stage) {
     case 'conversion':
-      return 'It sounds like you\'re ready to move forward! Would you like me to connect you with our project specialist who can provide detailed quotes and timelines?';
+      return 'Your project sounds exciting! Our solutions architect would love to discuss the specifics and create a tailored plan for your business. Would you like to schedule a brief call?';
     case 'solution_discussion':
-      return 'Based on what you\'ve shared, I think our development team could provide more specific guidance. Would you like to speak with one of our specialists?';
+      return 'To ensure we recommend the most effective solution for your needs, I\'d be happy to arrange a conversation with one of our technical consultants. They can provide in-depth insights and answer any specific questions you have.';
     default:
-      return 'Would you like to connect with our live support team for more personalized assistance?';
+      return 'I\'d be happy to connect you with one of our digital transformation specialists who can provide personalized guidance for your specific situation. Would that be helpful?';
   }
 };
 

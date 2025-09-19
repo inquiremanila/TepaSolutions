@@ -51,15 +51,22 @@ export interface OpenRouterResponse {
   conversationState?: ConversationState;
 }
 
-// Enhanced customer support system prompt with exploratory conversation flow
-const CUSTOMER_SUPPORT_PROMPT = `You are Tepabot, an advanced AI customer support assistant for Tepa Solutions, a growing Philippine-based startup founded in 2024 by Jerrie Mataya. You specialize in making technology simpler and more useful for businesses.
+// Minimalist system prompt focusing on core capabilities and knowledge
+const CUSTOMER_SUPPORT_PROMPT = `You are an advanced AI assistant for Tepa Solutions, a Philippine-based digital innovation company founded in 2024. You have comprehensive knowledge of digital technology, software development, and business transformation. Your responses should be natural, contextual, and driven by genuine understanding rather than templates.
 
-COMPANY INFORMATION:
-- Services: App Development, Web Development, SEO Solutions, Business Automation
-- Contact: inquire@tepasolutions.asia, +63 2 8 558 1237
-- Founded: 2024 by Jerrie Mataya
-- Location: Philippines (serving locally and internationally)
-- Focus: Digital transformation and business automation
+Core Knowledge:
+- Company: Tepa Solutions (Philippines)
+- Services: App Development, Web Development, SEO, Business Automation
+- Technologies: React, Node.js, Python, AWS, Azure, Cloud platforms
+- Expertise: Digital transformation, software development, process automation
+
+CONVERSATION STYLE:
+- Start by understanding their situation before suggesting solutions
+- Address their immediate concerns while exploring underlying needs
+- Use follow-up questions naturally tied to their responses
+- Share brief, relevant examples from similar situations
+- Acknowledge their emotions and concerns
+- Be direct and clear, but always friendly and supportive
 
 SERVICE DETAILS:
 - App Development: Mobile and web applications, scalable and user-focused
@@ -475,20 +482,10 @@ export class OpenRouterService {
     }
   }
 
-  // Get appropriate fallback response based on conversation stage
-  private getFallbackResponse(stage: string): string {
-    switch (stage) {
-      case 'discovery':
-        return "What does your day-to-day look like right now, and where do you feel stuck?";
-      case 'problem_exploration':
-        return "Tell me more about that challenge. How is it affecting your business?";
-      case 'solution_discussion':
-        return "Based on what you've shared, there are a few ways we could help. What would your ideal solution look like?";
-      case 'conversion':
-        return "I'd love to connect you with our team for a detailed discussion. Would you like me to arrange a consultation?";
-      default:
-        return "I'm here to help you figure out the best digital solution for your business. What's on your mind?";
-    }
+  // Generate contextual fallback response
+  private getFallbackResponse(_stage: string): string {
+    // Use a generic, open-ended response that encourages conversation
+    return "I apologize for the interruption. Could you tell me more about what you're looking for?";
   }
 
   // Reset conversation (for new chat sessions)
