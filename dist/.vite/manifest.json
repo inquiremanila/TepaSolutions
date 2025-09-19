@@ -1,6 +1,6 @@
 {
-  "_client-DKB5fcN-.js": {
-    "file": "assets/client-DKB5fcN-.js",
+  "_client-zomM9dWj.js": {
+    "file": "assets/client-zomM9dWj.js",
     "name": "client",
     "isDynamicEntry": true,
     "imports": [
@@ -8,7 +8,7 @@
     ]
   },
   "index.html": {
-    "file": "assets/app-BXWwxLUP.js",
+    "file": "assets/app-D9vkMP6o.js",
     "name": "app",
     "src": "index.html",
     "isEntry": true,
