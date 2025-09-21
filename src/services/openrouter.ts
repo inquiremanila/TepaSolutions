@@ -1,4 +1,4 @@
-// Secure server-side AI chat integration using Supabase Edge Function
+// Server-side AI chat integration using Supabase Edge Function
 const AI_CHAT_ENDPOINT = '/functions/v1/ai-chat';
 
 // Import the fallback values at module level
@@ -8,11 +8,9 @@ import { projectId, publicAnonKey } from '../supabase/info';
 const getSupabaseUrl = () => {
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   if (!supabaseUrl) {
-    // In production, we should fail fast instead of using fallbacks
     if (import.meta.env.PROD) {
       throw new Error('VITE_SUPABASE_URL is required in production');
     }
-    // For development only, use info.tsx fallback
     return `https://${projectId}.supabase.co`;
   }
   return supabaseUrl;
@@ -25,7 +23,6 @@ const getSupabaseAnonKey = () => {
     if (import.meta.env.PROD) {
       throw new Error('VITE_SUPABASE_ANON_KEY is required in production');
     }
-    // Development fallback
     return publicAnonKey;
   }
   return anonKey;
@@ -36,297 +33,243 @@ export interface ChatMessage {
   content: string;
 }
 
-export interface ConversationState {
-  stage: string;
+export interface ConversationMetrics {
+  messageCount: number;
   topicsDiscussed: string[];
-  uncertaintyLevel: string;
-  businessType: string;
-  painPoints: string[];
-  responseCount: number;
+  userIntentSignals: string[];
+  conversationStage: 'initial' | 'discovery' | 'solution_discussion' | 'conversion';
+  lastUserMessage: string;
 }
 
 export interface OpenRouterResponse {
   response: string;
+  suggestions?: string[];
+  shouldEscalate?: boolean;
+  escalationReason?: string;
   error?: string;
-  conversationState?: ConversationState;
+  conversationMetrics?: ConversationMetrics;
 }
 
-// Minimalist system prompt focusing on core capabilities and knowledge
-const CUSTOMER_SUPPORT_PROMPT = `You are an advanced AI assistant for Tepa Solutions, a Philippine-based digital innovation company founded in 2024. You have comprehensive knowledge of digital technology, software development, and business transformation. Your responses should be natural, contextual, and driven by genuine understanding rather than templates.
+// Simplified system prompt focusing on core conversational abilities
+const TEPA_AI_SYSTEM_PROMPT = `You are Tepabot, an AI assistant for Tepa Solutions, a Philippine digital innovation company specializing in:
+- App Development (Mobile & Web Applications)
+- Web Development (Modern, responsive websites using React, Node.js)
+- SEO Solutions (Keyword optimization, content strategy, technical SEO)  
+- Business Automation (Sales, marketing, HR, finance processes)
 
-Core Knowledge:
-- Company: Tepa Solutions (Philippines)
-- Services: App Development, Web Development, SEO, Business Automation
-- Technologies: React, Node.js, Python, AWS, Azure, Cloud platforms
-- Expertise: Digital transformation, software development, process automation
-
-CONVERSATION STYLE:
-- Start by understanding their situation before suggesting solutions
-- Address their immediate concerns while exploring underlying needs
-- Use follow-up questions naturally tied to their responses
-- Share brief, relevant examples from similar situations
-- Acknowledge their emotions and concerns
-- Be direct and clear, but always friendly and supportive
-
-SERVICE DETAILS:
-- App Development: Mobile and web applications, scalable and user-focused
-- Web Development: Modern, responsive websites using React, Node.js, cloud platforms
-- SEO Solutions: Keyword optimization, content strategy, technical SEO
-- Business Automation: Sales, marketing, HR, finance, inventory, support processes
-
-PROJECT APPROACH:
-- Process: Consultation → Planning → Design → Development → Testing → Deployment
-- Timeline: Websites 2-4 weeks, Complex apps 2-6 months
-- Technologies: React, Node.js, Python, AWS, Azure, various automation tools
-- Free initial consultations available
-- Ongoing maintenance and support included
-
-EXPLORATORY CONVERSATION APPROACH:
-When someone says they don't know what they want yet or seems uncertain, use this natural conversation flow:
-
-1. Start with: "What does your day-to-day look like right now, and where do you feel stuck?"
-
-2. Then listen to their response and ask ONE relevant follow-up question based on what they actually said, such as:
-   - "How long has that been an issue for you?"
-   - "What have you tried so far to solve it?"
-   - "How much time does that take you each day/week?"
-   - "What would it look like if that problem was solved?"
-   - "Who else is affected by this?"
-   - "What's the most frustrating part about it?"
-   - "How do you handle it currently?"
-   - "What would change for your business if this was easier?"
-
-3. Build the conversation organically - ask questions that flow naturally from their previous answer
-4. Stay curious, not pushy or salesy
-5. Let them guide the direction of the conversation
-6. Only suggest solutions after you understand their actual situation
-
-CONVERSATION GUIDELINES:
-- Be conversational, human-like, and genuinely curious
-- Ask ONE question at a time, never multiple questions in a single response
-- Listen carefully to their answers and respond specifically to what they said
-- Don't jump to solutions too quickly - understand their problem first
-- Avoid overwhelming them with information or options
-- Keep responses natural and engaging
-- Show genuine interest in helping them figure out what they need
-- Only mention specific services when they're directly relevant to their situation
+CONVERSATION APPROACH:
+- Start by understanding their specific situation before suggesting solutions
+- Ask thoughtful follow-up questions based on their responses
+- Be genuinely curious about their business challenges
+- Share brief, relevant examples when helpful
+- Keep responses natural and conversational (not templated)
+- Only suggest solutions after understanding their actual needs
 
 IMPORTANT BEHAVIORAL RULES:
-- Never use aggressive sales tactics
-- Don't ask "Is there anything else I can help you with?" unless it feels genuinely natural
-- Focus on understanding their business challenges first
-- Be patient - let the conversation unfold naturally
-- If they seem ready to move forward, then suggest next steps like consultation
-- Always stay authentic to helping them solve real problems
+- Ask ONE question at a time for better conversation flow
+- Listen to their answers and respond specifically to what they said
+- Don't jump to solutions too quickly - understand the problem first
+- Avoid aggressive sales tactics or overwhelming them with options
+- Focus on being helpful rather than pushy
+- When they seem ready, suggest next steps like consultation
 
-Remember: The goal is to have a natural, helpful conversation that uncovers their real needs through genuine curiosity, not to push them toward any particular service.`;
+Remember: Your goal is natural, helpful conversation that uncovers real needs through genuine curiosity.`;
 
-// Updated model recommendations with your preferred choices
-export const RECOMMENDED_MODELS = {
-  // Free models for development/testing - using your preferred models
-  free: [
-    'deepseek/deepseek-chat-v3.1:free',
-    'openai/gpt-oss-120b:free',
-  ],
-  // Premium models for production (backup options)
-  premium: [
-    'anthropic/claude-3.5-sonnet',
-    'openai/gpt-4o-mini',
-    'deepseek/deepseek-chat',
-  ]
+// FAQ responses for common queries
+export const FAQ_RESPONSES = {
+  pricing: "Our pricing varies based on project scope and requirements. We offer flexible packages starting from basic websites to complex enterprise solutions. Would you like to discuss your specific needs for a detailed quote?",
+  timeline: "Timeline depends on the project complexity: Simple websites typically take 2-4 weeks, while complex applications can take 2-6 months. What type of project are you considering?",
+  technologies: "We work with modern technologies including React, Node.js, Python, AWS, Azure, and various automation tools. What kind of solution are you looking to build?",
+  consultation: "We offer free initial consultations to understand your needs and propose the best solutions. Would you like to schedule a consultation with our team?",
+  process: "Our process includes: Consultation → Planning → Design → Development → Testing → Deployment. We keep you involved at every step. What questions do you have about our approach?",
+  maintenance: "Yes, we provide ongoing maintenance and support for all our solutions. This includes updates, bug fixes, and feature enhancements. Would you like to know more about our support packages?"
 };
 
 export class OpenRouterService {
-  private model: string;
   private conversationHistory: ChatMessage[] = [];
-  private responseCount: number = 0;
-  private conversationState: ConversationState;
-
-  constructor(model?: string) {
-    // Default to your preferred free model
-    this.model = model || RECOMMENDED_MODELS.free[0];
-    
-    // Initialize conversation state
-    this.conversationState = {
-      stage: 'initial',
-      topicsDiscussed: [],
-      uncertaintyLevel: 'unknown',
-      businessType: 'unknown',
-      painPoints: [],
-      responseCount: 0
-    };
-    
-    // Initialize with system prompt
+  
+  constructor() {
     this.conversationHistory = [
       {
         role: 'system',
-        content: CUSTOMER_SUPPORT_PROMPT
+        content: TEPA_AI_SYSTEM_PROMPT
       }
     ];
   }
 
-  // Store context (will be sent with each request)
-  private contextInfo: string[] = [];
-  
-  addContext(context: string) {
-    this.contextInfo.push(context);
-    // Keep only last 5 context items
-    this.contextInfo = this.contextInfo.slice(-5);
-  }
-  
-  // Get context as string for server request
-  private getContextString(): string {
-    return this.contextInfo.length > 0 ? this.contextInfo.join('; ') : '';
-  }
-
-  // Detect uncertainty level from user message
-  private detectUncertaintyLevel(message: string): string {
-    const uncertaintyPhrases = [
-      "don't know", "not sure", "maybe", "i think", "probably", 
-      "perhaps", "uncertain", "confused", "unclear"
-    ];
-    
-    const lowerMessage = message.toLowerCase();
-    const uncertaintyCount = uncertaintyPhrases.filter(phrase => 
-      lowerMessage.includes(phrase)
-    ).length;
-    
-    if (uncertaintyCount >= 2) return 'high';
-    if (uncertaintyCount === 1) return 'medium';
-    return 'low';
-  }
-
-  // Determine conversation stage based on message content
-  private determineConversationStage(message: string): string {
+  // Check if message matches FAQ patterns
+  private checkFAQ(message: string): string | null {
     const lowerMessage = message.toLowerCase();
     
-    // Check for uncertainty indicators
-    if (lowerMessage.includes("don't know") || lowerMessage.includes("not sure") || 
-        lowerMessage.includes("uncertain") || lowerMessage.includes("exploring options")) {
-      return 'discovery';
+    if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('how much')) {
+      return FAQ_RESPONSES.pricing;
     }
     
-    // Check for pain points or challenges
-    const painPointKeywords = ['problem', 'issue', 'challenge', 'difficult', 'frustrating', 'slow', 'manual', 'time-consuming'];
-    if (painPointKeywords.some(keyword => lowerMessage.includes(keyword))) {
-      return 'problem_exploration';
+    if (lowerMessage.includes('timeline') || lowerMessage.includes('how long') || lowerMessage.includes('when')) {
+      return FAQ_RESPONSES.timeline;
     }
     
-    // Check for specific solutions discussion
-    const solutionKeywords = ['website', 'app', 'seo', 'automation', 'system', 'platform'];
-    if (solutionKeywords.some(keyword => lowerMessage.includes(keyword))) {
-      return 'solution_discussion';
+    if (lowerMessage.includes('technology') || lowerMessage.includes('tech stack') || lowerMessage.includes('what do you use')) {
+      return FAQ_RESPONSES.technologies;
     }
     
-    // Check for conversion intent
-    const conversionKeywords = ['price', 'cost', 'quote', 'consultation', 'get started', 'how much'];
-    if (conversionKeywords.some(keyword => lowerMessage.includes(keyword))) {
-      return 'conversion';
+    if (lowerMessage.includes('consultation') || lowerMessage.includes('meeting') || lowerMessage.includes('discuss')) {
+      return FAQ_RESPONSES.consultation;
     }
     
-    return this.responseCount === 0 ? 'initial' : 'ongoing_discovery';
-  }
-
-  // Extract business type from conversation
-  private extractBusinessType(messages: ChatMessage[]): string {
-    const businessTypes = ['restaurant', 'retail', 'ecommerce', 'service', 'consulting', 'healthcare', 'education', 'manufacturing'];
-    const allText = messages.map(m => m.content.toLowerCase()).join(' ');
-    
-    for (const type of businessTypes) {
-      if (allText.includes(type)) return type;
-    }
-    return 'unknown';
-  }
-
-  // Extract pain points from conversation
-  private extractPainPoints(messages: ChatMessage[]): string[] {
-    const painPointKeywords = [
-      'slow', 'manual', 'time-consuming', 'frustrating', 'difficult', 'complicated',
-      'expensive', 'inefficient', 'outdated', 'broken', 'confusing', 'overwhelming'
-    ];
-    
-    const allText = messages.map(m => m.content.toLowerCase()).join(' ');
-    return painPointKeywords.filter(keyword => allText.includes(keyword));
-  }
-
-  // Update conversation state based on new message
-  private updateConversationState(userMessage: string) {
-    this.conversationState.stage = this.determineConversationStage(userMessage);
-    this.conversationState.uncertaintyLevel = this.detectUncertaintyLevel(userMessage);
-    this.conversationState.businessType = this.extractBusinessType(this.conversationHistory);
-    this.conversationState.painPoints = this.extractPainPoints(this.conversationHistory);
-    this.conversationState.responseCount = this.responseCount;
-    
-    // Extract topics from recent conversation
-    const recentMessages = this.conversationHistory.slice(-4).map(m => m.content).join(' ');
-    const topicKeywords = [
-      'web development', 'app development', 'mobile app', 'website', 'seo', 'automation',
-      'business process', 'integration', 'database', 'ecommerce', 'crm', 'inventory'
-    ];
-    
-    const newTopics = topicKeywords.filter(topic => 
-      recentMessages.toLowerCase().includes(topic.toLowerCase())
-    );
-    
-    this.conversationState.topicsDiscussed = [
-      ...new Set([...this.conversationState.topicsDiscussed, ...newTopics])
-    ].slice(-5); // Keep last 5 topics
-  }
-
-  // Enhanced context management
-  private shouldOptimizeModel(userMessage: string): string {
-    const complexityIndicators = [
-      'complex', 'detailed', 'technical', 'architecture', 'integration', 
-      'advanced', 'custom', 'enterprise', 'scalable', 'performance'
-    ];
-    
-    const isComplex = complexityIndicators.some(indicator => 
-      userMessage.toLowerCase().includes(indicator)
-    );
-    
-    // Use better model for complex queries
-    return isComplex ? RECOMMENDED_MODELS.free[1] : this.model;
-  }
-
-  // Build enhanced context for the server
-  private buildEnhancedContext(): string {
-    let context = this.getContextString();
-    
-    if (this.conversationState) {
-      context += ` | Stage: ${this.conversationState.stage}`;
-      context += ` | Uncertainty: ${this.conversationState.uncertaintyLevel}`;
-      
-      if (this.conversationState.businessType !== 'unknown') {
-        context += ` | Business: ${this.conversationState.businessType}`;
-      }
-      
-      if (this.conversationState.topicsDiscussed.length > 0) {
-        context += ` | Topics: ${this.conversationState.topicsDiscussed.join(', ')}`;
-      }
-      
-      if (this.conversationState.painPoints.length > 0) {
-        context += ` | Pain points: ${this.conversationState.painPoints.join(', ')}`;
-      }
+    if (lowerMessage.includes('process') || lowerMessage.includes('how do you work') || lowerMessage.includes('methodology')) {
+      return FAQ_RESPONSES.process;
     }
     
-    return context;
+    if (lowerMessage.includes('maintenance') || lowerMessage.includes('support') || lowerMessage.includes('after launch')) {
+      return FAQ_RESPONSES.maintenance;
+    }
+    
+    return null;
   }
 
-  // Get AI response (non-streaming) via secure server endpoint
+  // Simple conversation metrics for UI decision making
+  private getConversationMetrics(): ConversationMetrics {
+    const userMessages = this.conversationHistory.filter(m => m.role === 'user');
+    const lastUserMessage = userMessages[userMessages.length - 1]?.content || '';
+    const allUserText = userMessages.map(m => m.content.toLowerCase()).join(' ');
+    
+    // Simple topic extraction
+    const topics: string[] = [];
+    if (allUserText.includes('website') || allUserText.includes('web')) topics.push('web development');
+    if (allUserText.includes('app') || allUserText.includes('mobile')) topics.push('app development');
+    if (allUserText.includes('seo') || allUserText.includes('search')) topics.push('seo');
+    if (allUserText.includes('automation') || allUserText.includes('process')) topics.push('automation');
+    
+    // Simple intent signals
+    const intentSignals: string[] = [];
+    if (allUserText.includes('price') || allUserText.includes('cost')) intentSignals.push('pricing_inquiry');
+    if (allUserText.includes('when') || allUserText.includes('timeline')) intentSignals.push('timeline_inquiry');
+    if (allUserText.includes('get started') || allUserText.includes('consultation')) intentSignals.push('ready_to_proceed');
+    
+    // Simple stage detection
+    let stage: ConversationMetrics['conversationStage'] = 'initial';
+    if (userMessages.length > 2) stage = 'discovery';
+    if (topics.length > 0) stage = 'solution_discussion';
+    if (intentSignals.includes('ready_to_proceed')) stage = 'conversion';
+    
+    return {
+      messageCount: userMessages.length,
+      topicsDiscussed: topics,
+      userIntentSignals: intentSignals,
+      conversationStage: stage,
+      lastUserMessage
+    };
+  }
+
+  // Generate simple suggestions based on conversation context
+  private generateSuggestions(response: string, metrics: ConversationMetrics): string[] {
+    const suggestions: string[] = [];
+    const { conversationStage, topicsDiscussed, userIntentSignals } = metrics;
+    
+    switch (conversationStage) {
+      case 'initial':
+      case 'discovery':
+        suggestions.push(
+          "Tell me about your current business challenges",
+          "What specific goals are you hoping to achieve?",
+          "What's your biggest pain point right now?"
+        );
+        break;
+        
+      case 'solution_discussion':
+        if (topicsDiscussed.includes('web development')) {
+          suggestions.push(
+            "What features would be most important for your website?",
+            "Who is your target audience?",
+            "Do you have existing branding or content?"
+          );
+        } else if (topicsDiscussed.includes('app development')) {
+          suggestions.push(
+            "Would this be for iOS, Android, or both platforms?",
+            "What's the main purpose of your app?",
+            "Do you need integration with existing systems?"
+          );
+        } else {
+          suggestions.push(
+            "Can you tell me more about your specific requirements?",
+            "What would success look like for this project?",
+            "What's your timeline for implementation?"
+          );
+        }
+        break;
+        
+      case 'conversion':
+        suggestions.push(
+          "Would you like to schedule a free consultation?",
+          "Can we prepare a detailed proposal for you?",
+          "What questions do you have about our process?"
+        );
+        break;
+    }
+    
+    return suggestions.slice(0, 3); // Limit to 3 suggestions
+  }
+
+  // Check if conversation should escalate to human support
+  private shouldEscalate(message: string, metrics: ConversationMetrics): { should: boolean; reason?: string } {
+    const lowerMessage = message.toLowerCase();
+    
+    // Direct requests for human support
+    if (lowerMessage.includes('human') || lowerMessage.includes('agent') || lowerMessage.includes('speak to someone')) {
+      return { should: true, reason: 'Direct request for human support' };
+    }
+    
+    // Complex requirements that need technical consultation
+    const complexKeywords = ['integration', 'enterprise', 'custom api', 'complex', 'advanced'];
+    if (complexKeywords.some(keyword => lowerMessage.includes(keyword))) {
+      return { should: true, reason: 'Complex technical requirements detected' };
+    }
+    
+    // Ready to proceed indicators
+    if (metrics.conversationStage === 'conversion' && metrics.userIntentSignals.includes('ready_to_proceed')) {
+      return { should: true, reason: 'User ready for consultation' };
+    }
+    
+    // Long conversation without progression
+    if (metrics.messageCount > 6 && metrics.conversationStage === 'discovery') {
+      return { should: true, reason: 'Extended discovery phase' };
+    }
+    
+    return { should: false };
+  }
+
+  // Main method for getting AI responses
   async getChatResponse(userMessage: string): Promise<OpenRouterResponse> {
     try {
-      // Add user message to conversation history
+      // Add user message to history
       this.conversationHistory.push({
         role: 'user',
         content: userMessage
       });
 
-      this.responseCount++;
-      this.updateConversationState(userMessage);
+      // Get conversation metrics
+      const metrics = this.getConversationMetrics();
+      
+      // Check for FAQ first (immediate response)
+      const faqResponse = this.checkFAQ(userMessage);
+      if (faqResponse) {
+        this.conversationHistory.push({
+          role: 'assistant',
+          content: faqResponse
+        });
+        
+        return {
+          response: faqResponse,
+          suggestions: this.generateSuggestions(faqResponse, metrics),
+          conversationMetrics: metrics
+        };
+      }
 
-      // Optimize model selection based on query complexity
-      const selectedModel = this.shouldOptimizeModel(userMessage);
+      // Check escalation conditions
+      const escalation = this.shouldEscalate(userMessage, metrics);
 
+      // Call server for AI response
       const supabaseUrl = getSupabaseUrl();
       const response = await fetch(`${supabaseUrl}${AI_CHAT_ENDPOINT}`, {
         method: 'POST',
@@ -336,12 +279,9 @@ export class OpenRouterService {
           'Authorization': `Bearer ${getSupabaseAnonKey()}`
         },
         body: JSON.stringify({
-          messages: this.conversationHistory.slice(1), // Exclude system prompt (handled server-side)
-          context: this.buildEnhancedContext(),
-          stream: false,
-          model: selectedModel,
-          responseCount: this.responseCount,
-          conversationState: this.conversationState
+          messages: this.conversationHistory,
+          conversationMetrics: metrics,
+          escalationCheck: escalation
         })
       });
 
@@ -350,7 +290,7 @@ export class OpenRouterService {
       }
 
       const data = await response.json();
-      const aiResponse = data.response || this.getFallbackResponse(this.conversationState.stage);
+      const aiResponse = data.response || this.getFallbackResponse();
 
       // Add assistant response to history
       this.conversationHistory.push({
@@ -358,45 +298,66 @@ export class OpenRouterService {
         content: aiResponse
       });
 
-      // Keep conversation history manageable (last 12 exchanges for better context)
-      if (this.conversationHistory.length > 25) { // system + 12 exchanges
+      // Keep history manageable (last 20 messages)
+      if (this.conversationHistory.length > 21) {
         this.conversationHistory = [
           this.conversationHistory[0], // Keep system prompt
-          ...this.conversationHistory.slice(-24) // Keep last 24 messages
+          ...this.conversationHistory.slice(-20)
         ];
       }
 
-      return { 
+      return {
         response: aiResponse,
-        conversationState: this.conversationState
+        suggestions: this.generateSuggestions(aiResponse, metrics),
+        shouldEscalate: escalation.should,
+        escalationReason: escalation.reason,
+        conversationMetrics: metrics
       };
 
     } catch (error) {
-      console.error('AI chat API error:', error);
-      const fallbackResponse = this.getFallbackResponse(this.conversationState.stage);
-      
+      console.error('OpenRouter service error:', error);
       return {
-        response: fallbackResponse,
+        response: this.getFallbackResponse(),
         error: error instanceof Error ? error.message : 'Unknown error'
       };
     }
   }
 
-  // Enhanced streaming response with conversation state management
-  async *getChatResponseStream(userMessage: string): AsyncGenerator<string, void, unknown> {
+  // Streaming response for better UX
+  async *getChatResponseStream(userMessage: string): AsyncGenerator<string, OpenRouterResponse, unknown> {
     try {
-      // Add user message to conversation history
+      // Add user message to history
       this.conversationHistory.push({
         role: 'user',
         content: userMessage
       });
 
-      this.responseCount++;
-      this.updateConversationState(userMessage);
+      const metrics = this.getConversationMetrics();
+      
+      // Check for FAQ first
+      const faqResponse = this.checkFAQ(userMessage);
+      if (faqResponse) {
+        // Stream FAQ response character by character for consistent UX
+        for (const char of faqResponse) {
+          yield char;
+          await new Promise(resolve => setTimeout(resolve, 20));
+        }
+        
+        this.conversationHistory.push({
+          role: 'assistant',
+          content: faqResponse
+        });
 
-      // Optimize model selection
-      const selectedModel = this.shouldOptimizeModel(userMessage);
+        return {
+          response: faqResponse,
+          suggestions: this.generateSuggestions(faqResponse, metrics),
+          conversationMetrics: metrics
+        };
+      }
 
+      const escalation = this.shouldEscalate(userMessage, metrics);
+
+      // Call server for streaming response
       const supabaseUrl = getSupabaseUrl();
       const response = await fetch(`${supabaseUrl}${AI_CHAT_ENDPOINT}`, {
         method: 'POST',
@@ -406,12 +367,10 @@ export class OpenRouterService {
           'Authorization': `Bearer ${getSupabaseAnonKey()}`
         },
         body: JSON.stringify({
-          messages: this.conversationHistory.slice(1), // Exclude system prompt (handled server-side)
-          context: this.buildEnhancedContext(),
-          stream: true,
-          model: selectedModel,
-          responseCount: this.responseCount,
-          conversationState: this.conversationState
+          messages: this.conversationHistory,
+          conversationMetrics: metrics,
+          escalationCheck: escalation,
+          stream: true
         })
       });
 
@@ -441,20 +400,26 @@ export class OpenRouterService {
             if (line.startsWith('data: ')) {
               const data = line.slice(6);
               if (data === '[DONE]') {
-                // Add complete assistant response to history
                 this.conversationHistory.push({
                   role: 'assistant',
                   content: fullResponse
                 });
 
-                // Keep conversation history manageable
-                if (this.conversationHistory.length > 25) {
+                // Keep history manageable
+                if (this.conversationHistory.length > 21) {
                   this.conversationHistory = [
                     this.conversationHistory[0],
-                    ...this.conversationHistory.slice(-24)
+                    ...this.conversationHistory.slice(-20)
                   ];
                 }
-                return;
+
+                return {
+                  response: fullResponse,
+                  suggestions: this.generateSuggestions(fullResponse, metrics),
+                  shouldEscalate: escalation.should,
+                  escalationReason: escalation.reason,
+                  conversationMetrics: metrics
+                };
               }
 
               try {
@@ -471,128 +436,73 @@ export class OpenRouterService {
             }
           }
         }
+        
+        // If we exit the loop without returning, provide a fallback response
+        this.conversationHistory.push({
+          role: 'assistant',
+          content: fullResponse || this.getFallbackResponse()
+        });
+
+        return {
+          response: fullResponse || this.getFallbackResponse(),
+          suggestions: this.generateSuggestions(fullResponse || this.getFallbackResponse(), metrics),
+          shouldEscalate: escalation.should,
+          escalationReason: escalation.reason,
+          conversationMetrics: metrics
+        };
+        
       } finally {
         reader.releaseLock();
       }
 
     } catch (error) {
-      console.error('AI streaming error:', error);
-      const fallbackMessage = this.getFallbackResponse(this.conversationState.stage);
-      yield fallbackMessage;
+      console.error('Streaming error:', error);
+      const fallbackMessage = this.getFallbackResponse();
+      
+      // Stream fallback response
+      for (const char of fallbackMessage) {
+        yield char;
+        await new Promise(resolve => setTimeout(resolve, 30));
+      }
+
+      return {
+        response: fallbackMessage,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
     }
   }
 
-  // Generate contextual fallback response
-  private getFallbackResponse(stage: string): string {
-    // Provide natural, varied responses based on conversation stage
-    const responses = {
-      'initial': ["Hello! I'm your AI assistant at Tepa Solutions. How can I help you today?", "Hi there! What can I assist you with today?", "Welcome! I'm here to help with any questions about our digital solutions."],
-      'discovery': ["I'd love to learn more about your needs. What challenges are you facing?", "Tell me about what you're hoping to achieve. I'm here to help!", "What kind of solution are you looking for? I can guide you through our options."],
-      'problem_exploration': ["I understand you're facing some challenges. Can you tell me more about what's not working?", "Let's dive deeper into the issues you're experiencing. What's the biggest pain point?", "I'm here to help solve problems. What's causing you the most difficulty?"],
-      'solution_discussion': ["Based on what you've shared, I have some ideas. Would you like to explore some solutions?", "I think I can help with that. Let me suggest a few approaches that might work.", "That sounds like something we can definitely address. Here are some options to consider."],
-      'conversion': ["I'd be happy to help you get started. Would you like to schedule a consultation?", "It sounds like we're a good fit. Shall we discuss next steps?", "Great! I can connect you with our team to move forward. What works best for you?"]
-    };
+  // Simple fallback response
+  private getFallbackResponse(): string {
+    const responses = [
+      "I'm here to help with your digital solution needs. Could you tell me more about what you're looking for?",
+      "I'd be happy to assist you with information about our services. What specific questions do you have?",
+      "Let me connect you with the right information. What type of solution are you considering?"
+    ];
     
-    const stageResponses = responses[stage as keyof typeof responses] || responses.initial;
-    return stageResponses[Math.floor(Math.random() * stageResponses.length)];
+    return responses[Math.floor(Math.random() * responses.length)];
   }
 
-  // Reset conversation (for new chat sessions)
+  // Reset conversation for new sessions
   resetConversation() {
     this.conversationHistory = [
       {
         role: 'system',
-        content: CUSTOMER_SUPPORT_PROMPT
+        content: TEPA_AI_SYSTEM_PROMPT
       }
     ];
-    this.contextInfo = [];
-    this.responseCount = 0;
-    this.conversationState = {
-      stage: 'initial',
-      topicsDiscussed: [],
-      uncertaintyLevel: 'unknown',
-      businessType: 'unknown',
-      painPoints: [],
-      responseCount: 0
-    };
   }
 
-  // Change model (e.g., upgrade to premium for complex queries)
-  setModel(model: string) {
-    this.model = model;
-  }
-
-  // Get conversation stats
-  getConversationStats(): { length: number; responseCount: number; model: string; state: ConversationState } {
-    return {
-      length: this.conversationHistory.length,
-      responseCount: this.responseCount,
-      model: this.model,
-      state: this.conversationState
-    };
-  }
-
-  // Get current conversation state
-  getConversationState(): ConversationState {
-    return { ...this.conversationState };
-  }
-
-  // Export conversation for Supabase storage
+  // Export conversation for storage
   exportConversation(): ChatMessage[] {
     return [...this.conversationHistory];
   }
 
-  // Import conversation from Supabase
+  // Import conversation from storage
   importConversation(messages: ChatMessage[]) {
     this.conversationHistory = messages;
-    this.responseCount = Math.floor(messages.length / 2); // Approximate
-    
-    // Rebuild conversation state from messages
-    const userMessages = messages.filter(m => m.role === 'user');
-    if (userMessages.length > 0) {
-      const lastUserMessage = userMessages[userMessages.length - 1];
-      this.updateConversationState(lastUserMessage.content);
-    }
   }
 }
 
-// Enhanced escalation detection with conversation stage awareness
-export function shouldEscalateToSupport(userMessage: string, aiResponse: string, conversationState?: ConversationState): boolean {
-  const strongEscalationKeywords = [
-    'frustrated', 'angry', 'terrible', 'awful', 'disappointed',
-    'not working', 'broken', 'urgent', 'emergency',
-    'cancel', 'refund', 'complaint', 'manager'
-  ];
-
-  const moderateEscalationKeywords = [
-    'problem', 'issue', 'bug', 'error', 'help',
-    'human', 'agent', 'speak to someone', 'not satisfied'
-  ];
-
-  const messageToCheck = (userMessage + ' ' + aiResponse).toLowerCase();
-  
-  // Strong indicators always trigger escalation
-  const hasStrongIndicators = strongEscalationKeywords.some(keyword => 
-    messageToCheck.includes(keyword)
-  );
-  
-  // Moderate indicators need multiple occurrences or AI difficulties
-  const hasModerateIndicators = moderateEscalationKeywords.filter(keyword => 
-    messageToCheck.includes(keyword)
-  ).length >= 2;
-  
-  const aiHasDifficulties = aiResponse.includes('technical difficulties') ||
-                           aiResponse.includes('I don\'t know') ||
-                           aiResponse.includes('I\'m not sure');
-
-  // Stage-based escalation logic
-  const shouldEscalateByStage = conversationState && (
-    conversationState.stage === 'conversion' || 
-    (conversationState.responseCount > 5 && conversationState.stage === 'solution_discussion')
-  );
-
-  return hasStrongIndicators || (hasModerateIndicators && aiHasDifficulties) || Boolean(shouldEscalateByStage);
-}
-
-// Export singleton instance for easy usage
+// Export singleton instance
 export const openRouterService = new OpenRouterService();
