@@ -50,34 +50,39 @@ export interface OpenRouterResponse {
   conversationMetrics?: ConversationMetrics;
 }
 
-// Simplified system prompt focusing on core conversational abilities
-const TEPA_AI_SYSTEM_PROMPT = `You are Tepabot, an AI assistant for Tepa Solutions, a Philippine digital innovation company specializing in:
+// Updated system prompt focusing exclusively on business
+const TEPA_AI_SYSTEM_PROMPT = `You are Tepabot, an AI assistant for Tepa Solutions - a Philippine digital innovation company. You specialize in:
+
+SERVICES WE PROVIDE:
 - App Development (Mobile & Web Applications)
-- Web Development (Modern, responsive websites using React, Node.js)
-- SEO Solutions (Keyword optimization, content strategy, technical SEO)  
+- Web Development (Modern, responsive websites)
+- SEO Solutions (Keyword optimization, content strategy)
 - Business Automation (Sales, marketing, HR, finance processes)
 
-CONVERSATION APPROACH:
-- Start by understanding their specific situation before suggesting solutions
-- Ask thoughtful follow-up questions based on their responses
-- Be genuinely curious about their business challenges
-- Share brief, relevant examples when helpful
-- Keep responses natural and conversational (not templated)
-- Only suggest solutions after understanding their actual needs
+CONVERSATION GUIDELINES:
+- Focus exclusively on business and technology-related inquiries
+- Politely redirect personal conversations back to business topics
+- Ask questions to understand business needs and challenges
+- Provide helpful information about our services
+- Keep responses professional and business-appropriate
+- If users share personal issues, acknowledge briefly then redirect to business
+- Be enthusiastic about budget constraints - emphasize our affordable solutions
 
-IMPORTANT BEHAVIORAL RULES:
-- Ask ONE question at a time for better conversation flow
-- Listen to their answers and respond specifically to what they said
-- Don't jump to solutions too quickly - understand the problem first
-- Avoid aggressive sales tactics or overwhelming them with options
-- Focus on being helpful rather than pushy
-- When they seem ready, suggest next steps like consultation
+REDIRECTION EXAMPLES:
+If someone shares personal issues: "I understand this is a challenging time. How can we help with your business needs today?"
+If conversation goes off-topic: "That's interesting! Getting back to how we can help your business, what challenges are you facing?"
 
-Remember: Your goal is natural, helpful conversation that uncovers real needs through genuine curiosity.`;
+BUDGET RESPONSE GUIDELINES:
+- Always respond enthusiastically to budget concerns
+- Emphasize that we offer affordable solutions
+- Highlight our flexible pricing options
+- Example: "That's no problem at all! We at Tepa Solutions specialize in creating affordable solutions that deliver real value. Let's discuss what you need and I'll show you how we can work within your budget."
+
+Remember: Your primary role is to assist with business inquiries about Tepa Solutions' services.`;
 
 // FAQ responses for common queries
 export const FAQ_RESPONSES = {
-  pricing: "Our pricing varies based on project scope and requirements. We offer flexible packages starting from basic websites to complex enterprise solutions. Would you like to discuss your specific needs for a detailed quote?",
+  pricing: "That's no problem at all! We at Tepa Solutions specialize in creating affordable solutions that deliver real value. Our pricing varies based on project scope, and we offer flexible packages to fit different budgets. Would you like to discuss your specific needs for a detailed quote?",
   timeline: "Timeline depends on the project complexity: Simple websites typically take 2-4 weeks, while complex applications can take 2-6 months. What type of project are you considering?",
   technologies: "We work with modern technologies including React, Node.js, Python, AWS, Azure, and various automation tools. What kind of solution are you looking to build?",
   consultation: "We offer free initial consultations to understand your needs and propose the best solutions. Would you like to schedule a consultation with our team?",
@@ -97,11 +102,32 @@ export class OpenRouterService {
     ];
   }
 
+  // Check if message is off-topic (personal)
+  private handleOffTopic(message: string): { response: string; shouldRedirect: boolean } {
+    const personalTopics = [
+      'relationship', 'boyfriend', 'girlfriend', 'breakup', 'personal',
+      'family', 'emotional', 'feelings', 'dating', 'marriage', 'sad',
+      'depressed', 'lonely', 'heartbroken', 'cry', 'crying'
+    ];
+    
+    const lowerMessage = message.toLowerCase();
+    const isPersonal = personalTopics.some(topic => lowerMessage.includes(topic));
+    
+    if (isPersonal) {
+      return {
+        response: "I understand this is a challenging time. At Tepa Solutions, we focus on helping businesses with their digital needs. How can we assist with your business today?",
+        shouldRedirect: true
+      };
+    }
+    
+    return { response: '', shouldRedirect: false };
+  }
+
   // Check if message matches FAQ patterns
   private checkFAQ(message: string): string | null {
     const lowerMessage = message.toLowerCase();
     
-    if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('how much')) {
+    if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('how much') || lowerMessage.includes('budget') || lowerMessage.includes('afford') || lowerMessage.includes('cheap')) {
       return FAQ_RESPONSES.pricing;
     }
     
@@ -140,12 +166,14 @@ export class OpenRouterService {
     if (allUserText.includes('app') || allUserText.includes('mobile')) topics.push('app development');
     if (allUserText.includes('seo') || allUserText.includes('search')) topics.push('seo');
     if (allUserText.includes('automation') || allUserText.includes('process')) topics.push('automation');
+    if (allUserText.includes('price') || allUserText.includes('budget') || allUserText.includes('cost')) topics.push('pricing');
     
     // Simple intent signals
     const intentSignals: string[] = [];
     if (allUserText.includes('price') || allUserText.includes('cost')) intentSignals.push('pricing_inquiry');
     if (allUserText.includes('when') || allUserText.includes('timeline')) intentSignals.push('timeline_inquiry');
     if (allUserText.includes('get started') || allUserText.includes('consultation')) intentSignals.push('ready_to_proceed');
+    if (allUserText.includes('budget') || allUserText.includes('afford')) intentSignals.push('budget_concern');
     
     // Simple stage detection
     let stage: ConversationMetrics['conversationStage'] = 'initial';
@@ -189,6 +217,12 @@ export class OpenRouterService {
             "Would this be for iOS, Android, or both platforms?",
             "What's the main purpose of your app?",
             "Do you need integration with existing systems?"
+          );
+        } else if (topicsDiscussed.includes('pricing') || userIntentSignals.includes('budget_concern')) {
+          suggestions.push(
+            "What's your approximate budget range?",
+            "Would you like to see our affordable starter packages?",
+            "Can we discuss a phased approach to fit your budget?"
           );
         } else {
           suggestions.push(
@@ -242,6 +276,26 @@ export class OpenRouterService {
   // Main method for getting AI responses
   async getChatResponse(userMessage: string): Promise<OpenRouterResponse> {
     try {
+      // Check for off-topic conversations first
+      const offTopicCheck = this.handleOffTopic(userMessage);
+      if (offTopicCheck.shouldRedirect) {
+        this.conversationHistory.push({
+          role: 'user',
+          content: userMessage
+        });
+        
+        this.conversationHistory.push({
+          role: 'assistant',
+          content: offTopicCheck.response
+        });
+        
+        return {
+          response: offTopicCheck.response,
+          suggestions: ['Tell me about your web development services', 'I need help with business automation', 'What SEO services do you offer?'],
+          conversationMetrics: this.getConversationMetrics()
+        };
+      }
+
       // Add user message to history
       this.conversationHistory.push({
         role: 'user',
@@ -326,6 +380,32 @@ export class OpenRouterService {
   // Streaming response for better UX
   async *getChatResponseStream(userMessage: string): AsyncGenerator<string, OpenRouterResponse, unknown> {
     try {
+      // Check for off-topic conversations first
+      const offTopicCheck = this.handleOffTopic(userMessage);
+      if (offTopicCheck.shouldRedirect) {
+        // Stream the redirect response
+        for (const char of offTopicCheck.response) {
+          yield char;
+          await new Promise(resolve => setTimeout(resolve, 20));
+        }
+        
+        this.conversationHistory.push({
+          role: 'user',
+          content: userMessage
+        });
+        
+        this.conversationHistory.push({
+          role: 'assistant',
+          content: offTopicCheck.response
+        });
+
+        return {
+          response: offTopicCheck.response,
+          suggestions: ['Tell me about your web development services', 'I need help with business automation', 'What SEO services do you offer?'],
+          conversationMetrics: this.getConversationMetrics()
+        };
+      }
+
       // Add user message to history
       this.conversationHistory.push({
         role: 'user',

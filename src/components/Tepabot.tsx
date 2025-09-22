@@ -37,7 +37,7 @@ type ChatState = 'idle' | 'ai_responding' | 'waiting_for_user' | 'escalated';
 // Welcome message
 const WELCOME_MESSAGE: UIMessage = {
   id: "welcome",
-  text: "Hello! I'm Tepabot, your AI assistant at Tepa Solutions. I have deep knowledge of digital technology and business solutions. How can I help you today?",
+  text: "Hello! I'm Tepabot, How can I help you today?",
   isBot: true,
   timestamp: new Date()
 };
