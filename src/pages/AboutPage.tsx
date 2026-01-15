@@ -113,7 +113,7 @@ export function AboutPage({ navigate }: AboutPageProps) {
             <h2 className="text-3xl font-bold mb-8">Our Story</h2>
             <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
               <p>
-                Tepa Solutions was founded with a mission to bridge the gap between complex technology and practical business needs. With extensive experience in software development and business strategy, our founder Jerrie recognized that many businesses struggle with outdated systems and inefficient processes that hold them back from reaching their potential.
+                Tepa Solutions was founded with a mission to bridge the gap between complex technology and practical business needs. With extensive experience in software development and business strategy, we recognized that many businesses struggle with outdated systems and inefficient processes that hold them back from reaching their potential.
               </p>
               <p>
                 What started as a vision to help businesses leverage technology more effectively has evolved into a comprehensive technology consultancy serving clients across the Philippines and beyond.
@@ -127,7 +127,7 @@ export function AboutPage({ navigate }: AboutPageProps) {
                 <p className="italic text-lg mb-4">
                   "To empower businesses with innovative technology solutions that simplify complexity, drive efficiency, and unlock new opportunities for growth."
                 </p>
-                <p className="text-primary font-medium">— Jerrie M., Founder & CEO</p>
+                <p className="text-primary font-medium">— Founder & CEO</p>
               </div>
             </div>
           </motion.div>
